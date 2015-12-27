@@ -1,7 +1,7 @@
-Sid Wilson
+シド・ウィルソン
 FACE_SID
-As you know, WEAPCO has many slaves in this system. If we free a large number of them, it might help to spark a rebellion. I estimate that we will need to rescue around 250 to make a difference.
+知っての通り、この星系にはたくさんのWEAPCOの奴隷がいる。彼らを解放できれば反撃のきっかけになるはずだ。変化が現れるためには、250人は救出する必要があるだろう。
 FACE_CHRIS
-Most of the slaves are working in ore mines, aren't they?
+ほとんどの奴隷は採掘をしているそうだな。
 FACE_SID
-Yes, but attacking the ore mines directly would be dangerous. You'd be better off intercepting slave transports. What you'll have to do is fly around and see if you can intercept a WEAPCO patrol. Of course, they might not be escorting any slave units, so be careful!
+そうだ。だが、採掘所を直接攻撃するのは危険だ。奴隷の搬入を阻止するのがいいだろう。あたりを飛行し、WEPCOのパトロールを迎撃しろ。もちろん奴隷船を護衛しているとは限らない。十分に気をつけろ!!

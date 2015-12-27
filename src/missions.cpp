@@ -154,7 +154,7 @@ void updateSystemStatus()
 	{
 		game.stationedPlanet = 0;
 		game.area = 1;
-		strcpy(game.stationedName, "Hail");
+		strcpy(game.stationedName, "ハイル");
 		initPlanetMissions(game.system);
 	}
 	else if (game.area == MISN_MOEBO)
@@ -162,7 +162,7 @@ void updateSystemStatus()
 		game.stationedPlanet = 0;
 		game.system = 1;
 		game.area = MISN_RESCUESLAVES;
-		strcpy(game.stationedName, "Nerod");
+		strcpy(game.stationedName, "ネロド");
 		initPlanetMissions(game.system);
 
 		if (game.difficulty == DIFFICULTY_ORIGINAL)
@@ -195,7 +195,7 @@ void updateSystemStatus()
 		systemPlanet[game.stationedPlanet].missionCompleted = 1;
 	}
 
-	strcpy(game.destinationName, "None");
+	strcpy(game.destinationName, "なし");
 	game.destinationPlanet = game.stationedPlanet;
 }
 
@@ -327,7 +327,7 @@ void checkTimer()
 		currentMission.completed1[0] = OB_COMPLETED;
 		mission_killAllEnemies();
 		engine.addAliens = -1;
-		setInfoLine("*** All Primary Objectives Completed ***", FONT_GREEN);
+		setInfoLine("*** 全ての主要な任務を完了 ***", FONT_GREEN);
 	}
 }
 
@@ -341,7 +341,7 @@ static void evaluateRequirement(int type, int id, int *completed, int *targetVal
 		*completed = 2;
 		checkTimer();
 		if ((game.area == MISN_URUSOR) && (type == M_DISABLE_TARGET))
-			setRadioMessage(FACE_SID, "All vessels disabled!", 1);
+			setRadioMessage(FACE_SID, "補給艦を全て航行不能にした!", 1);
 	}
 	else
 	{
@@ -352,19 +352,19 @@ static void evaluateRequirement(int type, int id, int *completed, int *targetVal
 				switch(id)
 				{
 					case P_CASH:
-						sprintf(message, "Collect $%d more...", *targetValue);
+						sprintf(message, "あと $%d 獲得しろ…", *targetValue);
 						if ((rand() % 2) == 0)
-							sprintf(message, "$%d more to go...", *targetValue);
+							sprintf(message, "あと $%d だ…", *targetValue);
 						break;
 					case P_CARGO:
-						sprintf(message, "Collect %d more...", *targetValue);
+						sprintf(message, "あと %dつ 回収しろ…", *targetValue);
 						if ((rand() % 2) == 0)
-							sprintf(message, "%d more to go...", *targetValue);
+							sprintf(message, "あと %dつ だ…", *targetValue);
 						break;
 					case P_ORE:
-						sprintf(message, "Collect %d more...", *targetValue);
+						sprintf(message, "あと %d個 獲得しろ…", *targetValue);
 						if ((rand() % 2) == 0)
-							sprintf(message, "%d more to go...", *targetValue);
+							sprintf(message, "あと %dつ だ…", *targetValue);
 						break;
 				}
 				break;
@@ -373,12 +373,12 @@ static void evaluateRequirement(int type, int id, int *completed, int *targetVal
 				switch(id)
 				{
 					case P_CARGO:
-						sprintf(message, "Cargo pod destroyed!");
+						sprintf(message, "貨物が破壊された!");
 						if (game.area == MISN_CERADSE) // Get lectured by Sid
-							setRadioMessage(FACE_SID, "Chris, we needed that pod!! I warned you that we couldn't afford to lose a single one!!", 1);
+							setRadioMessage(FACE_SID, "クリス、重要な貨物だぞ!! 1つも失ってはならないと言ったはずだ!!", 1);
 						break;
 					case P_ESCAPEPOD:
-						sprintf(message, "Escape Pod lost!");
+						sprintf(message, "脱出ポッドが失われた!");
 						if (game.area == MISN_ODEON) // Get lectured by Phoebe
 							setRadioMessage(FACE_PHOEBE, "No... Ursula...", 1);
 						break;
@@ -391,13 +391,13 @@ static void evaluateRequirement(int type, int id, int *completed, int *targetVal
 					switch (game.area)
 					{
 						case MISN_NEROD:
-							setRadioMessage(FACE_SID, "Dammit, Chris! We just lost her!", 1);
+							setRadioMessage(FACE_SID, "畜生、クリス! 彼女を失ってしまったぞ!", 1);
 							break;
 						case MISN_ALLEZ:
-							setRadioMessage(FACE_CREW, "Noooo!! Hull bre...", 1);
+							setRadioMessage(FACE_CREW, "うわああ!! 船体破…損……", 1);
 							break;
 						case MISN_URUSOR:
-							setRadioMessage(FACE_SID, "Chris, we've got to disable them, not destroy them!!", 1);
+							setRadioMessage(FACE_SID, "クリス、航行不能にするんだ、破壊してはならない!!", 1);
 							break;
 					}
 				}
@@ -406,13 +406,13 @@ static void evaluateRequirement(int type, int id, int *completed, int *targetVal
 				if ((*targetValue <= 10) || (*targetValue % 10 == 0))
 				{
 					if ((rand() % 2) == 0)
-						sprintf(message, "%d more to go...", *targetValue);
+						sprintf(message, "あと %d隻 だ…", *targetValue);
 					else
-						sprintf(message, "Destroy %d more...", *targetValue);
+						sprintf(message, "%d隻 破壊しろ…", *targetValue);
 				}
 				break;
 			case M_DISABLE_TARGET:
-				sprintf(message, "Disable %d more...", *targetValue);
+				sprintf(message, "あと %d隻 航行不能にしろ…", *targetValue);
 				break;
 		}
 
@@ -434,8 +434,8 @@ void updateMissionRequirements(int type, int id, int value)
 	// you will automatically fail the mission(!)
 	if ((type == M_DESTROY_TARGET_TYPE) && (id == CD_SID))
 	{
-		setInfoLine("Sid has been killed!!", FONT_RED);
-		setRadioMessage(FACE_CHRIS, "Sid... I... I'm sorry...", 1);
+		setInfoLine("シドは死んだ!!", FONT_RED);
+		setRadioMessage(FACE_CHRIS, "シド、す…すまん……", 1);
 		currentMission.completed1[0] = -2;
 	}
 
@@ -482,12 +482,12 @@ void updateMissionRequirements(int type, int id, int value)
 			{
 				if (game.slavesRescued >= 250)
 				{
-					setInfoLine("*** Slaves Rescued - Mission Completed ***", FONT_GREEN);
+					setInfoLine("*** 奴隷を救出 - 作戦完了 ***", FONT_GREEN);
 					systemPlanet[9].missionCompleted = 1;
 				}
 				else
 				{
-					sprintf(message, "Rescue %d more...", 250 - game.slavesRescued);
+					sprintf(message, "あと %d人 だ…", 250 - game.slavesRescued);
 					setInfoLine(message, FONT_CYAN);
 				}
 			}
@@ -575,17 +575,17 @@ bool allMissionsCompleted()
 			if (currentMission.remainingObjectives1 > 1)
 			{
 				if ((game.area != MISN_POSWIC) || (i != 1))
-					setInfoLine("*** Primary Objective Completed ***", FONT_GREEN);
+					setInfoLine("*** 主要な任務を完了 ***", FONT_GREEN);
 				else
-					setInfoLine(">>> Primary Objective Failed <<<", FONT_RED);
+					setInfoLine(">>> 主要な任務を失敗 <<<", FONT_RED);
 				currentMission.completed1[i] = OB_COMPLETED;
 			}
 			else
 			{
 				if (game.area != MISN_INTERCEPTION)
-					setInfoLine("*** All Primary Objectives Completed ***", FONT_GREEN);
+					setInfoLine("*** 主要な任務を完了 ***", FONT_GREEN);
 				else
-					setInfoLine("*** Interception Destroyed ***", FONT_GREEN);
+					setInfoLine("*** 迎撃機を撃破 ***", FONT_GREEN);
 				currentMission.completed1[i] = OB_COMPLETED;
 
 				// do some area specific things
@@ -610,12 +610,12 @@ bool allMissionsCompleted()
 		{
 			if (currentMission.remainingObjectives2 > 1)
 			{
-				setInfoLine("*** Secondary Objective Completed ***", FONT_GREEN);
+				setInfoLine("*** 補助的な任務を完了 ***", FONT_GREEN);
 				currentMission.completed2[i] = OB_COMPLETED;
 			}
 			else
 			{
-				setInfoLine("*** All Secondary Objectives Completed ***", FONT_GREEN);
+				setInfoLine("*** 全ての補助的任務を完了 ***", FONT_GREEN);
 				currentMission.completed2[i] = OB_COMPLETED;
 
 				// do some area specific things
@@ -630,13 +630,13 @@ bool allMissionsCompleted()
 
 		if (currentMission.completed1[i] == -2)
 		{
-			setInfoLine(">>> MISSION FAILED <<<", FONT_RED);
+			setInfoLine(">>> 作戦失敗 <<<", FONT_RED);
 			currentMission.completed1[i] = OB_FAILED;
 		}
 
 		if (currentMission.completed2[i] == -2)
 		{
-			setInfoLine(">>> Secondary Objective Failed <<<", FONT_RED);
+			setInfoLine(">>> 補助的な任務を失敗 <<<", FONT_RED);
 			currentMission.completed2[i] = OB_FAILED;
 		}
 	}
@@ -715,7 +715,7 @@ static void drawBriefScreen()
 
 	blevelRect(140, 70, 500, 20, 0x00, 0x77, 0x00);
 	blevelRect(140, 90, 500, 130, 0x00, 0x33, 0x00);
-	drawString("Primary Objectives", 150, 74, FONT_WHITE);
+	drawString("主要な任務", 150, 74, FONT_WHITE);
 
 	for (int i = 0 ; i < 3 ; i++)
 	{
@@ -729,7 +729,7 @@ static void drawBriefScreen()
 	{
 		blevelRect(140, 230, 500, 20, 0x00, 0x77, 0x77);
 		blevelRect(140, 250, 500, 130, 0x00, 0x33, 0x33);
-		drawString("Secondary Objectives", 150, 234, FONT_WHITE);
+		drawString("補助的な任務", 150, 234, FONT_WHITE);
 
 		for (int i = 0 ; i < 3 ; i++)
 		{
@@ -743,7 +743,7 @@ static void drawBriefScreen()
 
 	blevelRect(140, 390, 500, 20, 0x77, 0x77, 0x00);
 	blevelRect(140, 410, 500, 130, 0x33, 0x33, 0x00);
-	drawString("Additional Information", 150, 394, FONT_WHITE);
+	drawString("追加の情報", 150, 394, FONT_WHITE);
 }
 
 /*
@@ -765,7 +765,7 @@ void missionBriefScreen()
 		{
 			char temp[50];
 			if (game.area != MISN_MARS)
-				sprintf(temp, "TIME LIMIT: %d minutes", currentMission.timeLimit1[0]);
+				sprintf(temp, "制限時間: %d分", currentMission.timeLimit1[0]);
 			else
 				sprintf(temp, "SURVIVAL FOR %d minutes", currentMission.timeLimit1[0]);
 			drawString(temp, -1, 500, FONT_RED);
@@ -780,43 +780,43 @@ void missionBriefScreen()
 			case MISN_ELLESH:
 			case MISN_MARS:
 			case MISN_VENUS:
-				drawString("Phoebe Lexx will not be present", 160, 420, FONT_WHITE);
+				drawString("フェーベ・レックスは参加しない", 160, 420, FONT_WHITE);
 				if (game.hasWingMate2)
-					drawString("Ursula Lexx will not be present", 160, 450, FONT_WHITE);
+					drawString("ウーシュラ・レックスは参加しない", 160, 450, FONT_WHITE);
 				break;
 		}
 
 		if ((game.area == MISN_URUSOR) ||
 				(game.area == MISN_POSWIC) ||
 				(game.area == MISN_EARTH))
-			drawString("Sid Wilson will join you on this mission", 160, 480, FONT_WHITE);
+			drawString("シド・ウィルソンが作戦に参加する", 160, 480, FONT_WHITE);
 
 		updateScreen();
 	}
 
 	loadGameGraphics();
-	textSurface(4, "Shield", 25, 550, FONT_WHITE);
-	textSurface(5, "Plasma:", 250, 550, FONT_WHITE);
+	textSurface(4, "ｼｰﾙﾄﾞ", 25, 550, FONT_WHITE);
+	textSurface(5, "ﾌﾟﾗｽﾞﾏ:", 250, 550, FONT_WHITE);
 
 	if (player.weaponType[1] == W_CHARGER)
-		textSurface(6, "Charge", 385, 550, FONT_WHITE);
+		textSurface(6, "ﾁｬｰｼﾞ", 385, 550, FONT_WHITE);
 	else if (player.weaponType[1] == W_LASER)
-		textSurface(6, "Heat", 405, 550, FONT_WHITE);
+		textSurface(6, "ｵﾝﾄﾞ", 405, 550, FONT_WHITE);
 	else
-		textSurface(6, "Rockets:", 385, 550, FONT_WHITE);
+		textSurface(6, "ﾛｹｯﾄ:", 385, 550, FONT_WHITE);
 
 	textSurface(7, "Target", 550, 550, FONT_WHITE);
-	textSurface(8, "Cash: $", 25, 20, FONT_WHITE);
-	textSurface(9, "Objectives Remaining:", 550, 20, FONT_WHITE);
-	textSurface(10, "Time Remaining - ", 260, 20, FONT_WHITE);
-	textSurface(11, "Power", 25, 570, FONT_WHITE);
-	textSurface(12, "Output", 250, 570, FONT_WHITE);
-	textSurface(13, "Cooler", 485, 570, FONT_WHITE);
+	textSurface(8, "ｷｬｯｼｭ: $", 25, 20, FONT_WHITE);
+	textSurface(9, "ﾉｺﾘ ﾉ ｻｸｾﾝ:", 550, 20, FONT_WHITE);
+	textSurface(10, "ﾉｺﾘｼﾞｶﾝ - ", 260, 20, FONT_WHITE);
+	textSurface(11, "ｶﾘｮｸ", 25, 570, FONT_WHITE);
+	textSurface(12, "ﾊﾝｲ", 250, 570, FONT_WHITE);
+	textSurface(13, "ﾚﾝｼｬｿｸﾄﾞ", 485, 570, FONT_WHITE);
 	audio_playRandomTrack();
 
 	if (game.area != MISN_INTERCEPTION)
 	{
-		drawString("PRESS ENTER TO CONTINUE...", -1, 550, FONT_WHITE);
+		drawString("ENTERキーを押すと続ける…", -1, 550, FONT_WHITE);
 
 		updateScreen();
 
@@ -899,7 +899,7 @@ void missionFinishedScreen()
 		if (currentMission.remainingObjectives1 + currentMission.remainingObjectives2 == 0)
 		{
 			shield_bonus = player.shield * 10;
-			sprintf(temp, "Shield Bonus: $%.3d", shield_bonus);
+			sprintf(temp, "シールド ボーナス: $%.3d", shield_bonus);
 			drawString(temp, -1, 430, FONT_WHITE);
 			game.cash += shield_bonus;
 			game.cashEarned += shield_bonus;
@@ -907,7 +907,7 @@ void missionFinishedScreen()
 
 		game.timeTaken += engine.timeTaken;
 
-		snprintf(temp, sizeof temp, "Mission Time: %2ld:%02ld:%02ld",
+		snprintf(temp, sizeof temp, "作戦時間: %2ld:%02ld:%02ld",
 			engine.timeTaken / 3600, (engine.timeTaken / 60) % 60,
 			engine.timeTaken % 60);
 
@@ -961,20 +961,20 @@ void initMissions()
 
 
 	sprintf(missions[MISN_START].primaryObjective[0],
-		"Escape from WEAPCO Persuit");
+		"WEAPCOの追撃から逃れる");
 	missions[MISN_START].primaryType[0] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_START].completed1[0] = OB_INCOMPLETE;
 
 
 	sprintf(missions[MISN_HAIL].primaryObjective[0],
-		"Collect $500 to pay Mercenary for FIREFLY");
+		"ファイアフライの代金として$500獲得する");
 	missions[MISN_HAIL].primaryType[0] = M_COLLECT;
 	missions[MISN_HAIL].target1[0] = P_CASH;
 	missions[MISN_HAIL].targetValue1[0] = 500;
 	missions[MISN_HAIL].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_HAIL].primaryObjective[1],
-		"Destroy all remaining WEAPCO fighters");
+		"残りのWEAPCOの戦闘機を全て破壊する");
 	missions[MISN_HAIL].primaryType[1] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_HAIL].completed1[1] = OB_INCOMPLETE;
 
@@ -982,21 +982,21 @@ void initMissions()
 
 
 	sprintf(missions[MISN_CERADSE].primaryObjective[0],
-		"Collect 6 Cargo Pods");
+		"6つの貨物を回収する");
 	missions[MISN_CERADSE].primaryType[0] = M_COLLECT;
 	missions[MISN_CERADSE].target1[0] = P_CARGO;
 	missions[MISN_CERADSE].targetValue1[0] = 6;
 	missions[MISN_CERADSE].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_CERADSE].primaryObjective[1],
-		"Do not destroy *ANY* Cargo Pods");
+		"貨物は*1つも*破壊してはならない");
 	missions[MISN_CERADSE].primaryType[1] = M_PROTECT_PICKUP;
 	missions[MISN_CERADSE].target1[1] = P_CARGO;
 	missions[MISN_CERADSE].targetValue1[1] = 0;
 	missions[MISN_CERADSE].completed1[1] = OB_CONDITION;
 
 	sprintf(missions[MISN_CERADSE].secondaryObjective[0],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_CERADSE].secondaryType[0] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_CERADSE].completed2[0] = OB_INCOMPLETE;
 
@@ -1004,14 +1004,14 @@ void initMissions()
 
 
 	sprintf(missions[MISN_HINSTAG].primaryObjective[0],
-		"Destroy 5 WEAPCO Missile Boats");
+		"5隻のWEPCOのミサイル艇を破壊する");
 	missions[MISN_HINSTAG].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_HINSTAG].target1[0] = CD_MISSILEBOAT;
 	missions[MISN_HINSTAG].targetValue1[0] = 5;
 	missions[MISN_HINSTAG].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_HINSTAG].secondaryObjective[0],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_HINSTAG].secondaryType[0] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_HINSTAG].completed2[0] = OB_INCOMPLETE;
 
@@ -1019,14 +1019,14 @@ void initMissions()
 
 
 	sprintf(missions[MISN_JOLDAR].primaryObjective[0],
-		"Destroy 9 WEAPCO Miners");
+		"9隻の機雷敷設艦を破壊する");
 	missions[MISN_JOLDAR].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_JOLDAR].target1[0] = CD_MINER;
 	missions[MISN_JOLDAR].targetValue1[0] = 9;
 	missions[MISN_JOLDAR].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_JOLDAR].secondaryObjective[0],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_JOLDAR].secondaryType[0] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_JOLDAR].completed2[0] = OB_INCOMPLETE;
 
@@ -1034,7 +1034,7 @@ void initMissions()
 
 
 	sprintf(missions[MISN_MOEBO].primaryObjective[0],
-		"Destroy WEAPCO Frigate");
+		"WEAPCOのフリゲート艦を破壊する");
 	missions[MISN_MOEBO].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_MOEBO].target1[0] = CD_BOSS;
 	missions[MISN_MOEBO].targetValue1[0] = 1;
@@ -1045,21 +1045,21 @@ void initMissions()
 	missions[MISN_MOEBO].addAliens = SOMETIMES;
 
 
-	sprintf(missions[MISN_NEROD].primaryObjective[0], "Rescue Phoebe Lexx");
+	sprintf(missions[MISN_NEROD].primaryObjective[0], "フェーベ・レックスを救出する");
 	missions[MISN_NEROD].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_NEROD].target1[0] = CD_CARGOSHIP;
 	missions[MISN_NEROD].targetValue1[0] = 1;
 	missions[MISN_NEROD].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_NEROD].primaryObjective[1],
-		"Do not allow Phoebe to be killed");
+		"フェーベを死なせてはならない");
 	missions[MISN_NEROD].primaryType[1] = M_PROTECT_TARGET;
 	missions[MISN_NEROD].target1[1] = CD_PHOEBE;
 	missions[MISN_NEROD].targetValue1[1] = 0;
 	missions[MISN_NEROD].completed1[1] = OB_CONDITION;
 
 	sprintf(missions[MISN_NEROD].primaryObjective[2],
-		"Destroy all WEAPCO forces");
+		"WEPCOの軍団を撃破する");
 	missions[MISN_NEROD].primaryType[2] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_NEROD].target1[2] = CD_ANY;
 	missions[MISN_NEROD].targetValue1[2] = 35;
@@ -1069,21 +1069,21 @@ void initMissions()
 
 
 	sprintf(missions[MISN_ALLEZ].primaryObjective[0],
-		"Assist medical supply craft");
+		"医薬品の輸送艦を救助する");
 	missions[MISN_ALLEZ].primaryType[0] = M_ESCAPE_TARGET;
 	missions[MISN_ALLEZ].target1[0] = CD_GOODTRANSPORT;
 	missions[MISN_ALLEZ].targetValue1[0] = 0;
 	missions[MISN_ALLEZ].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_ALLEZ].primaryObjective[1],
-		"Do not allow supply craft to be destroyed");
+		"輸送艦を破壊してはならない");
 	missions[MISN_ALLEZ].primaryType[1] = M_PROTECT_TARGET;
 	missions[MISN_ALLEZ].target1[1] = CD_GOODTRANSPORT;
 	missions[MISN_ALLEZ].targetValue1[1] = 0;
 	missions[MISN_ALLEZ].completed1[1] = OB_CONDITION;
 	
 	sprintf(missions[MISN_ALLEZ].secondaryObjective[0],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_ALLEZ].secondaryType[0] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_ALLEZ].completed2[0] = OB_INCOMPLETE;
 
@@ -1091,19 +1091,19 @@ void initMissions()
 
 
 	sprintf(missions[MISN_URUSOR].primaryObjective[0],
-		"Disable five WEAPCO supply craft");
+		"WEAPCOの補給艦を航行不能にする");
 	missions[MISN_URUSOR].primaryType[0] = M_DISABLE_TARGET;
 	missions[MISN_URUSOR].target1[0] = CD_CARGOSHIP;
 	missions[MISN_URUSOR].targetValue1[0] = 5;
 	missions[MISN_URUSOR].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_URUSOR].primaryObjective[1],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_URUSOR].primaryType[1] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_URUSOR].completed1[1] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_URUSOR].primaryObjective[2],
-		"Protect supply craft AND Sid Wilson");
+		"補給艦とシド・ウィルソンを護衛する");
 	missions[MISN_URUSOR].primaryType[2] = M_PROTECT_TARGET;
 	missions[MISN_URUSOR].target1[2] = CD_CARGOSHIP;
 	missions[MISN_URUSOR].targetValue1[2] = 0;
@@ -1113,21 +1113,21 @@ void initMissions()
 
 
 	sprintf(missions[MISN_DORIM].primaryObjective[0],
-		"Locate doctor's escape pod");
+		"科学者の脱出ポッドを見つける");
 	missions[MISN_DORIM].primaryType[0] = M_COLLECT;
 	missions[MISN_DORIM].target1[0] = P_ESCAPEPOD;
 	missions[MISN_DORIM].targetValue1[0] = 1;
 	missions[MISN_DORIM].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_DORIM].primaryObjective[1],
-		"Do not destroy doctor's escape pod");
+		"脱出ポッドを破壊してはならない");
 	missions[MISN_DORIM].primaryType[1] = M_PROTECT_PICKUP;
 	missions[MISN_DORIM].target1[1] = P_ESCAPEPOD;
 	missions[MISN_DORIM].targetValue1[1] = 1; // DONE ON PURPOSE!! DO NOT CHANGE THIS!!!!
 	missions[MISN_DORIM].completed1[1] = OB_CONDITION;
 
 	sprintf(missions[MISN_DORIM].secondaryObjective[0],
-		"Collect 10 pieces of Ore");
+		"10個の鉱石を集める");
 	missions[MISN_DORIM].secondaryType[0] = M_COLLECT;
 	missions[MISN_DORIM].target2[0] = P_ORE;
 	missions[MISN_DORIM].targetValue2[0] = 10;
@@ -1140,19 +1140,19 @@ void initMissions()
 
 
 	sprintf(missions[MISN_ELAMALE].primaryObjective[0],
-		"Destroy WEAPCO ore mining craft");
+		"WEPCOの採掘船を破壊する");
 	missions[MISN_ELAMALE].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_ELAMALE].target1[0] = CD_BOSS;
 	missions[MISN_ELAMALE].targetValue1[0] = 1;
 	missions[MISN_ELAMALE].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_ELAMALE].secondaryObjective[0],
-		"Save present slaves");
+		"奴隷を救出する");
 	missions[MISN_ELAMALE].secondaryType[0] = M_PROTECT_PICKUP;
 	missions[MISN_ELAMALE].target2[0] = P_SLAVES;
 	missions[MISN_ELAMALE].completed2[0] = OB_CONDITION;
 
-	sprintf(missions[MISN_ELAMALE].primaryObjective[1], "Battle Kline");
+	sprintf(missions[MISN_ELAMALE].primaryObjective[1], "クラインと戦う");
 	missions[MISN_ELAMALE].primaryType[1] = M_ESCAPE_TARGET;
 	missions[MISN_ELAMALE].target1[1] = CD_KLINE;
 	missions[MISN_ELAMALE].targetValue1[1] = 1;
@@ -1181,7 +1181,7 @@ void initMissions()
 	missions[MISN_ODEON].completed1[2] = OB_CONDITION;
 
 	sprintf(missions[MISN_ODEON].secondaryObjective[0],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_ODEON].secondaryType[0] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_ODEON].completed2[0] = OB_INCOMPLETE;
 
@@ -1235,7 +1235,7 @@ void initMissions()
 	missions[MISN_ALMARTHA].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_ALMARTHA].primaryObjective[1],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_ALMARTHA].primaryType[1] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_ALMARTHA].completed1[1] = OB_INCOMPLETE;
 
@@ -1256,7 +1256,7 @@ void initMissions()
 	missions[MISN_POSWIC].completed1[1] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_POSWIC].primaryObjective[2],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_POSWIC].primaryType[2] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_POSWIC].completed1[2] = OB_INCOMPLETE;
 
@@ -1281,7 +1281,7 @@ void initMissions()
 	missions[MISN_PLUTO].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_PLUTO].primaryObjective[1],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_PLUTO].primaryType[1] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_PLUTO].completed1[1] = OB_INCOMPLETE;
 
@@ -1299,7 +1299,7 @@ void initMissions()
 	missions[MISN_NEPTUNE].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_NEPTUNE].primaryObjective[1],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_NEPTUNE].primaryType[1] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_NEPTUNE].completed1[1] = OB_INCOMPLETE;
 
@@ -1317,7 +1317,7 @@ void initMissions()
 	missions[MISN_URANUS].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_URANUS].primaryObjective[1],
-		"Destroy all remaining WEAPCO fighters");
+		"残存するWEPCOの戦闘機を全て破壊する");
 	missions[MISN_URANUS].primaryType[1] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_URANUS].completed1[1] = OB_INCOMPLETE;
 

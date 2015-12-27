@@ -1,9 +1,9 @@
-00 2579AD
-60 After decades of war the intergalatic weapons corportation, WEAPCO, 
-20 has defeated all opposition itself and now rules the known universe
-20 with an iron fist. Using a huge number of powerful AI driven craft
-20 the company was completely unstoppable.
-40 Under WEAPCO's rule, millions suffered and died.
-40 The people cried out for a saviour... for someone to come and
-20 light this dark hour...
-80 ... and someone did.
+00 西暦2579年
+60 数十年間続いた戦争の末、
+20 軍需企業WEAPCOは敵対する者を全て破壊し、全宇宙をその支配下に置いた。
+20 人工知能を搭載した無数の巨艦を操るこの企業を
+20 止められる者は誰もいなかった。
+40 WEAPCOの下で多くの者たちが苦しみ、死んでいった。
+40 人々は救いを求めた…
+20 この暗黒に光をもたらす者を…
+80 …そして今、その時が訪れようとしている

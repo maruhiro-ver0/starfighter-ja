@@ -1554,7 +1554,7 @@ void alien_destroy(object *alien, object *attacker)
 		if (game.area != MISN_NEROD)
 		{
 			if ((alien->classDef == CD_PHOEBE) || (alien->classDef == CD_URSULA))
-				setInfoLine(">> Ally has ejected! <<\n", FONT_RED);
+				setInfoLine(">> 仲間は離脱した! <<\n", FONT_RED);
 			else
 				setInfoLine(">> Friendly craft has been destroyed! <<\n", FONT_RED);
 		}
@@ -1647,7 +1647,7 @@ void alien_hurt(object *alien, object *attacker, int damage, bool ion)
 			{
 				alien->flags |= FL_LEAVESECTOR;
 				alien->flags &= ~FL_CIRCLES;
-				setRadioMessage(FACE_KLINE, "Seems I underestimated you, Bainfield. We'll meet again!", 1);
+				setRadioMessage(FACE_KLINE, "お前を見くびっていたようだ、バンフィールド。また会うことになるだろう!", 1);
 			}
 		}
 		else if (game.area == MISN_EARTH)

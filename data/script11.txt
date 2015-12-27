@@ -2,13 +2,13 @@
 FACE_PHOEBE
 -1
 0
-Ummm... something about this doesn't look right! They should be offering more resistance than this!
+何かがおかしい…! もっと護衛がいてもいいはず!
 
 -8
 FACE_PHOEBE
 -1
 0
-DAMMIT! It's a trap! Come on, Chris, we have to leave NOW!!
+クソッ! 罠よ! 戻って、クリス、その場を離れて!!
 
 -9
 -1
@@ -20,37 +20,37 @@ DAMMIT! It's a trap! Come on, Chris, we have to leave NOW!!
 FACE_SID
 -1
 0
-Chris, wh...
+クリス、どうした…
 
 -15
 FACE_KLINE
 -1
 0
-So finally I meet the man who has been causing us so much trouble!
+ついに最も厄介な男に会えた!
 
 -20
 FACE_CHRIS
 -1
 0
-I see you've jammed up my warp drive. Who are you?
+ワープドライブのときの混線で見かけたな。誰だ?
 
 -25
 FACE_KLINE
 -1
 0
-I am Kline Kethlan. And I am here to put to a stop to your worthless little crusade!
+私はクライン・ケスラン。そして、その小さなボロ船を止めに来た!
 
 -31
 FACE_CHRIS
 -1
 0
-Kline Kethlan, huh? You sure sound confident.
+クライン・ケスラン? フン、ずいぶんと自信があるようだな。
 
 -36
 FACE_KLINE
 -1
 0
-Nowhere to run, nowhere to hide, and no one to help you! This will certainly be interesting...
+逃げる場所もなく、隠れる場所もなく、そして助けもいない! どうするか楽しみだ…
 
 -42
 -1

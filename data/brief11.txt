@@ -1,9 +1,9 @@
-Phoebe Lexx
+フェーベ・レックス
 FACE_SID
-I've received word that the slaves we rescued have started a rebellion. Looks like the plan worked.
+我々が救出した奴隷たちが反乱を起こしたとの情報が入った。計画はうまく進んでいるようだ。
 FACE_PHOEBE
-WEAPCO has an automated mining ship in orbit around Elamale. How about we take it out and cause some confusion?
+WEPCOの無人採掘船がエラメールの軌道上にあるわ。これを破壊して撹乱するのはどう?
 FACE_CHRIS
-I like that idea!
+いいアイデアだ!
 FACE_SID
-It'll work, but be careful.
+それはうまく行くだろう。だが油断するな。

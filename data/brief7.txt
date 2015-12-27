@@ -1,9 +1,9 @@
-(unknown)
+(不明)
 FACE_PHOEBE
-Help! This is an SOS! Can anyone hear me?!
+助けて! SOS! 誰か聞こえてる?!
 FACE_CHRIS
-I'm hearing you loud and clear! What's up?
+よく聞こえるぞ! どうした?
 FACE_PHOEBE
-Oh, thank God! I was intercepted by a large WEAPCO force near Nerod! I'm in need of assistance!
+ああ、助かったわ! ネロド周辺でWEAPCOの大群に囲まれているの! 支援を!
 FACE_CHRIS
-I'm on my way!
+すぐ向かう!

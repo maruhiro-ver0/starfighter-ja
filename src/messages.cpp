@@ -19,42 +19,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "Starfighter.h"
 
 static const char *deathMessage[6] = {
-	"Oh my God... No!",
-	"NOOOOOOOOOOOOOOOOOOOOOOOOOOO!!!!",
-	"Please tell me that didn't just happen...",
-	"Chris, Answer Me!!",
-	"What the hell happened?!",
-	"Chriiiiiiiiiiiiiiiiiiiiiiiiiiis!!!!",
+	"ああ… 畜生!",
+	"ウワァァァァァァァァァァッッ!!!!",
+	"嘘だと言ってくれ…",
+	"クリス、応答せよ!!",
+	"何ということだ?!",
+	"クリスーーーーーーーーーーーーー!!!!",
 };
 
 static const char *killMessage[10] = {
-	"Chalk another one up for me!",
-	"That'll teach you!",
-	"One more for me!",
-	"Target destroyed!",
-	"You ain't so tough!",
-	"Kicked your ass!",
+	"1点追加!",
+	"思い知ったか!",
+	"さらに1機追加!",
+	"目標を破壊!",
+	"弱いな!",
+	"やったぞ!",
 
-	"That takes me up to %d",
+	"これで%d機目だ。",
 
-	"Hey %s, you asleep over there?!",
-	"I'm catching up with you, %s!",
+	"おい%s、寝ているのか?!",
+	"これで追いついたぞ、%s!",
 
-	"Number One, Baby!",
+	"まずは1機目!",
 };
 
 static const char *missFireMessage[5] = {
-	"I am NOT your enemy!",
-	"Hey! Watch it!",
-	"What are you doing?! Shoot THEM!",
-	"OW!!! I hope that was an accident!",
-	"Open your eyes!!",
+	"敵じゃないぞ!",
+	"おい、よく見ろ!",
+	"何している?! 奴らを撃て!",
+	"おっと!!! ミスだと願ってるよ!",
+	"目を開けろ!!",
 };
 
 static const char *playerHitMessage[3] = {
-	"Oops! Sorry!",
-	"Get out of the way!",
-	"Don't fly into my missiles!",
+	"おっと! すまない!",
+	"そこをどけ!",
+	"ミサイルの前を飛ぶな!",
 };
 
 void getKillMessage(object *ally)
@@ -66,7 +66,7 @@ void getKillMessage(object *ally)
 
 	if (ally == &aliens[ALIEN_PHOEBE])
 	{
-		strcpy(otherName, "Ursula");
+		strcpy(otherName, "ウーシュラ");
 		kills = game.wingMate1Kills;
 		difference = game.wingMate1Kills - game.wingMate2Kills;
 		if ((game.wingMate1Kills > game.wingMate2Kills) &&
@@ -76,7 +76,7 @@ void getKillMessage(object *ally)
 	}
 	else
 	{
-		strcpy(otherName, "Phoebe");
+		strcpy(otherName, "フェーベ");
 		kills = game.wingMate2Kills;
 		difference = game.wingMate2Kills - game.wingMate1Kills;
 		if ((game.wingMate2Kills > game.wingMate1Kills) &&
@@ -135,8 +135,8 @@ void getKillMessage(object *ally)
 const char *getKlineInsult()
 {
 	static const char *insult[] = {
-		"Pathetic.", "How very disappointing...", "Heroic. And stupid.", "Fool.",
-		"And now you're nothing but a DEAD hero."
+		"みじめだな。", "君には失望したよ…", "勇敢、そしておろかだ。", "ばかばかしい。",
+		"君はもはや過去の英雄にすぎない。"
 	};
 
 	if (game.area != MISN_VENUS)

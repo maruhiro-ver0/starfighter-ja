@@ -208,20 +208,20 @@ static void game_doCollectables()
 
 						game.cash += collectable->value;
 						game.cashEarned += collectable->value;
-						sprintf(temp, "Got $%d ", collectable->value);
+						sprintf(temp, "$%d 獲得", collectable->value);
 						break;
 
 					case P_ROCKET:
 						LIMIT_ADD(player.ammo[1], collectable->value, 0,
 							game.maxRocketAmmo);
 						if (player.ammo[1] == game.maxRocketAmmo)
-							sprintf(temp, "Rocket Ammo at Maximum");
+							sprintf(temp, "ロケット弾 最大");
 						else
 						{
 							if (collectable->value > 1)
-								sprintf(temp, "Got %d rockets", collectable->value);
+								sprintf(temp, "ロケット弾 %d 獲得", collectable->value);
 							else
-								sprintf(temp, "Got a rocket");
+								sprintf(temp, "ロケット弾 獲得");
 						}
 						game.rocketPickups += collectable->value;
 						break;
@@ -229,7 +229,7 @@ static void game_doCollectables()
 					case P_SHIELD:
 						LIMIT_ADD(player.shield, 10, 0, player.maxShield);
 						game.shieldPickups ++;
-						sprintf(temp, "Restored 10 shield points");
+						sprintf(temp, "シールド 10 回復");
 						break;
 
 					case P_PLASMA_RATE:
@@ -244,16 +244,16 @@ static void game_doCollectables()
 									0, game.maxPlasmaAmmo);
 
 							if (weapon[W_PLAYER_WEAPON].reload[0] <= rate2reload[game.maxPlasmaRate])
-								sprintf(temp, "Firing rate already at maximum");
+								sprintf(temp, "連射速度 最大");
 							else
 							{
 								weapon[W_PLAYER_WEAPON].reload[0] -= 2;
-								sprintf(temp, "Firing rate increased");
+								sprintf(temp, "連射速度 増加");
 							}
 						}
 						else
 						{
-							sprintf(temp, "Upgrade failed (no plasma ammo)");
+							sprintf(temp, "パワーアップ 失敗 (プラズマ火薬 なし)");
 						}
 						break;
 
@@ -269,16 +269,16 @@ static void game_doCollectables()
 									0, game.maxPlasmaAmmo);
 
 							if (weapon[W_PLAYER_WEAPON].ammo[0] >= game.maxPlasmaOutput)
-								sprintf(temp, "Plasma output already at maximum");
+								sprintf(temp, "出力範囲 最大");
 							else
 							{
 								weapon[W_PLAYER_WEAPON].ammo[0]++;
-								sprintf(temp, "Plasma output increased");
+								sprintf(temp, "出力範囲 増加");
 							}
 						}
 						else
 						{
-							sprintf(temp, "Upgrade failed (no plasma ammo)");
+							sprintf(temp, "パワーアップ 失敗 (プラズマ火薬 なし)");
 						}
 						break;
 
@@ -294,15 +294,15 @@ static void game_doCollectables()
 									0, game.maxPlasmaAmmo);
 
 							if (weapon[W_PLAYER_WEAPON].damage >= game.maxPlasmaDamage)
-								sprintf(temp, "Plasma damage already at maximum");
+								sprintf(temp, "火力 最大");
 							else {
 								weapon[W_PLAYER_WEAPON].damage++;
-								sprintf(temp, "Plasma damage increased");
+								sprintf(temp, "火力 増加");
 							}
 						}
 						else
 						{
-							sprintf(temp, "Upgrade failed (no plasma ammo)");
+							sprintf(temp, "パワーアップ 失敗 (プラズマ火薬 なし)");
 						}
 						break;
 
@@ -322,51 +322,51 @@ static void game_doCollectables()
 							weapon[W_PLAYER_WEAPON].reload[0] = rate2reload[5];
 							weapon[W_PLAYER_WEAPON].flags |= WF_SPREAD;
 
-							sprintf(temp, "Picked up a Super Charge!!");
+							sprintf(temp, "スーパーチャージ 獲得!!");
 						}
 						else
 						{
-							sprintf(temp, "Damn! Upgrade failed (no plasma ammo)");
+							sprintf(temp, "畜生! パワーアップ 失敗 (プラズマ火薬 なし)");
 						}
 						break;
 
 					case P_PLASMA_AMMO:
 						if (player.ammo[0] >= game.maxPlasmaAmmo)
-							sprintf(temp, "Plasma cells already at Maximum");
+							sprintf(temp, "プラズマセル 最大");
 						else
 						{
 							LIMIT_ADD(player.ammo[0], collectable->value,
 								0, game.maxPlasmaAmmo);
 							if (collectable->value > 1)
 							{
-								sprintf(temp, "Got %d plasma cells", collectable->value);
+								sprintf(temp, "プラズマセル %d 獲得", collectable->value);
 							}
 							else
 							{
-								sprintf(temp, "Got a plasma cell");
+								sprintf(temp, "プラズマセル 獲得");
 								if ((rand() % 25) == 0)
-									sprintf(temp, "Got one whole plasma cell (wahoo!)");
+									sprintf(temp, "完全プラズマセル 獲得 (やったぜ!)");
 							}
 						}
 						game.cellPickups += collectable->value;
 						break;
 
 					case P_CARGO:
-						strcpy(temp, "Picked up some Cargo");
+						strcpy(temp, "貨物を回収");
 						game.cargoPickups++;
 						break;
 
 					case P_SLAVES:
-						sprintf(temp, "Rescued %d slaves", collectable->value);
+						sprintf(temp, "%d人の奴隷を救出", collectable->value);
 						game.slavesRescued += collectable->value;
 						break;
 
 					case P_ESCAPEPOD:
-						sprintf(temp, "Picked up an Escape Pod");
+						sprintf(temp, "脱出ポッドを発見");
 						break;
 
 					case P_ORE:
-						sprintf(temp, "Picked up some Ore");
+						sprintf(temp, "鉱石を獲得");
 						break;
 				}
 
@@ -610,7 +610,7 @@ static void game_doBullets()
 					{
 						if ((player.shield > engine.lowShield) &&
 								(player.shield - bullet->damage <= engine.lowShield))
-							setInfoLine("!!! WARNING: SHIELD LOW !!!", FONT_RED);
+							setInfoLine("!!! 警告: シールド低下 !!!", FONT_RED);
 
 						player.shield -= bullet->damage;
 						LIMIT(player.shield, 0, player.maxShield);
@@ -1132,7 +1132,7 @@ static void game_doPlayer()
 						if (player.ammo[1] >= 100)
 						{
 							player.ammo[1] = 200;
-							setInfoLine("Laser Overheat!!", FONT_WHITE);
+							setInfoLine("レーザー オーバーヒート!!", FONT_WHITE);
 						}
 					}
 				}

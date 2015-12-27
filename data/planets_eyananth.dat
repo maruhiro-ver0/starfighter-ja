@@ -1,17 +1,17 @@
 15
-Nerod
+ネロド
 31
 30
-Allez
+アレズ
 32
 30
-Urusor
+ウルソル
 33
 20
-Dorim
+ドリム
 31
 40
-Elamale
+エラメール
 34
 -1
 NONE
@@ -32,28 +32,28 @@ NONE
 7
 1
 FACE_PHOEBE
-??????????? (Nerod)
+??????????? (ネロド)
 SOS
 8
 2
 FACE_SID
-Sid Wilson (Allez)
-Assist medical supply craft
+シド・ウィルソン (アレズ)
+医薬品の輸送船の救助
 9
 0
 FACE_SID
-Sid Wilson (Urusor)
-Capture five WEAPCO supply craft
+シド・ウィルソン (ウルソル)
+5隻のWEAPCO補給艦を拿捕
 10
 1
 FACE_SID
-Sid Wilson (Dorim)
-Find WEAPCO scientist
+シド・ウィルソン (ドリム)
+WEAPCOの科学者の捜索
 11
 0
 FACE_SID
-Sid Wilson (Elamale)
-Destroy WEAPCO Ore Mining craft
+シド・ウィルソン (エラメール)
+WEAPCOの採掘船の破壊
 -1
 -1
 NONE
@@ -77,5 +77,5 @@ NONE
 6
 0
 FACE_SID
-Sid Wilson (none)
-Intercept slave transports
+シド・ウィルソン (なし)
+奴隷輸送の阻止

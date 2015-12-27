@@ -419,7 +419,7 @@ enum {
 	DIFFICULTY_MAX
 };
 
-const char * const systemNames[] = {"Spirit", "Eyananth", "Mordor", "Sol"};
+const char * const systemNames[] = {"スピリット", "エヤナンス", "モルドール", "太陽"};
 
 const char * const systemBackground[] = {
 	"gfx/spirit.jpg", "gfx/eyananth.jpg", "gfx/mordor.jpg", "gfx/sol.jpg"

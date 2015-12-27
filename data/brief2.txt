@@ -1,10 +1,10 @@
-Sid Wilson
+シド・ウィルソン
 FACE_CHRIS
-Hey, Sid, what's up?
+よお、シド。どうかしたか?
 FACE_SID
-Chris, I've intercepted a communication from WEAPCO. Seems they're transporting some medical supplies around Ceradse. We need to get hold of those pods to save some lives!
+クリス、輸送艦がWEPCOに襲われた。どうやらセラドセに医療品を運んでいたようだ。多くの命を救うために積荷を取り戻さなければ!
 FACE_CHRIS
-How many do we need?
+いくつあるんだ?
 FACE_SID
-All six, Chris! If you lose even a single one, thousands of people could perish in Spirit within the next few months.
+全部で6つだ! もし1つでも失えば、数ヶ月の内にこのスピリット系の人々が何千人も死んでしまうだろう。
 

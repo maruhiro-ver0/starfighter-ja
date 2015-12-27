@@ -2,6 +2,6 @@
 FACE_PHOEBE
 -1
 0
-Hey, over here! Destroy this tug so I can break free!
+こっちよ! このワイヤーを切れば動けるようになるわ!
 
 0

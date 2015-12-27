@@ -301,7 +301,7 @@ void doCutscene(int scene)
 		if ((showMessage) && (messageBox != NULL))
 			blit(messageBox, (screen->w - messageBox->w) / 2, screen->h - 100);
 
-		drawString("Press [Escape] to skip", -1, 580, FONT_WHITE);
+		drawString("何かキーを押すとスキップする", -1, 580, FONT_WHITE);
 
 		delayFrame();
 

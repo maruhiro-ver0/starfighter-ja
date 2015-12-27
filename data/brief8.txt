@@ -1,5 +1,5 @@
-Sid Wilson
+シド・ウィルソン
 FACE_SID
-I've just received another SOS. This one is coming from a supply craft carrying essential medical supplies.
+今、別のSOSを受信した。重要な医薬品を運ぶ輸送艦からだ。
 FACE_CHRIS
-Alright, Tell 'em I'm on my way.
+わかった。すぐ向かうと伝えてくれ。

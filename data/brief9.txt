@@ -1,9 +1,9 @@
-Sid Wilson
+シド・ウィルソン
 FACE_SID
-I need some resources before we leave, it'll make life a lot easier in Mordor. Problem is that WEAPCO hoards these parts.
+この星系を離れる前にいくらか資源を確保する必要がある。それがあればモルドール系での活動がより簡単になるだろう。問題は、このあたりではWEAPCOしか持ってないことだ。
 FACE_CHRIS
-Where can we get them, then?
+それでどこへ行けば手に入るんだ?
 FACE_SID
-There's a big shipment of them nearby. I can disable the supply craft carrying them; I just need you to give me some cover while I do it.
+近くにその大型補給艦がいる。私が航行不能にする。君にはその間の援護をたのむ。
 FACE_CHRIS
-You got it!
+分かった!

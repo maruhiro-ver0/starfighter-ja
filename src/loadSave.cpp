@@ -47,7 +47,7 @@ int initSaveSlots()
 		fp = fopen(fileName, "rb");
 		if (fp == NULL)
 		{
-			sprintf(saveSlot[i], (i == 0 ? "AUTOSAVE (Empty)" : "Empty"));
+			sprintf(saveSlot[i], (i == 0 ? "オートセーブ (空)" : "空"));
 			if (engine.gameSection == SECTION_TITLE)
 				textSurface(TS_SAVESLOT_0 + i, saveSlot[i], -1, imagePos,
 					FONT_WHITE);
@@ -56,17 +56,17 @@ int initSaveSlots()
 		{
 			if (i == 0)
 			{
-				sprintf(saveSlot[i], "AUTOSAVE");
+				sprintf(saveSlot[i], "オートセーブ");
 			}
 			else
 			{
 				if (fread(&tempGame, sizeof(Game), 1, fp) != 1)
 				{
-					sprintf(saveSlot[i], "Corrupt Game Data");
+					sprintf(saveSlot[i], "壊れたゲームデータ");
 				}
 				else
 				{
-					sprintf(saveSlot[i], "%s, %s", systemNames[tempGame.system],
+					sprintf(saveSlot[i], "%s系 %s", systemNames[tempGame.system],
 						tempGame.stationedName);
 				}
 			}
@@ -182,7 +182,7 @@ void createSavesSurface(SDL_Surface *savesSurface, signed char clickedSlot)
 		y += 30;
 	}
 
-	drawString("*** HELP ***", 120, 170, FONT_WHITE, savesSurface);
+	drawString("*** ヘルプ ***", 120, 170, FONT_WHITE, savesSurface);
 
 	switch (clickedSlot)
 	{
@@ -194,25 +194,25 @@ void createSavesSurface(SDL_Surface *savesSurface, signed char clickedSlot)
 			blevelRect(savesSurface, 5, 265, 100, 25, 0x00, 0x99, 0x00);
 			blevelRect(savesSurface, 125, 265, 100, 25, 0x99, 0x99, 0x00);
 			blevelRect(savesSurface, 243, 265, 100, 25, 0x99, 0x00, 0x00);
-			drawString("SAVE", 40, 270, FONT_WHITE, savesSurface);
-			drawString("CANCEL", 150, 270, FONT_WHITE, savesSurface);
-			drawString("DELETE", 270, 270, FONT_WHITE, savesSurface);
+			drawString("保存", 40, 270, FONT_WHITE, savesSurface);
+			drawString("取り消し", 150, 270, FONT_WHITE, savesSurface);
+			drawString("削除", 270, 270, FONT_WHITE, savesSurface);
 
-			drawString("SAVE will save the game", 17, 200, FONT_WHITE, savesSurface);
-			drawString("CANCEL will unselect that slot", 17, 220, FONT_WHITE,
+			drawString("[保存] ゲームの状態を保存する", 17, 200, FONT_WHITE, savesSurface);
+			drawString("[取り消し] スロットの選択を解除する", 17, 220, FONT_WHITE,
 				savesSurface);
-			drawString("DELETE will remove the save", 17, 240, FONT_WHITE,
+			drawString("[削除] 保存した状態を削除する", 17, 240, FONT_WHITE,
 				savesSurface);
 			break;
 		case -1:
-			drawString("First click a Save game slot to use", 17, 200,
+			drawString("スロットを選択してください", 17, 200,
 				FONT_WHITE, savesSurface);
 			break;
 		case -10:
-			drawString("Game Saved", 130, 200, FONT_WHITE, savesSurface);
+			drawString("保存した", 130, 200, FONT_WHITE, savesSurface);
 			break;
 		case -11:
-			drawString("Save Deleted", 130, 200, FONT_WHITE, savesSurface);
+			drawString("削除した", 130, 200, FONT_WHITE, savesSurface);
 			break;
 	}
 

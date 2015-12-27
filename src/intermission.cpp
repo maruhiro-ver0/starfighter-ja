@@ -40,7 +40,7 @@ static void intermission_setStatusLines()
 {
 	char string[50];
 
-	sprintf(string, "System : %s", systemNames[game.system]);
+	sprintf(string, "星系 : %s系", systemNames[game.system]);
 
 	textSurface(0, string, 0, 0, FONT_WHITE);
 
@@ -67,69 +67,69 @@ static void intermission_setStatusLines()
 	for (int i = 0 ; i < 30 ; i++)
 		textSurface(i, "", 0, 0, FONT_WHITE);
 
-	sprintf(string, "Missions Completed : %d/%d", completed, total);
+	sprintf(string, "完了した作戦 : %d/%d", completed, total);
 	textSurface(1, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Shots Fired : %d", game.shots);
+	sprintf(string, "撃った弾の数 : %d", game.shots);
 	textSurface(2, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Hits Scored : %d", game.hits);
+	sprintf(string, "命中した弾の数 : %d", game.hits);
 	textSurface(3, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Accuracy : %d%%", game.accuracy);
+	sprintf(string, "命中率 : %d%%", game.accuracy);
 	textSurface(4, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Enemies Killed by Others : %d", game.totalOtherKills);
+	sprintf(string, "プレイヤー以外に撃墜された敵の数 : %d", game.totalOtherKills);
 	textSurface(5, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Total Cash Earned : %d", game.cashEarned);
+	sprintf(string, "稼いだ送金額 : %d", game.cashEarned);
 	textSurface(6, string, 0, 0, FONT_WHITE);
 
-	textSurface(7, "*** Chris ***", 0, 0, FONT_WHITE);
+	textSurface(7, "*** クリス ***", 0, 0, FONT_WHITE);
 
-	sprintf(string, "Enemies Killed : %d", game.totalKills);
+	sprintf(string, "撃墜数 : %d", game.totalKills);
 	textSurface(8, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Shield Restores Picked Up : %d", game.shieldPickups);
+	sprintf(string, "獲得したシールド回復の数 : %d", game.shieldPickups);
 	textSurface(9, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Plasma Cells Picked Up : %d", game.cellPickups);
+	sprintf(string, "獲得したプラズマセルの数 : %d", game.cellPickups);
 	textSurface(10, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Rockets Picked Up : %d", game.rocketPickups);
+	sprintf(string, "獲得したロケット弾の数 : %d", game.rocketPickups);
 	textSurface(11, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Powerups Picked Up : %d", game.rocketPickups);
+	sprintf(string, "獲得したパワーアップの数 : %d", game.rocketPickups);
 	textSurface(12, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Mines Destroyed : %d", game.minesKilled);
+	sprintf(string, "破壊した機雷の数 : %d", game.minesKilled);
 	textSurface(13, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Slaves Rescued : %d", game.slavesRescued);
+	sprintf(string, "救出した奴隷の人数 : %d", game.slavesRescued);
 	textSurface(14, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "Cargo Picked Up : %d", game.cargoPickups);
+	sprintf(string, "回収した貨物の数 : %d", game.cargoPickups);
 	textSurface(15, string, 0, 0, FONT_WHITE);
 
 	if (game.hasWingMate1)
 	{
-		textSurface(16, "*** Phoebe ***", 0, 0, FONT_WHITE);
+		textSurface(16, "*** フェーベ ***", 0, 0, FONT_WHITE);
 
-		sprintf(string, "Enemies Killed : %d", game.wingMate1Kills);
+		sprintf(string, "撃墜数 : %d", game.wingMate1Kills);
 		textSurface(17, string, 0, 0, FONT_WHITE);
 
-		sprintf(string, "Ejections : %d", game.wingMate1Ejects);
+		sprintf(string, "脱出した回数 : %d", game.wingMate1Ejects);
 		textSurface(18, string, 0, 0, FONT_WHITE);
 	}
 
 	if (game.hasWingMate2)
 	{
-		textSurface(19, "*** Ursula ***", 0, 0, FONT_WHITE);
+		textSurface(19, "*** ウーシュラ ***", 0, 0, FONT_WHITE);
 
-		sprintf(string, "Enemies Killed : %d", game.wingMate2Kills);
+		sprintf(string, "撃墜数 : %d", game.wingMate2Kills);
 		textSurface(20, string, 0, 0, FONT_WHITE);
 
-		sprintf(string, "Ejections : %d", game.wingMate2Ejects);
+		sprintf(string, "脱出した回数 : %d", game.wingMate2Ejects);
 		textSurface(21, string, 0, 0, FONT_WHITE);
 	}
 
@@ -141,10 +141,10 @@ static void intermission_setStatusLines()
 
 	int timeTaken = game.timeTaken;
 
-	snprintf(string, sizeof string, "Total Time : %2d:%02d:%02d", timeTaken / 3600, (timeTaken / 60) % 60, timeTaken % 60);
+	snprintf(string, sizeof string, "総時間 : %2d:%02d:%02d", timeTaken / 3600, (timeTaken / 60) % 60, timeTaken % 60);
 
 	textSurface(26, string, -1, 0, FONT_WHITE);
-	textSurface(27, "Current Status", -1, 0, FONT_WHITE);
+	textSurface(27, "現在の状態", -1, 0, FONT_WHITE);
 
 	textShape[0].y = 400;
 	textShape[0].x = 150;
@@ -354,8 +354,8 @@ static void intermission_updateCommsSurface(SDL_Surface *comms)
 
 	blevelRect(comms, 0, 10, comms->w - 1, 55, 0x00, 0x22, 0x00);
 	blit(shape[FACE_CHRIS], 20, 15, comms);
-	drawString("Chris Bainfield", 80, 15, FONT_WHITE, comms);
-	sprintf(string, "Current Location: %s", systemPlanet[game.stationedPlanet].name);
+	drawString("クリス・バンフィールド", 80, 15, FONT_WHITE, comms);
+	sprintf(string, "現在位置: %s", systemPlanet[game.stationedPlanet].name);
 	drawString(string, 80, 35, FONT_WHITE, comms);
 }
 
@@ -365,7 +365,7 @@ static void intermission_createCommsSurface(SDL_Surface *comms)
 
 	blevelRect(comms, 0, 0, comms->w - 1, comms->h - 1, 0x00, 0x00, 0x25);
 
-	drawString("+++ RECEIVED MESSAGES +++", 115, 80, FONT_GREEN, comms);
+	drawString("+++ 受信したメッセージ +++", 115, 80, FONT_GREEN, comms);
 
 	int yOffset;
 
@@ -418,7 +418,7 @@ static void intermission_createMissionDetailSurface(SDL_Surface *comms, int miss
 		printf("Warning: Failed to retrieve name from \"%s\"\n", string);
 		strcpy(name, "Error");
 	}
-	sprintf(string, "+++ Communication with %s +++", name);
+	sprintf(string, "+++ %sとの交信 +++", name);
 	drawString(string, -1, 20, FONT_GREEN, comms);
 
 	while (fscanf(fp, "%[^\n]%*c", string) == 1)
@@ -478,7 +478,7 @@ static void intermission_createOptions(SDL_Surface *optionsSurface)
 
 	blevelRect(optionsSurface, 0, 0, optionsSurface->w - 2, optionsSurface->h - 2, 0x00, 0x00, 0x44);
 
-	drawString("++ OPTIONS ++", 105, 8, FONT_WHITE, optionsSurface);
+	drawString("++ オプション ++", 105, 8, FONT_WHITE, optionsSurface);
 
 	blevelRect(optionsSurface, 190, 45, 50, 22, 0x00, 0x00, 0x00);
 	blevelRect(optionsSurface, 250, 45, 50, 22, 0x00, 0x00, 0x00);
@@ -489,7 +489,7 @@ static void intermission_createOptions(SDL_Surface *optionsSurface)
 		blevelRect(optionsSurface, 250, 45, 50, 22, 0xff, 0x00, 0x00);
 	drawString("ON", 207, 50, FONT_WHITE, optionsSurface);
 	drawString("OFF", 263, 50, FONT_WHITE, optionsSurface);
-	drawString("SOUND", 30, 50, FONT_WHITE, optionsSurface);
+	drawString("効果音", 30, 50, FONT_WHITE, optionsSurface);
 
 	blevelRect(optionsSurface, 190, 95, 50, 22, 0x00, 0x00, 0x00);
 	blevelRect(optionsSurface, 250, 95, 50, 22, 0x00, 0x00, 0x00);
@@ -500,7 +500,7 @@ static void intermission_createOptions(SDL_Surface *optionsSurface)
 		blevelRect(optionsSurface, 250, 95, 50, 22, 0xff, 0x00, 0x00);
 	drawString("ON", 207, 100, FONT_WHITE, optionsSurface);
 	drawString("OFF", 263, 100, FONT_WHITE, optionsSurface);
-	drawString("MUSIC", 30, 100, FONT_WHITE, optionsSurface);
+	drawString("音楽", 30, 100, FONT_WHITE, optionsSurface);
 
  	blevelRect(optionsSurface, 190, 145, 50, 22, 0x00, 0x00, 0x00);
 	blevelRect(optionsSurface, 250, 145, 50, 22, 0x00, 0x00, 0x00);
@@ -511,7 +511,7 @@ static void intermission_createOptions(SDL_Surface *optionsSurface)
 		blevelRect(optionsSurface, 250, 145, 50, 22, 0xff, 0x00, 0x00);
 	drawString("ON", 207, 150, FONT_WHITE, optionsSurface);
 	drawString("OFF", 263, 150, FONT_WHITE, optionsSurface);
-	drawString("FULLSCREEN", 30, 150, FONT_WHITE, optionsSurface);
+	drawString("フルスクリーン", 30, 150, FONT_WHITE, optionsSurface);
 }
 
 static void intermission_doOptions(SDL_Surface *optionsSurface)
@@ -672,30 +672,30 @@ int intermission()
 
 	textObject iconInfo[12];
 
-	iconInfo[0].image = textSurface("Start Next Mission", FONT_WHITE);
-	iconInfo[1].image = textSurface("View System Map", FONT_WHITE);
-	iconInfo[2].image = textSurface("Current Status", FONT_WHITE);
-	iconInfo[3].image = textSurface("Save Game", FONT_WHITE);
-	iconInfo[4].image = textSurface("Upgrade FIREFLY", FONT_WHITE);
-	iconInfo[5].image = textSurface("Comms", FONT_WHITE);
-	iconInfo[6].image = textSurface("Options", FONT_WHITE);
-	iconInfo[7].image = textSurface("Exit to Title Screen", FONT_WHITE);
+	iconInfo[0].image = textSurface("次の作戦を開始", FONT_WHITE);
+	iconInfo[1].image = textSurface("星系マップ", FONT_WHITE);
+	iconInfo[2].image = textSurface("統計", FONT_WHITE);
+	iconInfo[3].image = textSurface("ゲームを保存", FONT_WHITE);
+	iconInfo[4].image = textSurface("ファイアフライを強化", FONT_WHITE);
+	iconInfo[5].image = textSurface("通信", FONT_WHITE);
+	iconInfo[6].image = textSurface("オプション", FONT_WHITE);
+	iconInfo[7].image = textSurface("タイトルに戻る", FONT_WHITE);
 
-	sprintf(string, "System : %s", systemNames[game.system]);
+	sprintf(string, "%s系", systemNames[game.system]);
 	iconInfo[8].image = textSurface(string, FONT_WHITE);
 
-	sprintf(string, "Stationed At: %s", systemPlanet[game.stationedPlanet].name);
+	sprintf(string, "現在位置: %s ステーション", systemPlanet[game.stationedPlanet].name);
 	iconInfo[9].image = textSurface(string, FONT_WHITE);
 
 	if (game.destinationPlanet > -1)
-		sprintf(string, "Destination: %s", systemPlanet[game.destinationPlanet].name);
+		sprintf(string, "目的地: %s", systemPlanet[game.destinationPlanet].name);
 	else
-		strcpy(string, "Destination: None");
+		strcpy(string, "目的地: なし");
 	iconInfo[10].image = textSurface(string, FONT_WHITE);
 	for (int i = 0 ; i < 9 ; i++)
 		iconInfo[i].x = (800 - iconInfo[i].image->w) / 2;
 
-	iconInfo[11].image = textSurface("Go to Destination Planet", FONT_WHITE);
+	iconInfo[11].image = textSurface("目的の惑星へ向かう", FONT_WHITE);
 
 	bool redrawBackGround = true;
 
@@ -810,14 +810,14 @@ int intermission()
 				{
 					if (game.system == 0)
 					{
-						sprintf(string, "Stationed At: %s", systemPlanet[game.stationedPlanet].name);
+						sprintf(string, "現在位置: %sステーション", systemPlanet[game.stationedPlanet].name);
 						SDL_FreeSurface(iconInfo[9].image);
 						iconInfo[9].image = textSurface(string, FONT_WHITE);
 						intermission_updateCommsSurface(commsSurface);
 					}
 					else
 					{
-						sprintf(string, "Destination: %s", systemPlanet[game.destinationPlanet].name);
+						sprintf(string, "目的地: %s", systemPlanet[game.destinationPlanet].name);
 						SDL_FreeSurface(iconInfo[10].image);
 						iconInfo[10].image = textSurface(string, FONT_WHITE);
 					}

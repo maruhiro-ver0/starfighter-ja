@@ -2,55 +2,55 @@
 FACE_CREW
 -1
 0
-Thank God! Please, help us! If they destroy this ship...
+神に感謝だ! たのむ、助けてくれ! もしこの船が破壊されたら…
 
 6
 FACE_CHRIS
 -1
 0
-How long do you need?
+どのくらい掛かりそうだ?
 
 10
 FACE_CREW
 -1
 0
-Just a few minutes!
+数分だ!
 
 60
 FACE_CREW
 19
 -16
-Alright! We've got the weapons working again! Now to look at the engines...
+よし! 武器は使えるようになった! 後はエンジンだ…
 
 80
 FACE_CREW
 19
 16
-DAMN! The guns are offline again! What you guys doing back there?!
+クソッ! また武器がダメになった! どうすりゃいいんだ?!
 
 100
 FACE_CREW
 19
 2048
-Chris, HELP!! We've lost all system power! We're a sitting duck out here!
+クリス、助けてくれ!! 全システムがダウンだ! 全員デッキで動けなくなっている!
 
 120
 FACE_CREW
 -1
 0
-Just a little longer...
+もう少しだ…
 
 140
 FACE_CREW
 19
 -2048
-Okay! We've fixed that one. We think we've found the problem with the engines too...
+OK! 回復した。後はエンジンの問題が分かれば…
 
 177
 FACE_CREW
 -1
 0
-Engines fixed! Let's move!
+エンジンの修理完了! 発進!
 
 180
 -1

@@ -2,25 +2,25 @@
 FACE_SID
 -1
 0
-You should try and destroy some of the frigate's weaponary, it'll help!
+まずフリゲートの武装を破壊しろ。それが助けになる!
 
 120
 FACE_SID
 -1
 0
-Chris, get a move on! The frigate is almost in range!
+クリス、急げ! フリゲートはもうすぐ射程内だ!
 
 150
 FACE_SID
 -1
 0
-The frigate is charging its cannon!
+フリゲートはカノン砲を装填している!
 
 170
 FACE_SID
 -1
 0
-Chris, HURRY!!!
+クリス、早くしろ!!!
 
 180
 -1
@@ -32,6 +32,6 @@ Chris, HURRY!!!
 FACE_SID
 -1
 0
-oh my god...
+何ということだ…
 
 0

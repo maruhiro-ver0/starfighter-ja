@@ -65,18 +65,18 @@ static signed char showLoadMenu()
 
 static void createDifficultyMenu()
 {
-	textSurface(TS_START_GAME, "START GAME", -1, 350, FONT_WHITE);
+	textSurface(TS_START_GAME, "始める", -1, 350, FONT_WHITE);
 
 	if (game.difficulty == DIFFICULTY_EASY)
-		textSurface(TS_DIFFICULTY, "DIFFICULTY - EASY", -1, 370, FONT_WHITE);
+		textSurface(TS_DIFFICULTY, "難易度 - 簡単", -1, 370, FONT_WHITE);
 	else if (game.difficulty == DIFFICULTY_HARD)
-		textSurface(TS_DIFFICULTY, "DIFFICULTY - HARD", -1, 370, FONT_WHITE);
+		textSurface(TS_DIFFICULTY, "難易度 - 難しい", -1, 370, FONT_WHITE);
 	else if (game.difficulty == DIFFICULTY_NIGHTMARE)
-		textSurface(TS_DIFFICULTY, "DIFFICULTY - NIGHTMARE!", -1, 370, FONT_WHITE);
+		textSurface(TS_DIFFICULTY, "難易度 - 悪夢!", -1, 370, FONT_WHITE);
 	else if (game.difficulty == DIFFICULTY_ORIGINAL)
-		textSurface(TS_DIFFICULTY, "DIFFICULTY - ORIGINAL", -1, 370, FONT_WHITE);
+		textSurface(TS_DIFFICULTY, "難易度 - オリジナル", -1, 370, FONT_WHITE);
 	else
-		textSurface(TS_DIFFICULTY, "DIFFICULTY - NORMAL", -1, 370, FONT_WHITE);
+		textSurface(TS_DIFFICULTY, "難易度 - 普通", -1, 370, FONT_WHITE);
 }
 
 static signed char showDifficultyMenu()
@@ -93,24 +93,24 @@ static signed char showDifficultyMenu()
 static void createOptionsMenu()
 {
 	if (engine.useSound)
-		textSurface(TS_SOUND, "SOUND - ON", -1, 350, FONT_WHITE);
+		textSurface(TS_SOUND, "効果音 - ON", -1, 350, FONT_WHITE);
 	else
-		textSurface(TS_SOUND, "SOUND - OFF", -1, 350, FONT_WHITE);
+		textSurface(TS_SOUND, "効果音 - OFF", -1, 350, FONT_WHITE);
 
 	if (engine.useMusic)
-		textSurface(TS_MUSIC, "MUSIC - ON", -1, 370, FONT_WHITE);
+		textSurface(TS_MUSIC, "音楽 - ON", -1, 370, FONT_WHITE);
 	else
-		textSurface(TS_MUSIC, "MUSIC - OFF", -1, 370, FONT_WHITE);
+		textSurface(TS_MUSIC, "音楽 - OFF", -1, 370, FONT_WHITE);
 
 	if (engine.fullScreen)
-		textSurface(TS_FULLSCREEN, "FULLSCREEN - ON", -1, 390, FONT_WHITE);
+		textSurface(TS_FULLSCREEN, "フルスクリーン - ON", -1, 390, FONT_WHITE);
 	else
-		textSurface(TS_FULLSCREEN, "FULLSCREEN - OFF", -1, 390, FONT_WHITE);
+		textSurface(TS_FULLSCREEN, "フルスクリーン - OFF", -1, 390, FONT_WHITE);
 
 	if (engine.autoPause)
-		textSurface(TS_AUTOPAUSE, "AUTOPAUSE - ON", -1, 410, FONT_WHITE);
+		textSurface(TS_AUTOPAUSE, "オートポーズ - ON", -1, 410, FONT_WHITE);
 	else
-		textSurface(TS_AUTOPAUSE, "AUTOPAUSE - OFF", -1, 410, FONT_WHITE);
+		textSurface(TS_AUTOPAUSE, "オートポーズ - OFF", -1, 410, FONT_WHITE);
 }
 
 static signed char showOptionsMenu()
@@ -210,17 +210,17 @@ int doTitle()
 
 	textSurface(TS_PRESENTS, "PRESENTS", -1, 300, FONT_WHITE);
 	textSurface(TS_AN_SDL_GAME, "AN SDL GAME", -1, 300, FONT_WHITE);
-	textSurface(TS_START_NEW_GAME, "START NEW GAME", -1, 350, FONT_WHITE);
-	textSurface(TS_LOAD_GAME, "LOAD GAME", -1, 370, FONT_WHITE);
-	textSurface(TS_CONTINUE_CURRENT_GAME, "CONTINUE CURRENT GAME", -1, 390,
+	textSurface(TS_START_NEW_GAME, "始めから", -1, 350, FONT_WHITE);
+	textSurface(TS_LOAD_GAME, "ロード", -1, 370, FONT_WHITE);
+	textSurface(TS_CONTINUE_CURRENT_GAME, "続き", -1, 390,
 		FONT_WHITE);
-	textSurface(TS_OPTIONS, "OPTIONS", -1, 410, FONT_WHITE);
-	textSurface(TS_CHEAT_OPTIONS, "CHEAT OPTIONS", -1, 430, FONT_WHITE);
-	textSurface(TS_QUIT, "QUIT", -1, 430, FONT_WHITE);
+	textSurface(TS_OPTIONS, "オプション", -1, 410, FONT_WHITE);
+	textSurface(TS_CHEAT_OPTIONS, "チートオプション", -1, 430, FONT_WHITE);
+	textSurface(TS_QUIT, "終了", -1, 430, FONT_WHITE);
 
 	createOptionsMenu();
 	createDifficultyMenu();
-	textSurface(TS_BACK_TO_MAIN_MENU, "BACK TO MAIN MENU", -1, 0, FONT_WHITE);
+	textSurface(TS_BACK_TO_MAIN_MENU, "メインメニューに戻る", -1, 0, FONT_WHITE);
 
 	createCheatMenu();
 

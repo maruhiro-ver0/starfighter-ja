@@ -28,36 +28,36 @@ static void drawSecondaryWeaponSurface()
 {
 	char description[50] = "";
 
-	drawString("Secondary Weapon", 10, 3, FONT_WHITE, shopSurface[2]);
+	drawString("補助装備", 10, 3, FONT_WHITE, shopSurface[2]);
 
 	switch (player.weaponType[1])
 	{
 		case W_NONE:
-			strcpy(description, "Type : None");
+			strcpy(description, "タイプ：なし");
 			break;
 		case W_ROCKETS:
-			strcpy(description, "Type : Rockets");
+			strcpy(description, "タイプ：ロケット");
 			break;
 		case W_DOUBLE_ROCKETS:
-			strcpy(description, "Type : Dbl Rockets");
+			strcpy(description, "タイプ：ダブル ロケット");
 			break;
 		case W_MICRO_ROCKETS:
-			strcpy(description, "Type : Micro Rockets");
+			strcpy(description, "タイプ：マイクロ ロケット");
 			break;
 		case W_LASER:
-			strcpy(description, "Type : Laser");
+			strcpy(description, "タイプ：レーザー");
 			break;
 		case W_CHARGER:
-			strcpy(description, "Type : Charger");
+			strcpy(description, "タイプ：チャージ");
 			break;
 		case W_HOMING_MISSILE:
-			strcpy(description, "Type : Homing Missile");
+			strcpy(description, "タイプ：ホーミング ミサイル");
 			break;
 		case W_DOUBLE_HOMING_MISSILES:
-			strcpy(description, "Type : Dbl Homing Missiles");
+			strcpy(description, "タイプ：ダブル ホーミング ミサイル");
 			break;
 		case W_MICRO_HOMING_MISSILES:
-			strcpy(description, "Type : Mcr Homing Missiles");
+			strcpy(description, "タイプ：マイクロ ホーミング ミサイル");
 			break;
 	}
 	drawString(description, 10, 22, FONT_WHITE, shopSurface[2]);
@@ -65,7 +65,7 @@ static void drawSecondaryWeaponSurface()
 	if ((player.weaponType[1] != W_LASER) &&
 		(player.weaponType[1] != W_CHARGER) && (player.weaponType[1] != W_NONE))
 	{
-		sprintf(description, "Capacity : %d", game.maxRocketAmmo);
+		sprintf(description, "最大数：%d", game.maxRocketAmmo);
 		drawString(description, 10, 37, FONT_WHITE, shopSurface[2]);
 	}
 }
@@ -199,27 +199,27 @@ static void drawShop()
 	char description[100];
 	strcpy(description, "");
 
-	drawString("Primary Weapon", 10, 3, FONT_WHITE, shopSurface[0]);
-	sprintf(description, "Plasma Cannons : %d", game.minPlasmaOutput);
+	drawString("主装備", 10, 3, FONT_WHITE, shopSurface[0]);
+	sprintf(description, "プラズマカノン：%d門", game.minPlasmaOutput);
 	drawString(description, 10, 22, FONT_WHITE, shopSurface[0]);
-	sprintf(description, "Plasma Power   : Stage %d",
+	sprintf(description, "プラズマ火力　：レベル %d",
 		game.minPlasmaDamage);
 	drawString(description, 10, 37, FONT_WHITE, shopSurface[0]);
-	sprintf(description, "Cooler         : Stage %d",
+	sprintf(description, "冷却装置　　　：レベル %d",
 		game.minPlasmaRate);
 	drawString(description, 10, 52, FONT_WHITE, shopSurface[0]);
 
-	drawString("Powerup Weapon", 10, 3, FONT_WHITE, shopSurface[1]);
-	sprintf(description, "Plasma Output    : Stage %d",
+	drawString("一時強化", 10, 3, FONT_WHITE, shopSurface[1]);
+	sprintf(description, "プラズマ出力範囲　：レベル %d",
 		game.maxPlasmaOutput);
 	drawString(description, 10, 22, FONT_WHITE, shopSurface[1]);
-	sprintf(description, "Plasma Condensor : Stage %d",
+	sprintf(description, "プラズマコンデンサ：レベル %d",
 		game.maxPlasmaDamage);
 	drawString(description, 10, 37, FONT_WHITE, shopSurface[1]);
-	sprintf(description, "Liquid Nitrogen  : Stage %d",
+	sprintf(description, "液体窒素　　　　　：レベル %d",
 		game.maxPlasmaRate);
 	drawString(description, 10, 52, FONT_WHITE, shopSurface[1]);
-	sprintf(description, "Plasma Capacity  : %d", game.maxPlasmaAmmo);
+	sprintf(description, "プラズマ容量　　　：%d", game.maxPlasmaAmmo);
 	drawString(description, 10, 67, FONT_WHITE, shopSurface[1]);
 
 	drawSecondaryWeaponSurface();
@@ -228,12 +228,12 @@ static void drawShop()
 
 	blevelRect(shopSurface[3], 0, 0, 600, 120, 0x00, 0x00, 0x22);
 
-	drawString("Temporary Weapons", 10, 2, FONT_WHITE, shopSurface[3]);
-	drawString("Ammo and Storage", 260, 2, FONT_WHITE, shopSurface[3]);
+	drawString("一時強化", 10, 2, FONT_WHITE, shopSurface[3]);
+	drawString("爆薬とコンテナ", 260, 2, FONT_WHITE, shopSurface[3]);
 
-	drawString("Primary Weapons", 10, 62, FONT_WHITE, shopSurface[3]);
+	drawString("主装備", 10, 62, FONT_WHITE, shopSurface[3]);
 
-	drawString("Secondary Weapons", 260, 62, FONT_WHITE, shopSurface[3]);
+	drawString("副装備", 260, 62, FONT_WHITE, shopSurface[3]);
 
 	signed char icons = MAX_SHOPITEMS;
 
@@ -250,54 +250,54 @@ static void drawShop()
 			shopItems[i].y - 178, shopSurface[3]);
 	}
 
-	sprintf(description, "Shield Units : %d", player.maxShield);
+	sprintf(description, "ｼｰﾙﾄﾞ ﾕﾆｯﾄ : %d", player.maxShield);
 	drawString(description, 10, 4, FONT_WHITE, shopSurface[4]);
-	sprintf(description, "Cash : $%d", game.cash);
+	sprintf(description, "ｷｬｯｼｭ : $%d", game.cash);
 	drawString(description, 10, 80, FONT_WHITE, shopSurface[4]);
-	sprintf(description, "Plasma Cells : %.3d", player.ammo[0]);
+	sprintf(description, "ﾌﾟﾗｽﾞﾏ ｾﾙ : %.3d", player.ammo[0]);
 	drawString(description, 430, 4, FONT_WHITE, shopSurface[4]);
-	sprintf(description, "Rockets : %.3d", player.ammo[1]);
+	sprintf(description, "ﾛｹｯﾄ : %.3d", player.ammo[1]);
 	drawString(description, 475, 80, FONT_WHITE, shopSurface[4]);
 
 	shopSurface[5] = createSurface(601, 56);
 	blevelRect(shopSurface[5], 0, 0, 600, 35, 0x00, 0x99, 0x00);
 	blevelRect(shopSurface[5], 0, 20, 600, 35, 0x00, 0x33, 0x00);
-	drawString("Information", 5, 4, FONT_WHITE, shopSurface[5]);
+	drawString("説明", 5, 4, FONT_WHITE, shopSurface[5]);
 
 	switch (shopSelectedItem)
 	{
 		case -1:
 			break;
 		case -2:
-			drawString("You don't have enough money", 20, 30, FONT_WHITE,
+			drawString("代金が足りない", 20, 30, FONT_WHITE,
 				shopSurface[5]);
 			break;
 		case -3:
-			drawString("Cannot upgrade ship", 5, 22, FONT_WHITE, shopSurface[5]);
-			drawString("Hardware capacity has been reached", 20, 38, FONT_CYAN,
+			drawString("強化できない", 5, 22, FONT_WHITE, shopSurface[5]);
+			drawString("機体の限界に達している", 20, 38, FONT_CYAN,
 				shopSurface[5]);
 			break;
 		case -4:
-			drawString("Ammunition limit reached", 20, 30, FONT_WHITE,
+			drawString("容量の限界に達している", 20, 30, FONT_WHITE,
 				shopSurface[5]);
 			break;
 		case -5:
-			drawString("You cannot sell that item", 20, 30, FONT_WHITE,
+			drawString("それは売却できない", 20, 30, FONT_WHITE,
 				shopSurface[5]);
 			break;
 		case -6:
-			drawString("Nothing to sell", 20, 30, FONT_WHITE, shopSurface[5]);
+			drawString("売却できるものがない", 20, 30, FONT_WHITE, shopSurface[5]);
 			break;
 		case -7:
-			drawString("Rockets cannot be bought for Laser or Charger Cannon",
+			drawString("レーザーまたはチャージの場合はロケット弾を購入できない",
 				5, 30, FONT_WHITE, shopSurface[5]);
 			break;
 		case -8:
-			drawString("You already have that weapon", 20, 30, FONT_WHITE,
+			drawString("既に装備している", 20, 30, FONT_WHITE,
 				shopSurface[5]);
 			break;
 		case -9:
-			drawString("This weapon's ammo limit has been reached", 20, 30,
+			drawString("その装備の限界に達している", 20, 30,
 				FONT_WHITE, shopSurface[5]);
 			break;
 		default:
@@ -324,96 +324,96 @@ void initShop()
 	/* ----------- Temporary Items ----------- */
 
 	shopItems[SHOP_PLASMA_MAX_OUTPUT].price = 0; // Overwritten later
-	strcpy(shopItems[SHOP_PLASMA_MAX_OUTPUT].name, "Plasma channel splitter");
+	strcpy(shopItems[SHOP_PLASMA_MAX_OUTPUT].name, "プラズマチャネル スプリッター");
 	strcpy(shopItems[SHOP_PLASMA_MAX_OUTPUT].description,
-		"Improves poweredup plasma output");
+		"一時強化時のプラズマ出力範囲が増加する");
 	shopItems[SHOP_PLASMA_MAX_OUTPUT].image = 9;
 
 	shopItems[SHOP_PLASMA_MAX_DAMAGE].price = 0; // Overwritten later
-	strcpy(shopItems[SHOP_PLASMA_MAX_DAMAGE].name, "Plasma capacity condensor");
+	strcpy(shopItems[SHOP_PLASMA_MAX_DAMAGE].name, "プラズマキャパシティー コンデンサー");
 	strcpy(shopItems[SHOP_PLASMA_MAX_DAMAGE].description,
-		"Increases poweredup plasma damage");
+		"一時強化時のプラズマ火力が増加する");
 	shopItems[SHOP_PLASMA_MAX_DAMAGE].image = 10;
 
 	shopItems[SHOP_PLASMA_MAX_RATE].price = 0; // Overwritten later
-	strcpy(shopItems[SHOP_PLASMA_MAX_RATE].name, "Liquid nitrogen capsules");
+	strcpy(shopItems[SHOP_PLASMA_MAX_RATE].name, "液体窒素カプセル");
 	strcpy(shopItems[SHOP_PLASMA_MAX_RATE].description,
-		"Increases plasma firing rate");
+		"一時強化時の連射速度が増加する");
 	shopItems[SHOP_PLASMA_MAX_RATE].image = 11;
 
 	shopItems[SHOP_PLASMA_AMMO].price = 10;
-	strcpy(shopItems[SHOP_PLASMA_AMMO].name, "10 Plasma cells");
-	strcpy(shopItems[SHOP_PLASMA_AMMO].description, "Plasma ammunition");
+	strcpy(shopItems[SHOP_PLASMA_AMMO].name, "10 プラズマセル");
+	strcpy(shopItems[SHOP_PLASMA_AMMO].description, "プラズマ火薬");
 	shopItems[SHOP_PLASMA_AMMO].image = 12;
 
 	shopItems[SHOP_ROCKET_AMMO].price = 10;
-	strcpy(shopItems[SHOP_ROCKET_AMMO].name, "Rocket Ammo");
+	strcpy(shopItems[SHOP_ROCKET_AMMO].name, "ロケット弾");
 	strcpy(shopItems[SHOP_ROCKET_AMMO].description,
-		"High velocity dumb fire rocket");
+		"無誘導高速ロケット弾");
 	shopItems[SHOP_ROCKET_AMMO].image = 13;
 
 	/* ----------- Permanent Items ----------- */
 
 	shopItems[SHOP_PLASMA_MIN_OUTPUT].price = 0; // Overwritten later
-	strcpy(shopItems[SHOP_PLASMA_MIN_OUTPUT].name, "Additional Plasma Cannon");
+	strcpy(shopItems[SHOP_PLASMA_MIN_OUTPUT].name, "プラズマカノンの増設");
 	strcpy(shopItems[SHOP_PLASMA_MIN_OUTPUT].description,
-		"Adds an extra plasma cannon to the Firefly");
+		"ファイアフライに新たなプラズマカノン砲を増設する");
 	shopItems[SHOP_PLASMA_MIN_OUTPUT].image = 14;
 
 	shopItems[SHOP_PLASMA_MIN_DAMAGE].price = 0; // Overwritten later
-	strcpy(shopItems[SHOP_PLASMA_MIN_DAMAGE].name, "Plasma Power Booster");
+	strcpy(shopItems[SHOP_PLASMA_MIN_DAMAGE].name, "プラズマパワーブースター");
 	strcpy(shopItems[SHOP_PLASMA_MIN_DAMAGE].description,
-		"Increases power of plasma shots");
+		"プラズマ弾の火力を増大させる");
 	shopItems[SHOP_PLASMA_MIN_DAMAGE].image = 15;
 
 	shopItems[SHOP_PLASMA_MIN_RATE].price = 0; // Overwritten later
-	strcpy(shopItems[SHOP_PLASMA_MIN_RATE].name, "Plasma Cooling Booster");
+	strcpy(shopItems[SHOP_PLASMA_MIN_RATE].name, "プラズマ冷却ブースター");
 	strcpy(shopItems[SHOP_PLASMA_MIN_RATE].description,
-		"Permanently increases firing rate");
+		"連射速度を増大させる");
 	shopItems[SHOP_PLASMA_MIN_RATE].image = 16;
 
 	/* ----------- Ammo Items -------------- */
 
 	shopItems[SHOP_PLASMA_MAX_AMMO].price = 0; // Overwritten later
-	strcpy(shopItems[SHOP_PLASMA_MAX_AMMO].name, "Plasma compressor");
+	strcpy(shopItems[SHOP_PLASMA_MAX_AMMO].name, "プラズマコンデンサー");
 	strcpy(shopItems[SHOP_PLASMA_MAX_AMMO].description,
-		"Increases plasma ammo capacity");
+		"プラズマ火薬の容量が増加する");
 	shopItems[SHOP_PLASMA_MAX_AMMO].image = 17;
 
 	shopItems[SHOP_ROCKET_MAX_AMMO].price = 0; // Overwritten later
-	strcpy(shopItems[SHOP_ROCKET_MAX_AMMO].name, "Rocket Pod");
+	strcpy(shopItems[SHOP_ROCKET_MAX_AMMO].name, "ロケットポッド");
 	strcpy(shopItems[SHOP_ROCKET_MAX_AMMO].description,
-		"Allows for an additional 5 rockets to be carried");
+		"装備できるロケット弾が 5本 増加する");
 	shopItems[SHOP_ROCKET_MAX_AMMO].image = 18;
 
 	/* ---------- Weaponary --------------- */
 
 	shopItems[SHOP_DOUBLE_ROCKETS].price = 2000;
-	strcpy(shopItems[SHOP_DOUBLE_ROCKETS].name, "Dual Rocket Launcher");
+	strcpy(shopItems[SHOP_DOUBLE_ROCKETS].name, "2連装ロケットランチャー");
 	strcpy(shopItems[SHOP_DOUBLE_ROCKETS].description,
-		"Allows for two rockets to be fired at once");
+		"一度に2本のロケット弾を発射する");
 	shopItems[SHOP_DOUBLE_ROCKETS].image = 19;
 
 	shopItems[SHOP_MICRO_ROCKETS].price = 2500;
-	strcpy(shopItems[SHOP_MICRO_ROCKETS].name, "Micro Rocket Launcher");
+	strcpy(shopItems[SHOP_MICRO_ROCKETS].name, "マイクロ ロケットランチャー");
 	strcpy(shopItems[SHOP_MICRO_ROCKETS].description,
-		"Launches several less powerful rockets at once");
+		"多数の小型ロケット弾を一度に発射する");
 	shopItems[SHOP_MICRO_ROCKETS].image = 20;
 
 	shopItems[SHOP_LASER].price = 5000;
-	strcpy(shopItems[SHOP_LASER].name, "Laser Cannon");
-	strcpy(shopItems[SHOP_LASER].description, "Laser Cannon");
+	strcpy(shopItems[SHOP_LASER].name, "レーザーカノン");
+	strcpy(shopItems[SHOP_LASER].description, "レーザーカノン");
 	shopItems[SHOP_LASER].image = 21;
 
 	shopItems[SHOP_HOMING_MISSILE].price = 7500;
-	strcpy(shopItems[SHOP_HOMING_MISSILE].name, "Homing Missile Launcher");
+	strcpy(shopItems[SHOP_HOMING_MISSILE].name, "誘導ミサイルランチャー");
 	sprintf(shopItems[SHOP_HOMING_MISSILE].description,
-		"Fires homing missile (max %i missiles)", maxHoming);
+		"誘導ミサイルを発射する (最大 %i本)", maxHoming);
 	shopItems[SHOP_HOMING_MISSILE].image = 22;
 
 	shopItems[SHOP_CHARGER].price = 10000;
-	strcpy(shopItems[SHOP_CHARGER].name, "Charge Cannon");
-	strcpy(shopItems[SHOP_CHARGER].description, "A charge up cannon");
+	strcpy(shopItems[SHOP_CHARGER].name, "チャージカノン");
+	strcpy(shopItems[SHOP_CHARGER].description, "エネルギーを充填するカノン砲");
 	shopItems[SHOP_CHARGER].image = 23;
 
 	shopItems[SHOP_DOUBLE_HOMING_MISSILES].price = 10000;

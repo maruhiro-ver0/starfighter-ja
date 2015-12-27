@@ -1,17 +1,17 @@
 15
-Hail
+ハイル
 31
 30
-Ceradse
+セラドセ
 32
 30
-Hinstag
+ヒンスタグ
 33
 20
-Joldar
+ジョルダー
 31
 40
-Moebo
+モエボ
 34
 -1
 NONE
@@ -32,28 +32,28 @@ NONE
 1
 0
 FACE_KRASS
-Krass Tyler (Hail)
-Destroy WEAPCO training ground
+クラス・タイラー (ハイル)
+WEAPCOの訓練所の破壊
 2
 1
 FACE_SID
-Sid Wilson (Ceradse)
-Collect 6 cargo pods
+シド・ウィルソン (セラドセ)
+6つの積荷の回収
 3
 2
 FACE_SID
-Sid Wilson (Hinstag)
-Destroy 5 WEAPCO missile boats
+シド・ウィルソン (ヒンスタグ)
+5隻のWEAPCOミサイル艇の破壊
 4
 3
 FACE_SID
-Sid Wilson (Joldar)
-Clear the mine field around Joldar
+シド・ウィルソン (ジョルダー)
+ジョルダー周辺の機雷の除去
 5
 0
 FACE_SID
-Sid Wilson (Moebo)
-Destroy WEAPCO frigate
+シド・ウィルソン (モエボ)
+WEAPCOフリゲートの破壊
 -1
 -1
 NONE

@@ -1556,7 +1556,7 @@ void alien_destroy(object *alien, object *attacker)
 			if ((alien->classDef == CD_PHOEBE) || (alien->classDef == CD_URSULA))
 				setInfoLine(">> √Á¥÷§œŒ•√¶§∑§ø! <<\n", FONT_RED);
 			else
-				setInfoLine(">> Friendly craft has been destroyed! <<\n", FONT_RED);
+				setInfoLine(">> Õß∑≥§Œ¥œ¡•§¨«À≤ı§µ§Ï§ø! <<\n", FONT_RED);
 		}
 	}
 

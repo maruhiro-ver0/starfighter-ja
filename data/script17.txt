@@ -1,8 +1,8 @@
 90
-FACE_SID
+シド・ウィルソン
 14
 128
-DAMMIT! It's getting away! We've got to stop it!
+クソッ! 逃げようとしているぞ! 止めなければ!
 
 
 0

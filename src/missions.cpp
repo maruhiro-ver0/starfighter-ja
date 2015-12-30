@@ -173,7 +173,7 @@ void updateSystemStatus()
 		game.stationedPlanet = 0;
 		game.system = 2;
 		game.area = MISN_CLOAKFIGHTER;
-		strcpy(game.stationedName, "Odeon");
+		strcpy(game.stationedName, "オデオン");
 		initPlanetMissions(game.system);
 
 		if (game.difficulty == DIFFICULTY_ORIGINAL)
@@ -364,7 +364,7 @@ static void evaluateRequirement(int type, int id, int *completed, int *targetVal
 					case P_ORE:
 						sprintf(message, "あと %d個 獲得しろ…", *targetValue);
 						if ((rand() % 2) == 0)
-							sprintf(message, "あと %dつ だ…", *targetValue);
+							sprintf(message, "あと %d個 だ…", *targetValue);
 						break;
 				}
 				break;
@@ -380,7 +380,7 @@ static void evaluateRequirement(int type, int id, int *completed, int *targetVal
 					case P_ESCAPEPOD:
 						sprintf(message, "脱出ポッドが失われた!");
 						if (game.area == MISN_ODEON) // Get lectured by Phoebe
-							setRadioMessage(FACE_PHOEBE, "No... Ursula...", 1);
+							setRadioMessage(FACE_PHOEBE, "ああ…ウーシュラ…", 1);
 						break;
 				}
 				break;
@@ -495,9 +495,9 @@ void updateMissionRequirements(int type, int id, int value)
 
 		if ((type == M_DESTROY_TARGET_TYPE) && (id == CD_CLOAKFIGHTER))
 		{
-			setInfoLine("*** Experimental Fighter Destroyed - Mission Completed ***", FONT_GREEN);
+			setInfoLine("*** 試作戦闘機を破壊 - 作戦完了 ***", FONT_GREEN);
 			systemPlanet[9].missionCompleted = 1;
-			setRadioMessage(FACE_CHRIS, "That's one less suprise that WEAPCO can spring on us!", 1);
+			setRadioMessage(FACE_CHRIS, "WEAPCOの奇襲など、たいしたことないな!", 1);
 			game.experimentalShield = 0;
 		}
 	}
@@ -517,7 +517,7 @@ static char revealHiddenObjectives()
 		if (currentMission.completed1[i] == OB_HIDDEN)
 		{
 			currentMission.completed1[i] = OB_INCOMPLETE;
-			sprintf(string, "New Objective - %s", currentMission.primaryObjective[i]);
+			sprintf(string, "新しい任務 - %s", currentMission.primaryObjective[i]);
 			setInfoLine(string, FONT_CYAN);
 			allDone = 0;
 		}
@@ -1161,20 +1161,20 @@ void initMissions()
 	missions[MISN_ELAMALE].addAliens = NEVER;
 
 
-	sprintf(missions[MISN_ODEON].primaryObjective[0], "Destroy Ursula's ship");
+	sprintf(missions[MISN_ODEON].primaryObjective[0], "ウーシュラの艦を破壊する");
 	missions[MISN_ODEON].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_ODEON].target1[0] = CD_EVILURSULA;
 	missions[MISN_ODEON].targetValue1[0] = 0;
 	missions[MISN_ODEON].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_ODEON].primaryObjective[1],
-		"Capture Ursula's escape pod");
+		"ウーシュラの脱出ポッドを保護する");
 	missions[MISN_ODEON].primaryType[1] = M_COLLECT;
 	missions[MISN_ODEON].target1[1] = P_ESCAPEPOD;
 	missions[MISN_ODEON].targetValue1[1] = 1;
 	missions[MISN_ODEON].completed1[1] = OB_INCOMPLETE;
 
-	sprintf(missions[MISN_ODEON].primaryObjective[2], "Do not kill Ursula");
+	sprintf(missions[MISN_ODEON].primaryObjective[2], "ウーシュラを死なせてはならない");
 	missions[MISN_ODEON].primaryType[2] = M_PROTECT_PICKUP;
 	missions[MISN_ODEON].target1[2] = P_ESCAPEPOD;
 	missions[MISN_ODEON].targetValue1[2] = 0;
@@ -1189,21 +1189,21 @@ void initMissions()
 
 
 	sprintf(missions[MISN_FELLON].primaryObjective[0],
-		"Assist attack on WEAPCO ore mining craft");
+		"WEAPCOの採掘船への攻撃を援護する");
 	missions[MISN_FELLON].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_FELLON].target1[0] = CD_BOSS;
 	missions[MISN_FELLON].targetValue1[0] = 1;
 	missions[MISN_FELLON].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_FELLON].primaryObjective[1],
-		"At least 1 rebel craft must survive");
+		"少なくとも1隻の解放軍の艦船が生き残る");
 	missions[MISN_FELLON].primaryType[1] = M_PROTECT_TARGET;
 	missions[MISN_FELLON].target1[1] = CD_REBELCARRIER;
 	missions[MISN_FELLON].targetValue1[1] = 2;
 	missions[MISN_FELLON].completed1[1] = OB_CONDITION;
 
 	sprintf(missions[MISN_FELLON].primaryObjective[2],
-		"Destroy all present WEAPCO forces");
+		"残存するWEAPCOの戦力を全て破壊する");
 	missions[MISN_FELLON].primaryType[2] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_FELLON].completed1[2] = OB_INCOMPLETE;
 
@@ -1211,14 +1211,14 @@ void initMissions()
 
 
 	sprintf(missions[MISN_SIVEDI].primaryObjective[0],
-		"Collect 25 pieces of Ore");
+		"25の鉱石を獲得する");
 	missions[MISN_SIVEDI].primaryType[0] = M_COLLECT;
 	missions[MISN_SIVEDI].target1[0] = P_ORE;
 	missions[MISN_SIVEDI].targetValue1[0] = 25;
 	missions[MISN_SIVEDI].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_SIVEDI].secondaryObjective[0],
-		"Collect 25 pieces of Ore");
+		"25の鉱石を獲得する");
 	missions[MISN_SIVEDI].secondaryType[0] = M_COLLECT;
 	missions[MISN_SIVEDI].target2[0] = P_ORE;
 	missions[MISN_SIVEDI].targetValue2[0] = 25;
@@ -1228,7 +1228,7 @@ void initMissions()
 
 
 	sprintf(missions[MISN_ALMARTHA].primaryObjective[0],
-		"Collect $2000 to pay mercenary");
+		"代金として$2000獲得する");
 	missions[MISN_ALMARTHA].primaryType[0] = M_COLLECT;
 	missions[MISN_ALMARTHA].target1[0] = P_CASH;
 	missions[MISN_ALMARTHA].targetValue1[0] = 2000;
@@ -1242,14 +1242,14 @@ void initMissions()
 	missions[MISN_ALMARTHA].addAliens = ALWAYS;
 
 
-	sprintf(missions[MISN_POSWIC].primaryObjective[0], "Destroy escorts");
+	sprintf(missions[MISN_POSWIC].primaryObjective[0], "護衛機を破壊する");
 	missions[MISN_POSWIC].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_POSWIC].target1[0] = CD_ESCORT;
 	missions[MISN_POSWIC].targetValue1[0] = 5;
 	missions[MISN_POSWIC].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_POSWIC].primaryObjective[1],
-		"Disable executive transport");
+		"重役の搬送を阻止する");
 	missions[MISN_POSWIC].primaryType[1] = M_ESCAPE_TARGET;
 	missions[MISN_POSWIC].target1[1] = CD_BOSS;
 	missions[MISN_POSWIC].targetValue1[1] = 1;
@@ -1264,7 +1264,7 @@ void initMissions()
 
 
 	sprintf(missions[MISN_ELLESH].primaryObjective[0],
-		"Destroy executive transport");
+		"重役の搬送船を破壊する");
 	missions[MISN_ELLESH].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_ELLESH].target1[0] = CD_BOSS;
 	missions[MISN_ELLESH].targetValue1[0] = 1;

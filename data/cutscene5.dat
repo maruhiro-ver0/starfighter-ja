@@ -18,14 +18,14 @@ gfx/mordor.jpg
 14 -1 0 0 0
 
 FACE_PHOEBE
-Will she be okay?
+姉さんはだいじょうぶ?
 FACE_SID
-I've had a look at the implants and they should be easy to remove. She'll just have a headache for a while.
+何かインプラントのような物があったが取り除けた。まだしばらくの間は頭痛がするだろう。
 FACE_CHRIS
-Will she be able to tell us anything useful?
+何か重要なことは聞けそうか?
 FACE_SID
-We'll have to wait for her memory to come back. She might not be able to remember anything she did while the implants were in.
+記憶が戻るまで少し待たなければならない。インプラントがあったときのことは思い出せないだろう。
 FACE_SID
-She'll still be able to pilot a ship though.
+それでも艦の操縦はできそうだ。
 FACE_NONE
-Ursula Lexx will now join you as a Wingmate. However, like Phoebe, she will not be available on certain missions.
+ウーシュラ・レックスは戦友となった。しかし、フェーベと同様、一部の作戦には参加できない。

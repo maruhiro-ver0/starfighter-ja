@@ -1,9 +1,9 @@
-Sid Wilson
+シド・ウィルソン
 FACE_CHRIS
-What have you found out about that experimental fighter?
+試作戦闘機のことは何か分かったか?
 FACE_SID
-It's got some kind of cloaking device that makes it invisible to radar. Could prove hard to track down.
+レーダーに映らない遮蔽装置の一種を搭載している。追跡は困難だ。
 FACE_CHRIS
-I'll just have to run around the system until I run into it.
+偶然出会うまで飛び回るしかないな。
 FACE_SID
-It's likely to run away if you engage it in battle, so try and do as much damage to it as possible.
+たとえ遭遇しても相手は逃げるだろう。見つけたら可能な限りダメージを与えることだ。

@@ -25,10 +25,10 @@ static event gameEvent[20];
 static void setKlineGreeting()
 {
 	static const char *greet[] = {
-		"How nice to see you again, Bainfield!",
-		"It all ends here, rebel!",
-		"I hope you won't disappoint me this time...",
-		"Do you really think you can defeat us?!"
+		"また会えたな、バンフィールド!",
+		"反逆者よ、これで終わりだ!",
+		"今回は失望させないでくれ…",
+		"私を倒せると思っているのか?!"
 	};
 
 	gameEvent[0].time = 2;

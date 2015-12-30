@@ -28,7 +28,7 @@ static void drawSecondaryWeaponSurface()
 {
 	char description[50] = "";
 
-	drawString("Êä½õÁõÈ÷", 10, 3, FONT_WHITE, shopSurface[2]);
+	drawString("ÉûÁõÈ÷", 10, 3, FONT_WHITE, shopSurface[2]);
 
 	switch (player.weaponType[1])
 	{

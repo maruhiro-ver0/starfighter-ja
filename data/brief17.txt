@@ -1,7 +1,7 @@
-Ursula Lexx
+ウーシュラ・レックス
 FACE_URSULA
-I've remembered something. WEAPCO is transporting some high level personnel to Poswic.
+思い出したぞ。WEAPCOは何人もの重役をポスイックに送っている。
 FACE_SID
-This could be really important to our success in Sol. I'll need some cover so I can disable that ship.
+それは太陽系での勝利のために極めて重要なことになるだろう。私もその艦を航行不能にするために参加する。
 FACE_CHRIS
-You got it!
+頼むぞ!

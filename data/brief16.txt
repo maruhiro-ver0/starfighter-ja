@@ -1,5 +1,5 @@
-Krass Tyler
+クラス・タイラー
 FACE_CHRIS
-Hey, Krass! I need you to help us out with something. Phoebe and Ursula are taking out key WEAPCO plants. Can you help me create a diversion by wreaking havoc a little bit away from that?
+おいクラス! 手伝ってくれ。フェーベとウーシュラがWEAPCOの重要なプラントを破壊しようとしている。ちょっと騒ぎを起こして、こちらに注意を引き付けられないか?
 FACE_KRASS
-Sure, I can help you out, boy. But I'll be needing my fee...
+いいぞ、助けてやろう。だが、金だ…

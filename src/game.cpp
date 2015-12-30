@@ -890,7 +890,7 @@ static void game_doAliens()
 						if (aliens[i].classDef == CD_CLOAKFIGHTER)
 						{
 							game.experimentalShield = aliens[i].shield;
-							setInfoLine("Experimental Fighter has fled",
+							setInfoLine("ªÓ∫Ó¿Ô∆Æµ°§œ»Ù§”µÓ§√§ø",
 								FONT_CYAN);
 						}
 

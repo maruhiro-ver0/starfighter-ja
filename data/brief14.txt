@@ -1,5 +1,5 @@
-Sid Wilson
+シド・ウィルソン
 FACE_SID
-A rebel group has organized a counter strike. If we can help them secure a victory it will be a real boost to morale.
+解放軍による攻撃の計画がある。彼らを支援し勝利できれば、士気は大いに高まるだろう。
 FACE_CHRIS
-Awesome! I'm on it!
+すげえ! すぐ出撃だ!

@@ -47,3 +47,4 @@ missions.o
 player.o
 weapons.o
 zlib1.dll
+resource.o

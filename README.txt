@@ -8,54 +8,72 @@ without any warranty.
 ========================================================================
 
 
-Thank you for downloading Project: Starfighter! This readme is just a
-basic overview of the game and instructions for building; for
-instructions on how to play the game, see docs/index.html.
+Project: Starfighterをダウンロードしてくれてありがとう! このreadmeにはゲ
+ームの簡単な説明とビルドの方法しか書かれていない。ゲームの遊び方の詳しい
+説明は docs/index.html を参照して欲しい。
 
-Project: Starfighter is a space shoot 'em up game originally developed
-by Parallel Realities in 2002, and released in 2003. You assume the role
-of Chris Bainfield in his quest to put an end to WEAPCO, the weapons
-corporation which has enslaved the galaxy.
+Project: Starfighterは、元々はParallel Realitiesが2002年に開発し、2003年
+に発表した宇宙を舞台としたシューティングゲームである。あなたはクリス・バ
+ンフィールドとなり、全宇宙を支配する軍需企業WEAPCOを終わらせるために戦う
+ことになる。
 
-If you played one of the versions of Project: Starfighter distributed by
-Parallel Realities, you might notice some differences in this version
-compared to the original:
+もし、あなたがParallel Realitiesが配布するいずれかのバージョンのProject:
+Starfighterで遊んだことがあれば、オリジナルとこのバージョンとの違いに気
+づくだろう。
 
-* The graphics, sounds, and music are all completely different. This is
-  because most of the original media was not properly licensed, and
-  therefore needed to be replaced to make the game 100% libre and legal.
-  Most of this work was done by the previous project at SourceForge;
-  this project completed that work by adding music and replacing one
-  non-libre graphic that got into version 1.2 by mistake.
+* グラフィック、効果音、音楽は全て異なる。これは、元のバージョンのものは
+  正式なライセンスに基づいていなかったため、100%自由で合法なものに置き換
+  える必要があったためである。ほとんどは以前のSourceForgeでのプロジェク
+  トの段階で行われた。このプロジェクトで新しい音楽が追加され、バージョン
+  1.2の段階で手違いで組み込まれた自由でないグラフィックは置き換えられた。
 
-* There are several gameplay changes. These changes were mostly done to
-  balance the game better. However, if you want the original experience,
-  "original" difficulty approximates it as closely as possible (short of
-  implementing bugs on purpose).
+* ゲーム内容が一部変更された。ほとんどの変更はゲームバランスを良くするた
+  めのものである。しかし、もしオリジナルと同じ内容で遊びたいならば、可能
+  な限り(バグ修正以外は)元に近い「オリジナル」の難易度も選択できる。
 
-* Typing "humansdoitbetter" in the title screen no longer enables
-  cheats. This is actually because the switch to SDL2 broke the original
-  feature, and rather than fixing it, I just replaced it with something
-  else. I'll let you figure out what the new method to access the cheat
-  menu is. :)
+* タイトルで"humansdoitbetter"と入力してもチートモードにはならない。SDL2
+  に切り替えたところ、これを修正するのは難しく、別の方法に置き換えること
+  にした。チートメニューにアクセスする新しい方法は自分で見つけて欲しい :)
 
 
-COMPILING FROM SOURCE
 
-Project: Starfighter depends on the following libraries to build:
+ソースからコンパイルする
+
+Project: Starfighterは次のライブラリに依存している:
 
 * SDL2 <http://libsdl.org>
 * SDL2_image <http://www.libsdl.org/projects/SDL_image/>
 * SDL2_mixer <http://www.libsdl.org/projects/SDL_mixer/>
 
-Once you have all dependencies installed, simply run:
+これらをインストールすれば、単に:
 
     make
 
-And optionally (as root):
+として、必要なら(rootで):
 
     make install
 
-If this doesn't work, you may need to tweak the makefile.
+とする。
+もしうまく行かないならば、makefileを修正する必要がある。
 
-To play, simply run the starfighter binary.
+プレーするときは、単に starfighter のバイナリを実行すればよい。
+
+========================================================================
+
+
+日本語版のビルド方法
+
+1. オリジナル(英語)のProject: Starfighterのソースを展開する。
+2. 日本語版のアーカイブ starfighter-1.4-jp-src.tgz を別のディレクトリに展開する。
+3. 日本語版の gfx/smallFont.png をオリジナルの gfx/ にコピーし上書きする。
+4. 日本語版の starfighter-1.4-jp.patch をオリジナルのルートディレクトリにコピーする。
+5. オリジナルのルートディレクトリで
+
+   patch -p1 < starfighter-1.4-jp.patch
+
+   を実行する。
+
+6. make を実行する。
+
+win32版をビルドする場合は starfighter-1.4-win32.patch.gz を展開し、パッチを当てる必要がある。
+このパッチは日本語版・英語版の両方で使える。

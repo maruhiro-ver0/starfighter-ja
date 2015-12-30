@@ -64,9 +64,11 @@ Project: Starfighterは次のライブラリに依存している:
 日本語版のビルド方法
 
 1. オリジナル(英語)のProject: Starfighterのソースを展開する。
-2. 日本語版のアーカイブ starfighter-1.4-jp-src.tgz を別のディレクトリに展開する。
-3. 日本語版の gfx/smallFont.png をオリジナルの gfx/ にコピーし上書きする。
-4. 日本語版の starfighter-1.4-jp.patch をオリジナルのルートディレクトリにコピーする。
+2. 日本語版のアーカイブ starfighter-1.4-jp-src.tgz を展開する。
+3. 日本語版の gfx/smallFont.png をオリジナルの gfx/ にコピーし上書きす
+   る。
+4. 日本語版の starfighter-1.4-jp.patch をオリジナルのルートディレクトリ
+   にコピーする。
 5. オリジナルのルートディレクトリで
 
    patch -p1 < starfighter-1.4-jp.patch
@@ -75,5 +77,6 @@ Project: Starfighterは次のライブラリに依存している:
 
 6. make を実行する。
 
-win32版をビルドする場合は starfighter-1.4-win32.patch.gz を展開し、パッチを当てる必要がある。
+win32版をビルドする場合は starfighter-1.4-win32.patch.gz を展開し、パッ
+チを当てる必要がある。
 このパッチは日本語版・英語版の両方で使える。

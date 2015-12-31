@@ -2,10 +2,10 @@
 FACE_CHRIS
 -1
 0
-WEAPCO is finished, Kethlan! You have nowhere to run, nowhere to hide, and no one to help you.
+WEAPCOは終わった、ケスラン! お前には逃げる場所も、隠れる場所も、助けもない。
 
 8
 FACE_KLINE
 -1
 0
-You underestimate me, Bainfield.
+お前は私を見くびっている、バンフィールド。

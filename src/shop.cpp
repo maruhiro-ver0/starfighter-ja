@@ -418,16 +418,16 @@ void initShop()
 
 	shopItems[SHOP_DOUBLE_HOMING_MISSILES].price = 10000;
 	strcpy(shopItems[SHOP_DOUBLE_HOMING_MISSILES].name,
-		"Dual Homing Missile Launcher");
+		"2連装誘導ミサイルランチャー");
 	sprintf(shopItems[SHOP_DOUBLE_HOMING_MISSILES].description,
-		"Fires two homing missiles (max %i missiles)", maxDoubleHoming);
+		"一度に2発の誘導ミサイルを発射する (最大 %i本)", maxDoubleHoming);
 	shopItems[SHOP_DOUBLE_HOMING_MISSILES].image = 24;
 
 	shopItems[SHOP_MICRO_HOMING_MISSILES].price = 15000;
 	strcpy(shopItems[SHOP_MICRO_HOMING_MISSILES].name,
-		"Homing Micro Missile Launcher");
+		"誘導マイクロミサイルランチャー");
 	sprintf(shopItems[SHOP_MICRO_HOMING_MISSILES].description,
-		"Fires several small homing missiles (max %i missiles)", maxMicroHoming);
+		"多数の小型誘導ミサイルを一度に発射する (最大 %i本)", maxMicroHoming);
 	shopItems[SHOP_MICRO_HOMING_MISSILES].image = 25;
 
 	shopItems[SHOP_PLASMA_MAX_OUTPUT].x = 100;

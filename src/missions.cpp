@@ -184,7 +184,7 @@ void updateSystemStatus()
 		game.stationedPlanet = 8;
 		game.system = 3;
 		game.area = MISN_PLUTO;
-		strcpy(game.stationedName, "Pluto");
+		strcpy(game.stationedName, "冥王星");
 		initPlanetMissions(game.system);
 
 		if (game.difficulty == DIFFICULTY_ORIGINAL)
@@ -602,7 +602,7 @@ bool allMissionsCompleted()
 				}
 
 				if (game.area == MISN_EARTH)
-					setRadioMessage(FACE_CHRIS, "You guys stay here and keep things under control. I'm going after Kethlan!", 1);
+					setRadioMessage(FACE_CHRIS, "お前らは残ってここを抑えていてくれ。俺はケスランを追う!", 1);
 			}
 		}
 
@@ -615,7 +615,7 @@ bool allMissionsCompleted()
 			}
 			else
 			{
-				setInfoLine("*** 全ての補助的任務を完了 ***", FONT_GREEN);
+				setInfoLine("*** 全ての補助的な任務を完了 ***", FONT_GREEN);
 				currentMission.completed2[i] = OB_COMPLETED;
 
 				// do some area specific things
@@ -767,7 +767,7 @@ void missionBriefScreen()
 			if (game.area != MISN_MARS)
 				sprintf(temp, "制限時間: %d分", currentMission.timeLimit1[0]);
 			else
-				sprintf(temp, "SURVIVAL FOR %d minutes", currentMission.timeLimit1[0]);
+				sprintf(temp, "%d分間 生き延びる", currentMission.timeLimit1[0]);
 			drawString(temp, -1, 500, FONT_RED);
 		}
 
@@ -805,7 +805,7 @@ void missionBriefScreen()
 	else
 		textSurface(6, "ﾛｹｯﾄ:", 385, 550, FONT_WHITE);
 
-	textSurface(7, "Target", 550, 550, FONT_WHITE);
+	textSurface(7, "ﾀｰｹﾞｯﾄ", 550, 550, FONT_WHITE);
 	textSurface(8, "ｷｬｯｼｭ: $", 25, 20, FONT_WHITE);
 	textSurface(9, "ﾉｺﾘ ﾉ ｻｸｾﾝ:", 550, 20, FONT_WHITE);
 	textSurface(10, "ﾉｺﾘｼﾞｶﾝ - ", 260, 20, FONT_WHITE);
@@ -1152,7 +1152,7 @@ void initMissions()
 	missions[MISN_ELAMALE].target2[0] = P_SLAVES;
 	missions[MISN_ELAMALE].completed2[0] = OB_CONDITION;
 
-	sprintf(missions[MISN_ELAMALE].primaryObjective[1], "クラインと戦う");
+	sprintf(missions[MISN_ELAMALE].primaryObjective[1], "ケスランと戦う");
 	missions[MISN_ELAMALE].primaryType[1] = M_ESCAPE_TARGET;
 	missions[MISN_ELAMALE].target1[1] = CD_KLINE;
 	missions[MISN_ELAMALE].targetValue1[1] = 1;
@@ -1274,7 +1274,7 @@ void initMissions()
 
 
 	sprintf(missions[MISN_PLUTO].primaryObjective[0],
-		"Destroy planetary guardian");
+		"惑星の防衛を破壊する");
 	missions[MISN_PLUTO].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_PLUTO].target1[0] = CD_PLUTOBOSS;
 	missions[MISN_PLUTO].targetValue1[0] = 1;
@@ -1292,7 +1292,7 @@ void initMissions()
 
 
 	sprintf(missions[MISN_NEPTUNE].primaryObjective[0],
-		"Destroy planetary guardian");
+		"惑星の防衛を破壊する");
 	missions[MISN_NEPTUNE].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_NEPTUNE].target1[0] = CD_NEPTUNEBOSS;
 	missions[MISN_NEPTUNE].targetValue1[0] = 1;
@@ -1310,7 +1310,7 @@ void initMissions()
 
 
 	sprintf(missions[MISN_URANUS].primaryObjective[0],
-		"Destroy all present WEAPCO forces");
+		"惑星の防衛を破壊する");
 	missions[MISN_URANUS].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_URANUS].target1[0] = CD_URANUSBOSS;
 	missions[MISN_URANUS].targetValue1[0] = 1;
@@ -1328,14 +1328,14 @@ void initMissions()
 
 
 	sprintf(missions[MISN_SATURN].primaryObjective[0],
-		"Destroy outer defence systems");
+		"外惑星防衛システムを破壊する");
 	missions[MISN_SATURN].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_SATURN].target1[0] = CD_MOBILE_RAY;
 	missions[MISN_SATURN].targetValue1[0] = 6;
 	missions[MISN_SATURN].completed1[0] = OB_INCOMPLETE;
 
 	sprintf(missions[MISN_SATURN].primaryObjective[1],
-		"Destroy all remaining WEAPCO craft");
+		"残存するWEPCOの艦船を全て破壊する");
 	missions[MISN_SATURN].primaryType[1] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_SATURN].completed1[1] = OB_INCOMPLETE;
 
@@ -1343,18 +1343,18 @@ void initMissions()
 
 
 	sprintf(missions[MISN_JUPITER].primaryObjective[0],
-		"Investigate distress call");
+		"救難信号を調査する");
 	missions[MISN_JUPITER].primaryType[0] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_JUPITER].completed1[0] = OB_CONDITION;
 
-	sprintf(missions[MISN_JUPITER].primaryObjective[1], "Defeat Krass Tyler");
+	sprintf(missions[MISN_JUPITER].primaryObjective[1], "クラス・タイラーを倒す");
 	missions[MISN_JUPITER].primaryType[1] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_JUPITER].target1[1] = CD_KRASS;
 	missions[MISN_JUPITER].targetValue1[1] = 1;
 	missions[MISN_JUPITER].completed1[1] = OB_HIDDEN;
 
 	sprintf(missions[MISN_JUPITER].primaryObjective[2],
-		"Destroy Krass' support group");
+		"タイラーの支援者を倒す");
 	missions[MISN_JUPITER].primaryType[2] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_JUPITER].target1[1] = CD_FIREFLY;
 	missions[MISN_JUPITER].targetValue1[1] = 4;
@@ -1363,7 +1363,7 @@ void initMissions()
 	missions[MISN_JUPITER].addAliens = ALWAYS;
 
 
-	sprintf(missions[MISN_MARS].primaryObjective[0], "Navigate asteroid belt");
+	sprintf(missions[MISN_MARS].primaryObjective[0], "アステロイドベルトを進む");
 	missions[MISN_MARS].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_MARS].target1[0] = CD_BOSS;
 	missions[MISN_MARS].targetValue1[0] = 1;
@@ -1375,7 +1375,7 @@ void initMissions()
 
 
 	sprintf(missions[MISN_EARTH].primaryObjective[0],
-		"Destroy WEAPCO frontline forces");
+		"WEAPCOの前線部隊を破壊する");
 	missions[MISN_EARTH].primaryType[0] = M_DESTROY_TARGET_TYPE;
 	missions[MISN_EARTH].target1[0] = CD_ANY;
 	missions[MISN_EARTH].targetValue1[0] = 100;
@@ -1384,7 +1384,7 @@ void initMissions()
 	missions[MISN_EARTH].addAliens = ALWAYS;
 
 
-	sprintf(missions[MISN_VENUS].primaryObjective[0], "Defeat Kline");
+	sprintf(missions[MISN_VENUS].primaryObjective[0], "ケスランを倒す");
 	missions[MISN_VENUS].primaryType[0] = M_DESTROY_ALL_TARGETS;
 	missions[MISN_VENUS].completed1[0] = OB_INCOMPLETE;
 

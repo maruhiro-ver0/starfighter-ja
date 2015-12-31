@@ -1185,11 +1185,11 @@ static void game_doPlayer()
 
 					if (weapon[W_PLAYER_WEAPON].flags & WF_SPREAD)
 					{
-						setInfoLine("Weapon set to Spread", FONT_WHITE);
+						setInfoLine("拡散モードに設定", FONT_WHITE);
 					}
 					else
 					{
-						setInfoLine("Weapon set to Concentrate", FONT_WHITE);
+						setInfoLine("集中モードに設定", FONT_WHITE);
 					}
 				}
 

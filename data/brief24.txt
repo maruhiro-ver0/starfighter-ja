@@ -1,5 +1,5 @@
-Sid Wilson
+シド・ウィルソン
 FACE_SID
-Chris, we've got a small problem. WEAPCO has a minefield in the asteroid belt. We'll need you to clear a way through.
+クリス、少し問題がある。WEAPCOはアステロイドベルトに機雷原を敷いている。これを取り除かなければならない。
 FACE_CHRIS
-Alright. I'll radio in once I've cleared a safe path.
+分かった。安全な道を作れたら連絡する。

@@ -135,7 +135,7 @@ void getKillMessage(object *ally)
 const char *getKlineInsult()
 {
 	static const char *insult[] = {
-		"みじめだな。", "君には失望したよ…", "勇敢、そしておろかだ。", "ばかばかしい。",
+		"みじめだな。", "君には失望したよ…", "勇敢、そして愚かだ。", "ばかばかしい。",
 		"君はもはや過去の英雄にすぎない。"
 	};
 
@@ -155,7 +155,7 @@ void getPlayerDeathMessage()
 	
 	if ((aliens[ALIEN_BOSS].active) && (aliens[ALIEN_BOSS].classDef == CD_KRASS))
 	{
-		setRadioMessage(FACE_KRASS, "That was the easiest $90,000,000 I've ever earned! Bwwah!! Ha!! Ha!! Ha!!", 1);
+		setRadioMessage(FACE_KRASS, "これで$90,000,000とはチョロいもんだ! ガハハ! ハッ!! ハッ!! ハッ!!", 1);
 		return;
 	}
 

@@ -129,31 +129,31 @@ static signed char showOptionsMenu()
 static void createCheatMenu()
 {
 	if (engine.cheatShield)
-		textSurface(TS_UNLIMITED_SHIELD, "UNLIMITED SHIELD - ON", -1, 350,
+		textSurface(TS_UNLIMITED_SHIELD, "無制限のシールド - ON", -1, 350,
 			FONT_WHITE);
 	else
-		textSurface(TS_UNLIMITED_SHIELD, "UNLIMITED SHIELD - OFF", -1, 350,
+		textSurface(TS_UNLIMITED_SHIELD, "無制限のシールド - OFF", -1, 350,
 			FONT_WHITE);
 
 	if (engine.cheatAmmo)
-		textSurface(TS_UNLIMITED_AMMO, "UNLIMITED AMMO - ON", -1, 370,
+		textSurface(TS_UNLIMITED_AMMO, "無制限のプラズマ - ON", -1, 370,
 			FONT_WHITE);
 	else
-		textSurface(TS_UNLIMITED_AMMO, "UNLIMITED AMMO - OFF", -1, 370,
+		textSurface(TS_UNLIMITED_AMMO, "無制限のプラズマ - OFF", -1, 370,
 			FONT_WHITE);
 
 	if (engine.cheatCash)
-		textSurface(TS_UNLIMITED_CASH, "UNLIMITED CASH - ON", -1, 390,
+		textSurface(TS_UNLIMITED_CASH, "無制限のキャッシュ - ON", -1, 390,
 			FONT_WHITE);
 	else
-		textSurface(TS_UNLIMITED_CASH, "UNLIMITED CASH - OFF", -1, 390,
+		textSurface(TS_UNLIMITED_CASH, "無制限のキャッシュ - OFF", -1, 390,
 			FONT_WHITE);
 
 	if (engine.cheatTime)
-		textSurface(TS_UNLIMITED_TIME, "UNLIMITED TIME - ON", -1, 410,
+		textSurface(TS_UNLIMITED_TIME, "無制限の時間 - ON", -1, 410,
 			FONT_WHITE);
 	else
-		textSurface(TS_UNLIMITED_TIME, "UNLIMITED TIME - OFF", -1, 410,
+		textSurface(TS_UNLIMITED_TIME, "無制限の時間 - OFF", -1, 410,
 			FONT_WHITE);
 }
 

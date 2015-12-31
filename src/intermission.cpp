@@ -872,7 +872,7 @@ int intermission()
 					game.stationedPlanet = game.destinationPlanet;
 					game.distanceCovered = 0;
 					player.shield = player.maxShield;
-					sprintf(string, "Stationed At: %s",
+					sprintf(string, "現在位置: %s",
 						systemPlanet[game.stationedPlanet].name);
 					strcpy(game.stationedName,
 						systemPlanet[game.stationedPlanet].name);

@@ -1,7 +1,7 @@
-Sid Wilson
+シド・ウィルソン
 FACE_SID
-While you were gone I picked up a distress call coming from around Jupiter.
+皆がいない間に、木星周辺から救難信号を受信した。
 FACE_URSULA
-Who would be sending out a distress call within Sol?
+太陽系内の誰が信号を送る必要があるのだ?
 FACE_CHRIS
-Let's check it out. Even if it's a trap, I think we can handle it.
+調べてみよう。罠かもしれんが、何とかなるさ。

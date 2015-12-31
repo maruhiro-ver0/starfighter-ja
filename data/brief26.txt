@@ -1,5 +1,5 @@
-Sid Wilson
+シド・ウィルソン
 FACE_CHRIS
-Kethlan has run off to Venus. I'm going after him.
+ケスランは金星へ逃げた。俺は奴を追う。
 FACE_SID
-Be careful, Chris. We've won the war, but it would be a real shame if you died now!
+気をつけてくれ、クリス。我々は戦争に勝利した。なのに君に死なれたとあっては耐え難い恥辱だ!

@@ -1,29 +1,29 @@
 15
-Mercury
+水星
 33
 20
-Venus
+金星
 34
 20
-Earth
+地球
 32
 20
-Mars
+火星
 33
 30
-Jupiter
+木星
 34
 20
-Saturn
+土星
 31
 20
-Uranus
+天王星
 31
 20
-Neptune
+海王星
 31
 20
-Pluto
+冥王星
 31
 -1
 NONE
@@ -37,43 +37,43 @@ NONE
 26
 0
 FACE_SID
-Sid Wilson (Venus)
-End Game
+シド・ウィルソン (金星)
+全てを終わらせる
 25
 0
 FACE_CHRIS
-Everyone (Earth)
-Take back Earth
+全員 (地球)
+地球の奪還
 24
 0
 FACE_SID
-Sid Wilson (Mars)
-Destroy inner defence system
+シド・ウィルソン (火星)
+内惑星防衛システムの破壊
 23
 0
 FACE_SID
-Sid Wilson (Jupiter)
-Investigate distress call
+シド・ウィルソン (木星)
+救難信号の調査
 22
 0
 FACE_SID
-Sid Wilson (Saturn)
-Destroy outer defence system
+シド・ウィルソン (土星)
+外惑星防衛システムの破壊
 21
 2
 FACE_URSULA
-Ursula Lexx (Uranus)
-Secure Uranus
+ウーシュラ・レックス (天王星)
+天王星の制圧
 20
 1
 FACE_PHOEBE
-Phoebe Lexx (Neptune)
-Secure Neptune
+フェーベ・レックス (海王星)
+海王星の制圧
 19
 0
 FACE_SID
-Sid Wilson (Pluto)
-Secure Pluto
+シド・ウィルソン (冥王星)
+冥王星の制圧
 -1
 -1
 NONE

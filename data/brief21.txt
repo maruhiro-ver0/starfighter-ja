@@ -1,9 +1,9 @@
-Sid Wilson
+シド・ウィルソン
 FACE_SID
-We've got to start from the outside and work our way in. That will give us less chance of being flanked during the final operation.
+まず外惑星を制圧し、そこから切り込む。そうすれば最後の作戦のとき両側から挟まれる危険性が小さくなる。
 FACE_PHOEBE
-Gotcha.
+分かった。
 FACE_URSULA
-Okay.
+OK
 FACE_CHRIS
-Alright.
+了解。

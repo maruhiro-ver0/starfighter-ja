@@ -55,12 +55,20 @@ gfx/plasmaGreen.png
 gfx/plasmaRed.png
 gfx/redDir.png
 gfx/sellIcon.png
-gfx/smallFont.png
+gfx/smallFont.png (Alphabet)
 gfx/stunBolt.png
 gfx/targetText.png
 
 Author: Astrid S. de Wijn
 License: CC BY-SA 3.0 <https://creativecommons.org/licenses/by-sa/3.0/>
+
+------------------------------------------------------------------------
+
+gfx/smallFont.png (Kanji)
+
+Author: Yu Izumi
+License: Public Domain
+Source: http://members.at.infoseek.co.jp/yu_izumi/izumi-bf/dl-jp.html
 
 ------------------------------------------------------------------------
 

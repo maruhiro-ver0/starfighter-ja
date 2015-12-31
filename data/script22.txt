@@ -2,7 +2,7 @@
 FACE_SID
 -1
 0
-Chris! Another two of those ray cannons just arrived in your sector!
+クリス! 別の2機のレーザー砲が領域に近づいているぞ!
 
 45
 -1
@@ -20,7 +20,7 @@ Chris! Another two of those ray cannons just arrived in your sector!
 FACE_SID
 -1
 0
-Two more!
+2機到着した!
 
 90
 -1

@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -23,7 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 extern Game game;
 
 void game_init();
+void game_doStars();
 void game_doExplosions();
+void game_delayFrame();
+bool game_collision(float x0, float y0, int w0, int h0, float x2, float y2, int w1, int h1);
 int game_mainLoop();
 
 #endif

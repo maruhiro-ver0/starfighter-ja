@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -153,52 +153,52 @@ void collectable_add(float x, float y, int type, int value, int life)
 	switch(type)
 	{
 		case P_CASH:
-			collectable->image = shape[24];
+			collectable->image = gfx_sprites[SP_PICKUP_MONEY];
 			break;
 
 		case P_ROCKET:
-			collectable->image = shape[49];
+			collectable->image = gfx_sprites[SP_PICKUP_ROCKETS];
 			break;
 
 		case P_PLASMA_AMMO:
-			collectable->image = shape[25];
+			collectable->image = gfx_sprites[SP_PICKUP_PLASMA];
 			break;
 
 		case P_SHIELD:
-			collectable->image = shape[26];
+			collectable->image = gfx_sprites[SP_PICKUP_SHIELD];
 			break;
 
 		case P_PLASMA_SHOT:
-			collectable->image = shape[27];
+			collectable->image = gfx_sprites[SP_PICKUP_PLASMA_OUTPUT];
 			break;
 
 		case P_PLASMA_RATE:
-			collectable->image = shape[28];
+			collectable->image = gfx_sprites[SP_PICKUP_PLASMA_RATE];
 			break;
 
 		case P_PLASMA_DAMAGE:
-			collectable->image = shape[29];
+			collectable->image = gfx_sprites[SP_PICKUP_PLASMA_POWER];
 			break;
 
 		case P_CARGO:
-			collectable->image = shape[32];
+			collectable->image = gfx_sprites[SP_CARGO];
 			break;
 
 		case P_SUPER:
-			collectable->image = shape[50];
+			collectable->image = gfx_sprites[SP_SUPERCHARGE];
 			break;
 
 		case P_MINE:
-			collectable->image = shape[31];
+			collectable->image = gfx_sprites[SP_MINE];
 			break;
 
 		case P_SLAVES:
 		case P_ESCAPEPOD:
-			collectable->image = shape[45];
+			collectable->image = gfx_sprites[SP_ESCAPE_POD];
 			break;
 
 		case P_ORE:
-			collectable->image = shape[46 + rand() % 3];
+			collectable->image = gfx_sprites[RANDRANGE(SP_ORE, SP_ORE_L)];
 			break;
 	}
 
@@ -206,15 +206,34 @@ void collectable_add(float x, float y, int type, int value, int life)
 	engine.collectableTail = collectable;
 }
 
+bool collectable_collision(collectables *collectable, object *ship)
+{
+	float x0 = collectable->x;
+	float y0 = collectable->y;
+	float w0 = collectable->image->w;
+	float h0 = collectable->image->h;
+
+	float x2 = ship->x;
+	float y2 = ship->y;
+	float w1 = ship->image[0]->w;
+	float h1 = ship->image[0]->h;
+
+	float x1 = x0 + w0;
+	float y1 = y0 + h0;
+
+	float x3 = x2 + w1;
+	float y3 = y2 + h1;
+
+	return !(x1<x2 || x3<x0 || y1<y2 || y3<y0);
+}
+
 void collectable_explode(collectables *collectable)
 {
-	if ((collectable->x >= 0) && (collectable->x <= screen->w) &&
-			(collectable->y >= 0) && (collectable->y <= screen->h))
-		audio_playSound(SFX_EXPLOSION, collectable->x);
+	audio_playSound(SFX_EXPLOSION, collectable->x, collectable->y);
 
 	for (int i = 0 ; i < 10 ; i++)
-		explosion_add(collectable->x + rand() % 25 - rand() % 25,
-			collectable->y + rand() % 25 - rand() % 25, E_BIG_EXPLOSION);
+		explosion_add(RANDRANGE(collectable->x - 25, collectable->x + 25),
+			RANDRANGE(collectable->y - 25, collectable->y + 25), SP_BIG_EXPLOSION);
 
 	player_checkShockDamage(collectable->x, collectable->y);
 }

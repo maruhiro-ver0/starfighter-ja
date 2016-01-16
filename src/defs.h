@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012 Guus Sliepen
-Copyright (C) 2012, 2015 Julian Marchant
+Copyright (C) 2012, 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,6 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef DEFS_H
 #define DEFS_H
 
+#include <stdlib.h>
+
+
+// Macros
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 #define LIMIT(x, a, b) x = ((x) < (b) ? ((x) > (a) ? (x) : (a)) : (b))
@@ -29,10 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WRAP_ADD(x, y, a, b) x = (((x) + (y)) + \
 	((x) + (y) < (a) ? ((b) - (a)) : 0) + \
 	((x) + (y) > (b) ? ((a) - (b)) : 0))
-#define RANDRANGE(x, y) (((x) < (y)) ? ((x) + (rand() % (1 + (y) - (x)))) : (x))
+#define CHANCE(x) ((rand() % RAND_MAX) < ((x) * RAND_MAX))
+#define RANDRANGE(x, y) (((x) < (y)) ? ((x) + (rand() % (long)(1 + (y) - (x)))) : (x))
 
-// ALL
-#define NONE 0
 
 // Compile-time options
 #ifndef VERSION
@@ -43,9 +46,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DATADIR "."
 #endif 
 
-#ifndef PATH_MAX
-#define PATH_MAX	4096
+#ifndef SCREEN_WIDTH
+#define SCREEN_WIDTH 800
 #endif
+
+#ifndef SCREEN_HEIGHT
+#define SCREEN_HEIGHT 600
+#endif
+
+#ifndef PATH_MAX
+#define PATH_MAX 4096
+#endif
+
+#define STARS_NUM 200
 
 // Object Flags
 #define FL_WEAPCO 1
@@ -60,7 +73,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FL_DROPMINES 512
 #define FL_AIMS 1024
 #define FL_DISABLED 2048
-#define FL_CANNOTDIE 4096 // This will only apply to Kline before the final mission
+#define FL_CANNOTDIE 4096 // No longer used
 #define FL_RUNSAWAY 8192
 #define FL_ALWAYSFACE 16384 // Kline doesn't turn his back on you! ;)
 #define FL_CIRCLES 32768L // Kline can circle around
@@ -71,13 +84,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define FL_ACTIVATE 1048576L
 #define FL_HASMINIMUMSPEED 2097152L
 #define FL_FIRELASER 4194304L
-
-// Explosions
-#define E_SMALL_EXPLOSION 4
-#define E_BIG_EXPLOSION 8
-#define E_SMOKE 12
-#define E_TINY_EXPLOSION 16
-#define E_ELECTRICAL 20
 
 // Weapon flags
 #define WF_SPREAD 4
@@ -91,19 +97,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define WF_DISABLE 1024
 #define WF_TIMEDEXPLOSION 2048
 
-#define MAX_WEAPONS 20
-#define MAX_SHAPES 100
-#define MAX_SHIPSHAPES 120
-#define MAX_TEXTSHAPES 150
-#define MAX_FONTSHAPES 6
-#define MAX_SHOPSHAPES 6
 #define MAX_CARGO 20
+#define MAX_INFOLINES 3
+#define MAX_EVENTS 20
 
-#define SHIP_HIT_INDEX 60
+
+enum keys {
+	KEY_UP,
+	KEY_DOWN,
+	KEY_LEFT,
+	KEY_RIGHT,
+	KEY_FIRE,
+	KEY_ALTFIRE,
+	KEY_SWITCH,
+	KEY_PAUSE,
+	KEY_ESCAPE,
+	KEY_FULLSCREEN,
+	KEY_DUMMY,
+	KEY_LAST
+};
 
 // AI Types
 enum {
-
 	AI_NORMAL = 1,
 	AI_DEFENSIVE,
 	AI_OFFENSIVE,
@@ -113,23 +128,25 @@ enum {
 
 // These are for Alien *indexes* NOT classdefs!!
 enum {
-
-	ALIEN_BOSS_PART4 = 10,
-	ALIEN_BOSS_PART3 = 11,
-	ALIEN_BOSS_PART2 = 12,
-	ALIEN_BOSS_PART1 = 13,
-	ALIEN_BOSS = 14,
+	ALIEN_NORMAL_LAST = 20,
+	ALIEN_BOSS,
+	ALIEN_BOSS_PART1,
+	ALIEN_BOSS_PART2,
+	ALIEN_BOSS_PART3,
+	ALIEN_BOSS_PART4,
+	ALIEN_BOSS_PART5,
+	ALIEN_BOSS_PART6,
 	ALIEN_KLINE,
 	ALIEN_PHOEBE,
 	ALIEN_URSULA,
 	ALIEN_SID,
-	ALIEN_GOODTRANSPORT = 19,
-	ALIEN_MAX = 25
+	ALIEN_FRIEND1,
+	ALIEN_FRIEND2,
+	ALIEN_MAX
 };
 
 // Droppables
 enum {
-
 	P_ANYTHING = 1,
 	P_WEAPONS,
 	P_CASH,
@@ -150,7 +167,6 @@ enum {
 
 // Jobs
 enum {
-
 	WT_PLASMA = 1,
 	WT_ROCKET,
 	WT_ENERGYRAY,
@@ -163,7 +179,6 @@ enum {
 
 // Weapons
 enum {
-
 	W_NONE = -1,
 	W_PLAYER_WEAPON,
 	W_PLAYER_WEAPON2,
@@ -182,13 +197,14 @@ enum {
 	W_AIMED_SHOT,
 	W_SPREADSHOT,
 	W_IONCANNON,
-	W_DIRSHOCKMISSILE
+	W_DIRSHOCKMISSILE,
+	W_MAX
 };
 
 // Mission types
 enum {
-
-	M_DESTROY_ALL_TARGETS = 1,
+	M_NONE,
+	M_DESTROY_ALL_TARGETS,
 	M_DESTROY_TARGET_TYPE,
 	M_COLLECT,
 	M_PROTECT_PICKUP,
@@ -198,7 +214,6 @@ enum {
 };
 
 enum {
-
 	OB_JUST_FAILED = -2,
 	OB_FAILED,
 	OB_INCOMPLETE,
@@ -210,7 +225,6 @@ enum {
 
 // Class Defs - Some of these are just place holders
 enum {
-
 	CD_DUALFIGHTER, 	// 0
 	CD_MISSILEBOAT,
 	CD_PROTOFIGHTER,
@@ -259,10 +273,224 @@ enum {
 	CD_URSULA
 };
 
-// Text shapes
+// Sprites
 enum {
+	// Intermission
+	SP_CURSOR,
+	SP_START_MISSION,
+	SP_MAP,
+	SP_STATUS,
+	SP_SAVE,
+	SP_SHOP,
+	SP_COMM,
+	SP_OPTIONS,
+	SP_EXIT,
+	SP_PLASMA_MAX_OUTPUT,
+	SP_PLASMA_MAX_POWER,
+	SP_PLASMA_MAX_RATE,
+	SP_PLASMA_AMMO,
+	SP_ROCKET_AMMO,
+	SP_PLASMA_MIN_OUTPUT,
+	SP_PLASMA_MIN_POWER,
+	SP_PLASMA_MIN_RATE,
+	SP_PLASMA_MAX_AMMO,
+	SP_ROCKET_MAX_AMMO,
+	SP_DOUBLE_ROCKETS,
+	SP_MICRO_ROCKETS,
+	SP_LASER,
+	SP_HOMING_MISSILE,
+	SP_CHARGER,
+	SP_DOUBLE_HOMING_MISSILES,
+	SP_MICRO_HOMING_MISSILES,
+	SP_GOTO,
+	SP_BUY,
+	SP_SELL,
+	SP_FIREFLY,
+	SP_SUN,
+	SP_PLANET_GREEN,
+	SP_PLANET_BLUE,
+	SP_PLANET_RED,
+	SP_PLANET_ORANGE,
 
-	TS_PRESENTS,
+	// Bullets
+	SP_PLASMA_GREEN,
+	SP_PLASMA_RED,
+	SP_DIR_PLASMA_GREEN,
+	SP_DIR_PLASMA_RED,
+	SP_ION,
+	SP_ROCKET,
+	SP_ROCKET_L,
+
+	// Explosions
+	SP_SMALL_EXPLOSION,
+	SP_SMALL_EXPLOSION_2,
+	SP_SMALL_EXPLOSION_3,
+	SP_SMALL_EXPLOSION_L,
+	SP_BIG_EXPLOSION,
+	SP_BIG_EXPLOSION_2,
+	SP_BIG_EXPLOSION_3,
+	SP_BIG_EXPLOSION_L,
+	SP_SMOKE,
+	SP_SMOKE_2,
+	SP_SMOKE_3,
+	SP_SMOKE_L,
+	SP_TINY_EXPLOSION,
+	SP_TINY_EXPLOSION_2,
+	SP_TINY_EXPLOSION_3,
+	SP_TINY_EXPLOSION_L,
+	SP_ELECTRICAL,
+	SP_ELECTRICAL_2,
+	SP_ELECTRICAL_3,
+	SP_ELECTRICAL_L,
+
+	// Pickups
+	SP_PICKUP_MONEY,
+	SP_PICKUP_PLASMA,
+	SP_PICKUP_ROCKETS,
+	SP_PICKUP_SHIELD,
+	SP_PICKUP_PLASMA_OUTPUT,
+	SP_PICKUP_PLASMA_POWER,
+	SP_PICKUP_PLASMA_RATE,
+	SP_SUPERCHARGE,
+	SP_CARGO,
+	SP_ESCAPE_POD,
+	SP_ORE,
+	SP_ORE_2,
+	SP_ORE_L,
+	SP_CHAIN_LINK,
+	SP_MINE,
+
+	// Targeting system
+	SP_ARROW_NORTH,
+	SP_ARROW_NORTHEAST,
+	SP_ARROW_EAST,
+	SP_ARROW_SOUTHEAST,
+	SP_ARROW_SOUTH,
+	SP_ARROW_SOUTHWEST,
+	SP_ARROW_WEST,
+	SP_ARROW_NORTHWEST,
+	SP_ARROW_FRIEND_NORTH,
+	SP_ARROW_FRIEND_NORTHEAST,
+	SP_ARROW_FRIEND_EAST,
+	SP_ARROW_FRIEND_SOUTHEAST,
+	SP_ARROW_FRIEND_SOUTH,
+	SP_ARROW_FRIEND_SOUTHWEST,
+	SP_ARROW_FRIEND_WEST,
+	SP_ARROW_FRIEND_NORTHWEST,
+	SP_INDICATOR_TARGET,
+	SP_INDICATOR_SID,
+	SP_INDICATOR_PHOEBE,
+	SP_INDICATOR_URSULA,
+	SP_INDICATOR_KLINE,
+
+	SP_MAX
+};
+
+// Face sprites
+enum {
+	FS_CHRIS,
+	FS_SID,
+	FS_KRASS,
+	FS_KLINE,
+	FS_PHOEBE,
+	FS_URSULA,
+	FS_CREW,
+	FS_MAX
+};
+
+// Ship sprites
+enum {
+	SS_FIREFLY,
+	SS_FIREFLY_L,
+	SS_SID,
+	SS_SID_L,
+	SS_FRIEND,
+	SS_FRIEND_L,
+	SS_GOODTRANSPORT,
+	SS_GOODTRANSPORT_L,
+	SS_REBELCARRIER,
+	SS_REBELCARRIER_L,
+	SS_DUALFIGHTER,
+	SS_DUALFIGHTER_L,
+	SS_MISSILEBOAT,
+	SS_MISSILEBOAT_L,
+	SS_PROTOFIGHTER,
+	SS_PROTOFIGHTER_L,
+	SS_AIMFIGHTER,
+	SS_AIMFIGHTER_L,
+	SS_DRONE,
+	SS_DRONE_L,
+	SS_MINER,
+	SS_MINER_L,
+	SS_ESCORT,
+	SS_ESCORT_L,
+	SS_MOBILE_RAY,
+	SS_MOBILE_RAY_L,
+	SS_TRANSPORTSHIP,
+	SS_TRANSPORTSHIP_L,
+	SS_CARGOSHIP,
+	SS_CARGOSHIP_L,
+	SS_SLAVETRANSPORT,
+	SS_SLAVETRANSPORT_L,
+	SS_BARRIER,
+	SS_MOBILESHIELD,
+	SS_MOBILESHIELD_L,
+	SS_ASTEROID,
+	SS_ASTEROID_SMALL,
+	SS_ASTEROID_SMALL_L,
+	SS_CLOAKFIGHTER,
+	SS_CLOAKFIGHTER_L,
+	SS_EVILURSULA,
+	SS_EVILURSULA_L,
+	SS_KRASS,
+	SS_KRASS_L,
+	SS_FRIGATE,
+	SS_FRIGATE_L,
+	SS_FRIGATE_WING1,
+	SS_FRIGATE_WING1_L,
+	SS_FRIGATE_WING2,
+	SS_FRIGATE_WING2_L,
+	SS_MINERBOSS,
+	SS_MINERBOSS_L,
+	SS_MINERBOSS_WING1,
+	SS_MINERBOSS_WING1_L,
+	SS_MINERBOSS_WING2,
+	SS_MINERBOSS_WING2_L,
+	SS_MINERBOSS_WING3,
+	SS_MINERBOSS_WING3_L,
+	SS_MINERBOSS_WING4,
+	SS_MINERBOSS_WING4_L,
+	SS_EXEC,
+	SS_EXEC_L,
+	SS_PLUTOBOSS,
+	SS_PLUTOBOSS_L,
+	SS_URANUSBOSS,
+	SS_URANUSBOSS_L,
+	SS_URANUSBOSS_WING1,
+	SS_URANUSBOSS_WING1_L,
+	SS_URANUSBOSS_WING2,
+	SS_URANUSBOSS_WING2_L,
+	SS_KLINE,
+	SS_KLINE_L,
+	SS_HIT_INDEX,
+	SS_MAX = SS_HIT_INDEX * 2
+};
+
+// Shop sprites
+enum {
+	SHOP_S_PRIMARY,
+	SHOP_S_POWERUP,
+	SHOP_S_SECONDARY,
+	SHOP_S_CATALOG,
+	SHOP_S_SHIP_INFO,
+	SHOP_S_ITEM_INFO,
+	SHOP_S_MAX
+};
+
+// Text sprites
+enum {
+	// Main menu
+	TS_PRESENTS = MAX_INFOLINES,
 	TS_AN_SDL_GAME,
 	TS_START_NEW_GAME,
 	TS_LOAD_GAME,
@@ -286,12 +514,72 @@ enum {
 	TS_UNLIMITED_CASH,
 	TS_UNLIMITED_TIME,
 	TS_START_GAME,
-	TS_DIFFICULTY
+	TS_DIFFICULTY,
+
+	// Intermission
+	TS_CURRENT_SYSTEM,
+	TS_INFO_START_MISSION,
+	TS_INFO_GOTO,
+	TS_INFO_MAP,
+	TS_INFO_STATUS,
+	TS_INFO_SAVE_GAME,
+	TS_INFO_SHOP,
+	TS_INFO_COMMS,
+	TS_INFO_OPTIONS,
+	TS_INFO_EXIT,
+	TS_CURRENT_PLANET,
+	TS_DEST_PLANET,
+
+	// Status
+	TS_STATUS_HEADER,
+	TS_SHOTS_FIRED,
+	TS_HITS_SCORED,
+	TS_ACCURACY,
+	TS_OTHER_KILLS,
+	TS_CASH_EARNED,
+	TS_CHRIS_HEADER,
+	TS_CHRIS_KILLS,
+	TS_CHRIS_SHIELD_PICKUPS,
+	TS_CHRIS_PLASMA_PICKUPS,
+	TS_CHRIS_ROCKET_PICKUPS,
+	TS_CHRIS_POWERUP_PICKUPS,
+	TS_CHRIS_MINES_KILLED,
+	TS_CHRIS_SLAVES_RESCUED,
+	TS_PHOEBE_HEADER,
+	TS_PHOEBE_KILLS,
+	TS_PHOEBE_DEATHS,
+	TS_URSULA_HEADER,
+	TS_URSULA_KILLS,
+	TS_URSULA_DEATHS,
+	TS_STATUS_FOOTER,
+
+	// Mission
+	TS_RADIO,
+	TS_SHIELD,
+	TS_PLASMA_T,
+	TS_AMMO_T,
+	TS_TARGET,
+	TS_TARGET_SID,
+	TS_TARGET_PHOEBE,
+	TS_TARGET_KLINE,
+	TS_CASH_T,
+	TS_OBJECTIVES_T,
+	TS_TIME_T,
+	TS_POWER,
+	TS_OUTPUT,
+	TS_COOLER,
+	TS_PAUSED,
+	TS_TIME,
+	TS_PLASMA,
+	TS_AMMO,
+	TS_CASH,
+	TS_OBJECTIVES,
+
+	TS_MAX
 };
 
 // Menu types
 enum {
-
 	MENU_MAIN,
 	MENU_DIFFICULTY,
 	MENU_LOAD,
@@ -301,7 +589,6 @@ enum {
 
 // Shop items
 enum {
-
 	SHOP_PLASMA_MAX_OUTPUT,
 	SHOP_PLASMA_MAX_DAMAGE,
 	SHOP_PLASMA_MAX_RATE,
@@ -319,23 +606,22 @@ enum {
 	SHOP_CHARGER,
 	SHOP_DOUBLE_HOMING_MISSILES,
 	SHOP_MICRO_HOMING_MISSILES,
-	MAX_SHOPITEMS
+	SHOP_MAX
 };
 
 // Font Colors
 enum {
-
 	FONT_WHITE,
 	FONT_RED,
 	FONT_YELLOW,
 	FONT_GREEN,
 	FONT_CYAN,
-	FONT_OUTLINE // a dark blue color
+	FONT_OUTLINE, // a dark blue color
+	FONT_MAX
 };
 
 // Sounds
 enum {
-
 	SFX_EXPLOSION,
 	SFX_HIT,
 	SFX_DEATH,
@@ -357,27 +643,64 @@ enum {
 
 // Sections
 enum {
-
 	SECTION_TITLE,
 	SECTION_INTERMISSION,
 	SECTION_GAME
 };
 
-// Faces
+// Systems
 enum {
+	SYSTEM_SPIRIT,
+	SYSTEM_EYANANTH,
+	SYSTEM_MORDOR,
+	SYSTEM_SOL
+};
 
-	FACE_CHRIS = 90,
-	FACE_SID,
-	FACE_KRASS,
-	FACE_KLINE,
-	FACE_PHOEBE,
-	FACE_URSULA,
-	FACE_CREW
+// Planets (Spirit)
+enum {
+	PLANET_HAIL,
+	PLANET_CERADSE,
+	PLANET_HINSTAG,
+	PLANET_JOLDAR,
+	PLANET_MOEBO
+};
+
+// Planets (Eyananth)
+enum {
+	PLANET_NEROD,
+	PLANET_ALLEZ,
+	PLANET_URUSOR,
+	PLANET_DORIM,
+	PLANET_ELAMALE,
+	PLANET_RESCUESLAVES = 9 // For save compatibility
+};
+
+// Planets (Mordor)
+enum {
+	PLANET_ODEON,
+	PLANET_FELLON,
+	PLANET_SIVEDI,
+	PLANET_ALMARTHA,
+	PLANET_POSWIC,
+	PLANET_ELLESH,
+	PLANET_CLOAKFIGHTER = 9 // For save compatibility
+};
+
+// Planets (Sol)
+enum {
+	PLANET_MERCURY,
+	PLANET_VENUS,
+	PLANET_EARTH,
+	PLANET_MARS,
+	PLANET_JUPITER,
+	PLANET_SATURN,
+	PLANET_URANUS,
+	PLANET_NEPTUNE,
+	PLANET_PLUTO
 };
 
 // Missions
 enum {
-
 	MISN_START,
 	MISN_HAIL,
 	MISN_CERADSE,
@@ -426,8 +749,8 @@ const char * const systemBackground[] = {
 };
 
 const int rate2reload[6] = {15, 15, 13, 11, 9, 7};
-const int screenWidth = 800;
-const int screenHeight = 600;
+const int screenWidth = SCREEN_WIDTH;
+const int screenHeight = SCREEN_HEIGHT;
 const int xViewBorder = 100;
 const int yViewBorder = 100;
 const float cameraMaxSpeed = 3.;

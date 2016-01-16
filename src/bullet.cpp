@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 void bullet_add(object *theWeapon, object *attacker, int y, int dy)
 {
 	object *bullet;
-	signed char imageIndex;
+	int imageIndex;
 	int tempX, tempY, steps;
 
 	bullet = new object;
@@ -131,7 +131,7 @@ void bullet_add(object *theWeapon, object *attacker, int y, int dy)
 	{
 		bullet->dx = RANDRANGE(-20, 20);
 		bullet->dy = RANDRANGE(-20, 20);
-		bullet->image[0] = shape[4];
+		bullet->image[0] = gfx_sprites[SP_SMALL_EXPLOSION];
 	}
 
 	engine.bulletTail->next = bullet;
@@ -180,4 +180,25 @@ object *bullet_getTarget(object *bullet)
 		return NULL;
 
 	return &aliens[i];
+}
+
+bool bullet_collision(object *bullet, object *ship)
+{
+	float x0 = bullet->x;
+	float y0 = bullet->y;
+	float w0 = bullet->image[0]->w;
+	float h0 = bullet->image[0]->h;
+
+	float x2 = ship->x;
+	float y2 = ship->y;
+	float w1 = ship->image[0]->w;
+	float h1 = ship->image[0]->h;
+
+	float x1 = x0 + w0;
+	float y1 = y0 + h0;
+
+	float x3 = x2 + w1;
+	float y3 = y2 + h1;
+
+	return !(x1<x2 || x3<x0 || y1<y2 || y3<y0);
 }

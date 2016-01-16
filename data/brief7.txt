@@ -1,9 +1,0 @@
-(不明)
-FACE_PHOEBE
-助けて! SOS! 誰か聞こえてる?!
-FACE_CHRIS
-よく聞こえるぞ! どうした?
-FACE_PHOEBE
-ああ、助かったわ! ネロド周辺でWEAPCOの大群に囲まれているの! 支援を!
-FACE_CHRIS
-すぐ向かう!

@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -42,13 +42,18 @@ void audio_loadSounds()
 	sound[SFX_PLASMA3] = Mix_LoadWAV("sound/plasma3.ogg");
 }
 
-void audio_playSound(int sid, float x)
+void audio_playSound(int sid, float x, float y)
 {
-	if ((!engine.useSound) || (!engine.useAudio))
-		return;
-
 	int channel = -1;
 	static int freechannel = 4;
+	static int channelVolume[4] = {0, 0, 0, 0};
+	int angle = atanf((x - (screen->w / 2)) / (screen->w / 2)) * 180 / M_PI;
+	int attenuation = fabsf(x - (screen->w / 2)) / (screen->w / 20);
+	float distance = sqrtf(powf(fabsf(x - (screen->w / 2)), 2) + powf(fabsf(y - (screen->h / 2)), 2));
+	int volume = MIX_MAX_VOLUME - (MIX_MAX_VOLUME * distance / (3 * screen->w));
+
+	if ((!engine.useSound) || (!engine.useAudio) || (volume <= 0))
+		return;
 
 	switch(sid)
 	{
@@ -80,15 +85,22 @@ void audio_playSound(int sid, float x)
 			break;
 	}
 
-	if(channel == -1) {
+	if (channel == -1)
+	{
 		channel = freechannel++;
-		if(freechannel >= 8)
+		if (freechannel >= 8)
 			freechannel = 4;
 	}
+	else
+	{
+		if (Mix_Playing(channel) && (volume <= MIX_MAX_VOLUME / 4) &&
+				(channelVolume[channel] >= MIX_MAX_VOLUME * 3 / 4))
+			return;
+		else
+			channelVolume[channel] = volume;
+	}
 
-	int angle = atanf((x - (screen->w / 2)) / (screen->w / 2)) * 180 / M_PI;
-	int attenuation = fabsf(x - (screen->w / 2)) / 40;
-
+	angle %= 360;
 	if (angle < 0)
 		angle += 360;
 
@@ -96,6 +108,7 @@ void audio_playSound(int sid, float x)
 		attenuation = 255;
 
 	Mix_SetPosition(channel, angle, attenuation);
+	Mix_Volume(channel, volume);
 	Mix_PlayChannel(channel, sound[sid], 0);
 }
 

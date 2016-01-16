@@ -1,18 +1,22 @@
 CXXFLAGS ?= -O2 -Wall -g
 CXXFLAGS += `pkg-config --cflags sdl2 SDL2_image SDL2_mixer`
 LIBS = `pkg-config --libs sdl2 SDL2_image SDL2_mixer`
-OBJS = alien.o audio.o bullet.o cargo.o collectable.o engine.o explosion.o game.o graphics.o init.o intermission.o loadSave.o messages.o misc.o missions.o player.o resources.o script.o ship.o shop.o Starfighter.o title.o weapons.o
+OBJS = alien.o audio.o bullet.o cargo.o collectable.o colors.o cutscene.o engine.o event.o explosion.o game.o gfx.o intermission.o loadSave.o messages.o misc.o missions.o player.o renderer.o resources.o screen.o ship.o shop.o Starfighter.o title.o weapons.o window.o
 
-VERSION = 1.4
+VERSION = 1.5.1
 PROG = starfighter
 DOCS = docs/*
 DATA = data gfx sound music
 DATAFILES = data/* gfx/* sound/* music/*
+LAUNCHER = misc/starfighter.desktop
+ICON = misc/starfighter.png
 
 PREFIX ?= /usr
 BINDIR ?= $(PREFIX)/games/
 DATADIR ?= $(PREFIX)/share/games/parallelrealities/
 DOCDIR ?= $(PREFIX)/share/doc/$(PROG)/
+MENUDIR ?= $(PREFIX)/share/applications/
+ICONDIR ?= $(PREFIX)/share/pixmaps/
 
 # top-level rule to create the program.
 ALL = $(PROG)
@@ -36,10 +40,14 @@ install: $(ALL)
 	mkdir -p $(DESTDIR)$(BINDIR)
 	mkdir -p $(DESTDIR)$(DATADIR)
 	mkdir -p $(DESTDIR)$(DOCDIR)
+	mkdir -p $(MENUDIR)
+	mkdir -p $(ICONDIR)
 
 	install -m 755 $(PROG) $(DESTDIR)$(BINDIR)$(PROG)
-	cp -pr $(DATA) $(DESTDIR)$(DATADIR)
-	cp -p $(DOCS) $(DESTDIR)$(DOCDIR)
+	cp -r $(DATA) $(DESTDIR)$(DATADIR)
+	cp $(DOCS) $(DESTDIR)$(DOCDIR)
+	cp $(LAUNCHER) $(MENUDIR)
+	cp $(ICON) $(ICONDIR)
 
 optimise:
 	advpng -z gfx/*.png

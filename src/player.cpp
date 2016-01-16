@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012, 2013 Guus Sliepen
-Copyright (C) 2012, 2015 Julian Marchant
+Copyright (C) 2012, 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -34,8 +34,8 @@ void initPlayer()
 	player.systemPower = player.maxShield;
 	player.face = 0;
 
-	player.image[0] = shipShape[0];
-	player.image[1] = shipShape[1];
+	player.image[0] = gfx_shipSprites[SS_FIREFLY];
+	player.image[1] = gfx_shipSprites[SS_FIREFLY_L];
 
 	player.engineX = player.image[0]->w;
 	player.engineY = (player.image[0]->h / 2);
@@ -270,8 +270,11 @@ void getPlayerInput()
 	{
 		// Get the current mouse position
 		static int px = -1, py = -1;
-		int x, y;
+		int x, y, w, h;
 		SDL_GetMouseState(&x, &y);
+		SDL_GetWindowSize(window, &w, &h);
+		x = screen->w * x / w;
+		y = screen->h * y / h;
 		if (px == x && py == y) {
 			if(engine.keyState[KEY_UP] && engine.cursor_y > 0)
 				engine.cursor_y -= 4;
@@ -317,7 +320,7 @@ void leaveSector()
 		if (player.x <= -100)
 		{
 			engine.done = 2;
-			audio_playSound(SFX_FLY, screen->w / 2);
+			audio_playSound(SFX_FLY, screen->w / 2, screen->h / 2);
 		}
 	}
 

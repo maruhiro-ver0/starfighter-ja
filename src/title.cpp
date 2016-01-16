@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012, 2013 Guus Sliepen
-Copyright (C) 2012, 2015 Julian Marchant
+Copyright (C) 2012, 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,25 +19,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "Starfighter.h"
 
-static signed char showGameMenu(signed char continueSaveSlot)
+static int showGameMenu(int continueSaveSlot)
 {
-	blitText(TS_START_NEW_GAME);
+	screen_blitText(TS_START_NEW_GAME);
+	screen_blitText(TS_LOAD_GAME);
 	if (continueSaveSlot != -1)
 	{
-		blitText(TS_LOAD_GAME);
-		blitText(TS_CONTINUE_CURRENT_GAME);
+		screen_blitText(TS_CONTINUE_CURRENT_GAME);
 	}
-	blitText(TS_OPTIONS);
+	screen_blitText(TS_OPTIONS);
 	if (engine.cheat)
 	{
-		textShape[TS_QUIT].y = 450;
-		blitText(TS_CHEAT_OPTIONS);
+		gfx_textSprites[TS_QUIT].y = screen->h / 3 + 150;
+		screen_blitText(TS_CHEAT_OPTIONS);
 	}
 	else
 	{
-		textShape[TS_QUIT].y = 430;
+		gfx_textSprites[TS_QUIT].y = screen->h / 3 + 130;
 	}
-	blitText(TS_QUIT);
+	screen_blitText(TS_QUIT);
 
 	if (engine.cheat)
 		return 6;
@@ -45,47 +45,53 @@ static signed char showGameMenu(signed char continueSaveSlot)
 	return 5;
 }
 
-static signed char showLoadMenu()
+static int showLoadMenu()
 {
-	signed char rtn = 1;
+	int rtn = 1;
 
 	for (int i = TS_SAVESLOT_0 ; i <= TS_SAVESLOT_5 ; i++)
 	{
 		rtn++;
-		if (textShape[i].image != NULL)
+		if (gfx_textSprites[i].image != NULL)
 		{
-			blitText(i);
-			textShape[TS_BACK_TO_MAIN_MENU].y = textShape[i].y + 40;
+			screen_blitText(i);
+			gfx_textSprites[TS_BACK_TO_MAIN_MENU].y = gfx_textSprites[i].y + 40;
 		}
 	}
-	blitText(TS_BACK_TO_MAIN_MENU);
+	screen_blitText(TS_BACK_TO_MAIN_MENU);
 
 	return rtn;
 }
 
 static void createDifficultyMenu()
 {
-	textSurface(TS_START_GAME, "始める", -1, 350, FONT_WHITE);
+	gfx_createTextObject(TS_START_GAME, "始める",
+		-1, screen->h / 3 + 50, FONT_WHITE);
 
 	if (game.difficulty == DIFFICULTY_EASY)
-		textSurface(TS_DIFFICULTY, "難易度 - 簡単", -1, 370, FONT_WHITE);
+		gfx_createTextObject(TS_DIFFICULTY, "難易度 - 簡単",
+			-1, screen->h / 3 + 70, FONT_WHITE);
 	else if (game.difficulty == DIFFICULTY_HARD)
-		textSurface(TS_DIFFICULTY, "難易度 - 難しい", -1, 370, FONT_WHITE);
+		gfx_createTextObject(TS_DIFFICULTY, "難易度 - 難しい",
+			-1, screen->h / 3 + 70, FONT_WHITE);
 	else if (game.difficulty == DIFFICULTY_NIGHTMARE)
-		textSurface(TS_DIFFICULTY, "難易度 - 悪夢!", -1, 370, FONT_WHITE);
+		gfx_createTextObject(TS_DIFFICULTY, "難易度 - 悪夢!",
+			-1, screen->h / 3 + 70, FONT_WHITE);
 	else if (game.difficulty == DIFFICULTY_ORIGINAL)
-		textSurface(TS_DIFFICULTY, "難易度 - オリジナル", -1, 370, FONT_WHITE);
+		gfx_createTextObject(TS_DIFFICULTY, "難易度 - 旧版",
+			-1, screen->h / 3 + 70, FONT_WHITE);
 	else
-		textSurface(TS_DIFFICULTY, "難易度 - 普通", -1, 370, FONT_WHITE);
+		gfx_createTextObject(TS_DIFFICULTY, "難易度 - 普通",
+			-1, screen->h / 3 + 70, FONT_WHITE);
 }
 
-static signed char showDifficultyMenu()
+static int showDifficultyMenu()
 {
-	textShape[TS_BACK_TO_MAIN_MENU].y = 410;
+	gfx_textSprites[TS_BACK_TO_MAIN_MENU].y = screen->h / 3 + 110;
 
-	blitText(TS_START_GAME);
-	blitText(TS_DIFFICULTY);
-	blitText(TS_BACK_TO_MAIN_MENU);
+	screen_blitText(TS_START_GAME);
+	screen_blitText(TS_DIFFICULTY);
+	screen_blitText(TS_BACK_TO_MAIN_MENU);
 
 	return 3;
 }
@@ -93,35 +99,43 @@ static signed char showDifficultyMenu()
 static void createOptionsMenu()
 {
 	if (engine.useSound)
-		textSurface(TS_SOUND, "効果音 - ON", -1, 350, FONT_WHITE);
+		gfx_createTextObject(TS_SOUND, "効果音 - ON",
+			-1, screen->h / 3 + 50, FONT_WHITE);
 	else
-		textSurface(TS_SOUND, "効果音 - OFF", -1, 350, FONT_WHITE);
+		gfx_createTextObject(TS_SOUND, "効果音 - OFF",
+			-1, screen->h / 3 + 50, FONT_WHITE);
 
 	if (engine.useMusic)
-		textSurface(TS_MUSIC, "音楽 - ON", -1, 370, FONT_WHITE);
+		gfx_createTextObject(TS_MUSIC, "音楽 - ON",
+			-1, screen->h / 3 + 70, FONT_WHITE);
 	else
-		textSurface(TS_MUSIC, "音楽 - OFF", -1, 370, FONT_WHITE);
+		gfx_createTextObject(TS_MUSIC, "音楽 - OFF",
+			-1, screen->h / 3 + 70, FONT_WHITE);
 
 	if (engine.fullScreen)
-		textSurface(TS_FULLSCREEN, "フルスクリーン - ON", -1, 390, FONT_WHITE);
+		gfx_createTextObject(TS_FULLSCREEN, "フルスクリーン - ON",
+			-1, screen->h / 3 + 90, FONT_WHITE);
 	else
-		textSurface(TS_FULLSCREEN, "フルスクリーン - OFF", -1, 390, FONT_WHITE);
+		gfx_createTextObject(TS_FULLSCREEN, "フルスクリーン - OFF",
+			-1, screen->h / 3 + 90, FONT_WHITE);
 
 	if (engine.autoPause)
-		textSurface(TS_AUTOPAUSE, "オートポーズ - ON", -1, 410, FONT_WHITE);
+		gfx_createTextObject(TS_AUTOPAUSE, "オートポーズ - ON",
+			-1, screen->h / 3 + 110, FONT_WHITE);
 	else
-		textSurface(TS_AUTOPAUSE, "オートポーズ - OFF", -1, 410, FONT_WHITE);
+		gfx_createTextObject(TS_AUTOPAUSE, "オートポーズ - OFF",
+			-1, screen->h / 3 + 110, FONT_WHITE);
 }
 
-static signed char showOptionsMenu()
+static int showOptionsMenu()
 {
-	textShape[TS_BACK_TO_MAIN_MENU].y = 450;
+	gfx_textSprites[TS_BACK_TO_MAIN_MENU].y = screen->h / 3 + 150;
 
-	blitText(TS_SOUND);
-	blitText(TS_MUSIC);
-	blitText(TS_FULLSCREEN);
-	blitText(TS_AUTOPAUSE);
-	blitText(TS_BACK_TO_MAIN_MENU);
+	screen_blitText(TS_SOUND);
+	screen_blitText(TS_MUSIC);
+	screen_blitText(TS_FULLSCREEN);
+	screen_blitText(TS_AUTOPAUSE);
+	screen_blitText(TS_BACK_TO_MAIN_MENU);
 
 	return 5;
 }
@@ -129,43 +143,43 @@ static signed char showOptionsMenu()
 static void createCheatMenu()
 {
 	if (engine.cheatShield)
-		textSurface(TS_UNLIMITED_SHIELD, "無制限のシールド - ON", -1, 350,
-			FONT_WHITE);
+		gfx_createTextObject(TS_UNLIMITED_SHIELD, "無制限のシールド - ON",
+			-1, screen->h / 3 + 50, FONT_WHITE);
 	else
-		textSurface(TS_UNLIMITED_SHIELD, "無制限のシールド - OFF", -1, 350,
-			FONT_WHITE);
+		gfx_createTextObject(TS_UNLIMITED_SHIELD, "無制限のシールド - OFF",
+			-1, screen->h / 3 + 50, FONT_WHITE);
 
 	if (engine.cheatAmmo)
-		textSurface(TS_UNLIMITED_AMMO, "無制限のプラズマ - ON", -1, 370,
-			FONT_WHITE);
+		gfx_createTextObject(TS_UNLIMITED_AMMO, "無制限のプラズマ - ON",
+			-1, screen->h / 3 + 70, FONT_WHITE);
 	else
-		textSurface(TS_UNLIMITED_AMMO, "無制限のプラズマ - OFF", -1, 370,
-			FONT_WHITE);
+		gfx_createTextObject(TS_UNLIMITED_AMMO, "無制限のプラズマ - OFF",
+			-1, screen->h / 3 + 70, FONT_WHITE);
 
 	if (engine.cheatCash)
-		textSurface(TS_UNLIMITED_CASH, "無制限のキャッシュ - ON", -1, 390,
-			FONT_WHITE);
+		gfx_createTextObject(TS_UNLIMITED_CASH, "無制限のキャッシュ - ON",
+			-1, screen->h / 3 + 90, FONT_WHITE);
 	else
-		textSurface(TS_UNLIMITED_CASH, "無制限のキャッシュ - OFF", -1, 390,
-			FONT_WHITE);
+		gfx_createTextObject(TS_UNLIMITED_CASH, "無制限のキャッシュ - OFF",
+			-1, screen->h / 3 + 90, FONT_WHITE);
 
 	if (engine.cheatTime)
-		textSurface(TS_UNLIMITED_TIME, "無制限の時間 - ON", -1, 410,
-			FONT_WHITE);
+		gfx_createTextObject(TS_UNLIMITED_TIME, "無制限の時間 - ON",
+			-1, screen->h / 3 + 110, FONT_WHITE);
 	else
-		textSurface(TS_UNLIMITED_TIME, "無制限の時間 - OFF", -1, 410,
-			FONT_WHITE);
+		gfx_createTextObject(TS_UNLIMITED_TIME, "無制限の時間 - OFF",
+			-1, screen->h / 3 + 110, FONT_WHITE);
 }
 
-static signed char showCheatMenu()
+static int showCheatMenu()
 {
-	textShape[TS_BACK_TO_MAIN_MENU].y = 450;
+	gfx_textSprites[TS_BACK_TO_MAIN_MENU].y = screen->h / 3 + 150;
 
-	blitText(TS_UNLIMITED_SHIELD);
-	blitText(TS_UNLIMITED_AMMO);
-	blitText(TS_UNLIMITED_CASH);
-	blitText(TS_UNLIMITED_TIME);
-	blitText(TS_BACK_TO_MAIN_MENU);
+	screen_blitText(TS_UNLIMITED_SHIELD);
+	screen_blitText(TS_UNLIMITED_AMMO);
+	screen_blitText(TS_UNLIMITED_CASH);
+	screen_blitText(TS_UNLIMITED_TIME);
+	screen_blitText(TS_BACK_TO_MAIN_MENU);
 
 	return 5;
 }
@@ -176,12 +190,31 @@ This is the main title screen, with the stars whirling past and the
 */
 int doTitle()
 {
+	int continueSaveSlot;
+
+	int prx;
+	int pry;
+	int sfx;
+	int sfy;
+
+	int then;
+	int now;
+
+	int redGlow = 255;
+	int redDir = -2;
+	char buildVersion[25];
+
+	int selectedOption = 1;
+	bool skip = false;
+	int listLength = 5; // menu list length
+	int menuType = MENU_MAIN;
+
 	game_init();
 
 	engine.gameSection = SECTION_TITLE;
 
-	flushBuffer();
-	freeGraphics();
+	screen_flushBuffer();
+	gfx_free();
 	resetLists();
 	
 	// required to stop the title screen crashing
@@ -190,37 +223,44 @@ int doTitle()
 
 	loadGameGraphics();
 
-	clearScreen(black);
-	updateScreen();
-	clearScreen(black);
+	screen_clear(black);
+	renderer_update();
+	screen_clear(black);
 
-	signed char continueSaveSlot = initSaveSlots();
+	continueSaveSlot = initSaveSlots();
 
 	loadBackground("gfx/spirit.jpg");
 
 	SDL_Surface *prlogo, *sflogo;
-	prlogo = loadImage("gfx/prlogo.png");
-	sflogo = loadImage("gfx/sflogo.png");
+	prlogo = gfx_loadImage("gfx/prlogo.png");
+	sflogo = gfx_loadImage("gfx/sflogo.png");
 
-	int prx = ((screen->w - prlogo->w) / 2);
-	int pry = ((screen->h - prlogo->h) / 2);
+	prx = ((screen->w - prlogo->w) / 2);
+	pry = ((screen->h - prlogo->h) / 2);
 
-	int sfx = ((screen->w - sflogo->w) / 2);
-	int sfy = ((screen->h - sflogo->h) / 2);
+	sfx = ((screen->w - sflogo->w) / 2);
+	sfy = ((screen->h - sflogo->h) / 3);
 
-	textSurface(TS_PRESENTS, "PRESENTS", -1, 300, FONT_WHITE);
-	textSurface(TS_AN_SDL_GAME, "AN SDL GAME", -1, 300, FONT_WHITE);
-	textSurface(TS_START_NEW_GAME, "始めから", -1, 350, FONT_WHITE);
-	textSurface(TS_LOAD_GAME, "ロード", -1, 370, FONT_WHITE);
-	textSurface(TS_CONTINUE_CURRENT_GAME, "続き", -1, 390,
-		FONT_WHITE);
-	textSurface(TS_OPTIONS, "オプション", -1, 410, FONT_WHITE);
-	textSurface(TS_CHEAT_OPTIONS, "チートオプション", -1, 430, FONT_WHITE);
-	textSurface(TS_QUIT, "終了", -1, 430, FONT_WHITE);
+	gfx_createTextObject(TS_PRESENTS, "PRESENTS",
+		-1, screen->h / 2, FONT_WHITE);
+	gfx_createTextObject(TS_AN_SDL_GAME, "AN SDL GAME",
+		-1, screen->h / 2, FONT_WHITE);
+	gfx_createTextObject(TS_START_NEW_GAME, "最初から",
+		-1, screen->h / 3 + 50, FONT_WHITE);
+	gfx_createTextObject(TS_LOAD_GAME, "ロード",
+		-1, screen->h / 3 + 70, FONT_WHITE);
+	gfx_createTextObject(TS_CONTINUE_CURRENT_GAME, "続き",
+		-1, screen->h / 3 + 90, FONT_WHITE);
+	gfx_createTextObject(TS_OPTIONS, "オプション",
+		-1, screen->h / 3 + 110, FONT_WHITE);
+	gfx_createTextObject(TS_CHEAT_OPTIONS, "チートオプション",
+		-1, screen->h / 3 + 130, FONT_WHITE);
+	gfx_createTextObject(TS_QUIT, "終了",
+		-1, screen->h / 3 + 130, FONT_WHITE);
 
 	createOptionsMenu();
 	createDifficultyMenu();
-	textSurface(TS_BACK_TO_MAIN_MENU, "メインメニューに戻る", -1, 0, FONT_WHITE);
+	gfx_createTextObject(TS_BACK_TO_MAIN_MENU, "メインメニューに戻る", -1, 0, FONT_WHITE);
 
 	createCheatMenu();
 
@@ -230,8 +270,7 @@ int doTitle()
 	engine.smx = 0;
 	engine.smy = 0;
 
-	int then = SDL_GetTicks();
-	int now;
+	then = SDL_GetTicks();
 
 	for (int i = 0 ; i < 15 ; i++)
 	{
@@ -246,27 +285,22 @@ int doTitle()
 		aliens[i].face = 0;
 	}
 
-	int redGlow = 255;
-	signed char redDir = -2;
-	char buildVersion[25];
 	sprintf(buildVersion, "Version "VERSION);
 
 	SDL_Rect optionRec;
 
-	optionRec.x = 290;
-	optionRec.y = 345;
+	optionRec.x = screen->w / 2 - 110;
+	optionRec.y = screen->h / 3 + 45;
 	optionRec.h = 22;
 	optionRec.w = 215;
 
-	signed char selectedOption = 1;
-	if (continueSaveSlot > -1)
-		{selectedOption = 3; optionRec.y += 40;}
+	if (continueSaveSlot != -1)
+	{
+		selectedOption = 3;
+		optionRec.y += 40;
+	}
 
-	bool skip = false;
-	signed char listLength = 5; // menu list length
-	signed char menuType = MENU_MAIN;
-
-	drawBackGround();
+	screen_drawBackground();
 
 	engine.done = 0;
 	flushInput();
@@ -276,20 +310,20 @@ int doTitle()
 
 	while (!engine.done)
 	{
-		updateScreen();
-		unBuffer();
+		renderer_update();
+		screen_unBuffer();
 
 		now = SDL_GetTicks();
 
-		doStarfield();
+		game_doStars();
 		game_doExplosions();
 
 		for (int i = 0 ; i < 15 ; i++)
 		{
 			explosion_addEngine(&aliens[i]);
 			aliens[i].x += aliens[i].dx;
-			blit(aliens[i].image[0], (int)aliens[i].x, (int)aliens[i].y);
-			if (aliens[i].x > 830)
+			screen_blit(aliens[i].image[0], (int)aliens[i].x, (int)aliens[i].y);
+			if (aliens[i].x > screen->w + 30)
 			{
 				aliens[i].x = -40;
 				aliens[i].y = rand() % (screen->h - 20);
@@ -299,25 +333,25 @@ int doTitle()
 
 		if ((now - then > 2000) && (now - then < 8000) && (!skip))
 		{
-			blit(prlogo, prx, pry);
+			screen_blit(prlogo, prx, pry);
 		}
 		else if ((now - then > 9000) && (now - then < 15000) && (!skip))
 		{
-			blitText(TS_PRESENTS);
+			screen_blitText(TS_PRESENTS);
 		}
 		else if ((now - then > 16000) && (now - then < 21000) && (!skip))
 		{
-			blitText(TS_AN_SDL_GAME);
+			screen_blitText(TS_AN_SDL_GAME);
 		}
 		else if ((now - then > 25500) || (skip))
 		{
-			blit(sflogo, sfx, sfy);
+			screen_blit(sflogo, sfx, sfy);
 
 			if ((now - then >= 27500) || (skip))
 			{
-				addBuffer(0, 0, screen->w, screen->h);
+				screen_addBuffer(0, 0, screen->w, screen->h);
 
-				blevelRect(optionRec.x, optionRec.y, optionRec.w, optionRec.h, redGlow, 0x00, 0x00);
+				screen_drawRect(optionRec.x, optionRec.y, optionRec.w, optionRec.h, redGlow, 0x00, 0x00);
 
 				switch(menuType)
 				{
@@ -347,31 +381,36 @@ int doTitle()
 					engine.keyState[KEY_UP] = 0;
 					WRAP_ADD(selectedOption, -1, 1, listLength + 1);
 					if (menuType == MENU_MAIN)
-						if ((selectedOption == 2) || (selectedOption == 3))
+						if (selectedOption == 3)
 							if (continueSaveSlot == -1)
-								selectedOption = 1;
+								selectedOption = 2;
 				}
 				if (engine.keyState[KEY_DOWN])
 				{
 					engine.keyState[KEY_DOWN] = 0;
 					WRAP_ADD(selectedOption, 1, 0, listLength);
 					if (menuType == MENU_MAIN)
-						if ((selectedOption == 2) || (selectedOption == 3))
+						if (selectedOption == 3)
 							if (continueSaveSlot == -1)
 								selectedOption = 4;
 				}
 
-				optionRec.y = 326 + (20 * selectedOption);
+				optionRec.y = screen->h / 3 + 26 + (20 * selectedOption);
 				if (menuType > MENU_MAIN)
 					if (selectedOption == listLength)
 						optionRec.y += 20;
 
 				if (!skip)
 				{
-					drawString("Copyright Parallel Realities 2003", 5, 560, FONT_WHITE, background);
-					drawString("Copyright Guus Sliepen, Astrid S. de Wijn and others 2012", 5, 580, FONT_WHITE, background);
-					drawString(buildVersion, 794 - strlen(buildVersion) * 9, 580, FONT_WHITE, background);
-					addBuffer(0, 560, 800, 40);
+					gfx_renderString("Copyright Parallel Realities 2003",
+						5, screen->h - 60, FONT_WHITE, 0, gfx_background);
+					gfx_renderString("Copyright Guus Sliepen, Astrid S. de Wijn and others 2012",
+						5, screen->h - 40, FONT_WHITE, 0, gfx_background);
+					gfx_renderString("Copyright 2015, 2016 onpon4",
+						5, screen->h - 20, FONT_WHITE, 0, gfx_background);
+					gfx_renderString(buildVersion, screen->w - 6 - strlen(buildVersion) * 9,
+						screen->h - 20, FONT_WHITE, 0, gfx_background);
+					screen_addBuffer(0, 0, screen->w, screen->h);
 					skip = true;
 				}
 			}
@@ -390,10 +429,15 @@ int doTitle()
 		{
 			if ((now - then <= 27500) && (!skip))
 			{
-				drawString("Copyright Parallel Realities 2003", 5, 560, FONT_WHITE, background);
-				drawString("Copyright Guus Sliepen, Astrid S. de Wijn and others 2012", 5, 580, FONT_WHITE, background);
-				drawString(buildVersion, 794 - strlen(buildVersion) * 9, 580, FONT_WHITE, background);
-				addBuffer(0, 560, 800, 40);
+				gfx_renderString("Copyright Parallel Realities 2003",
+					5, screen->h - 60, FONT_WHITE, 0, gfx_background);
+				gfx_renderString("Copyright Guus Sliepen, Astrid S. de Wijn and others 2012",
+					5, screen->h - 40, FONT_WHITE, 0, gfx_background);
+				gfx_renderString("Copyright 2015, 2016 onpon4",
+					5, screen->h - 20, FONT_WHITE, 0, gfx_background);
+				gfx_renderString(buildVersion, screen->w - 6 - strlen(buildVersion) * 9,
+					screen->h - 20, FONT_WHITE, 0, gfx_background);
+				screen_addBuffer(0, 560, 800, 40);
 				skip = true;
 			}
 			else
@@ -524,7 +568,7 @@ int doTitle()
 			engine.keyState[KEY_FIRE] = engine.keyState[KEY_ALTFIRE] = 0;
 		}
 
-		delayFrame();
+		game_delayFrame();
 	}
 
 	audio_haltMusic();
@@ -563,7 +607,7 @@ Scrolls the intro text up the screen and nothing else.
 */
 void showStory()
 {
-	freeGraphics();
+	gfx_free();
 
 	int y = screen->h + 20;
 
@@ -571,43 +615,45 @@ void showStory()
 
 	fp = fopen("data/intro.txt", "rb");
 
-	int i = 0;
+	int index = 0;
 	int nextPos = -1;
 	char string[255];
 
 	while (fscanf(fp, "%d %[^\n]%*c", &nextPos, string) == 2)
 	{
 		y += nextPos;
-		textSurface(i, string, -1, y, FONT_WHITE);
+		gfx_createTextObject(index, string, -1, y, FONT_WHITE);
 
-		i++;
+		index++;
 	}
 
 	fclose(fp);
 
 	loadBackground("gfx/startUp.jpg");
-	blit(background, 0, 0);
-	flushBuffer();
+	screen_drawBackground();
+	screen_flushBuffer();
 
 	flushInput();
 	engine.keyState[KEY_FIRE] = engine.keyState[KEY_ALTFIRE] = 0;
 
 	while (true)
 	{
-		updateScreen();
-		unBuffer();
+		renderer_update();
+		screen_unBuffer();
 
 		getPlayerInput();
 
 		if ((engine.keyState[KEY_FIRE] || engine.keyState[KEY_ALTFIRE]))
 			break;
 
-		if (textShape[8].y > (screen->h / 2) + 150)
+		// XXX: The fact that it's line 8 that's watched is completely
+		// arbitrary. It might be prudent to replace this with something else.
+		if (gfx_textSprites[8].y > (screen->h / 2) + 150)
 		{
 			for (int i = 0 ; i < 9 ; i++)
 			{
-				textShape[i].y -= 0.33333;
-				blitText(i);
+				gfx_textSprites[i].y -= 0.33333;
+				screen_blitText(i);
 			}
 		}
 		else
@@ -616,7 +662,7 @@ void showStory()
 			break;
 		}
 
-		delayFrame();
+		game_delayFrame();
 	}
 }
 
@@ -625,18 +671,18 @@ The game over screen :(
 */
 void gameover()
 {
-	flushBuffer();
-	freeGraphics();
-	SDL_FillRect(background, NULL, black);
+	screen_flushBuffer();
+	gfx_free();
+	SDL_FillRect(gfx_background, NULL, black);
 
 	engine.keyState[KEY_FIRE] = engine.keyState[KEY_ALTFIRE] = 0;
 	engine.gameSection = SECTION_INTERMISSION;
 
-	SDL_Surface *gameover = loadImage("gfx/gameover.png");
+	SDL_Surface *gameover = gfx_loadImage("gfx/gameover.png");
 
-	clearScreen(black);
-	updateScreen();
-	clearScreen(black);
+	screen_clear(black);
+	renderer_update();
+	screen_clear(black);
 	SDL_Delay(1000);
 
 	audio_playMusic("music/death.ogg", -1);
@@ -644,7 +690,7 @@ void gameover()
 	int x = (screen->w - gameover->w) / 2;
 	int y = (screen->h - gameover->h) / 2;
 
-	updateScreen();
+	renderer_update();
 
 	flushInput();
 	engine.keyState[KEY_FIRE] = engine.keyState[KEY_ALTFIRE] = 0;
@@ -656,26 +702,26 @@ void gameover()
 		if (engine.keyState[KEY_FIRE] || engine.keyState[KEY_ALTFIRE])
 			break;
 
-		updateScreen();
+		renderer_update();
 
-		unBuffer();
+		screen_unBuffer();
 		x = ((screen->w - gameover->w) / 2) - RANDRANGE(-2, 2);
 		y = ((screen->h - gameover->h) / 2)  - RANDRANGE(-2, 2);
-		blit(gameover, x,  y);
+		screen_blit(gameover, x,  y);
 
-		delayFrame();
+		game_delayFrame();
 	}
 
 	SDL_FreeSurface(gameover);
 	audio_haltMusic();
-	flushBuffer();
+	screen_flushBuffer();
 }
 
 void doCredits()
 {
 	loadBackground("gfx/credits.jpg");
-	flushBuffer();
-	freeGraphics();
+	screen_flushBuffer();
+	gfx_free();
 
 	FILE *fp;
 	int lastCredit = -1;
@@ -687,11 +733,11 @@ void doCredits()
 
 	textObject *credit;
 
-	clearScreen(black);
-	updateScreen();
-	clearScreen(black);
+	screen_clear(black);
+	renderer_update();
+	screen_clear(black);
 
-	drawBackGround();
+	screen_drawBackground();
 
 	audio_playMusic("music/rise_of_spirit.ogg", 1);
 
@@ -704,7 +750,7 @@ void doCredits()
 	while (fscanf(fp, "%d %[^\n]%*c", &yPos, text) == 2)
 	{
 		lastCredit++;
-		credit[lastCredit].image = textSurface(text, FONT_WHITE);
+		credit[lastCredit].image = gfx_createTextSurface(text, FONT_WHITE);
 		credit[lastCredit].x = (screen->w - credit[lastCredit].image->w) / 2;
 		yPos2 += yPos;
 		credit[lastCredit].y = yPos2;
@@ -721,8 +767,8 @@ void doCredits()
 
 	while (true)
 	{
-		updateScreen();
-		unBuffer();
+		renderer_update();
+		screen_unBuffer();
 
 		getPlayerInput();
 		if (engine.keyState[KEY_ESCAPE] || engine.keyState[KEY_FIRE] ||
@@ -738,14 +784,14 @@ void doCredits()
 		for (i = 0 ; i <= lastCredit ; i++)
 		{
 			if ((credit[i].y > -10) && (credit[i].y < (screen->h + 10)))
-				blit(credit[i].image, (int)credit[i].x, (int)credit[i].y);
+				screen_blit(credit[i].image, (int)credit[i].x, (int)credit[i].y);
 			if (speed > 0 && credit[lastCredit].y > ((screen->h / 2) + 100))
 				credit[i].y -= speed;
 			else if(speed < 0 && credit[0].y < screen->h)
 				credit[i].y -= speed;
 		}
 
-		delayFrame();
+		game_delayFrame();
 	}
 
 	for (i = 0 ; i <= lastCredit ; i++)

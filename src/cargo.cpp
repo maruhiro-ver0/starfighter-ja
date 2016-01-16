@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -58,9 +58,9 @@ object *cargo_add(object *owner, int cargoType)
 	cargo[index].dx = 0;
 	cargo[index].dy = 0;
 	cargo[index].collectType = cargoType;
-	cargo[index].image[0] = shape[32];
+	cargo[index].image[0] = gfx_sprites[SP_CARGO];
 	if (cargoType == P_PHOEBE)
-		cargo[index].image[0] = shipShape[20];
+		cargo[index].image[0] = gfx_shipSprites[SS_FRIEND];
 
 	return &cargo[index];
 }
@@ -76,7 +76,7 @@ void cargo_becomeCollectable(int i)
 		aliens[ALIEN_PHOEBE].active = true;
 		aliens[ALIEN_PHOEBE].x = cargo[i].x;
 		aliens[ALIEN_PHOEBE].y = cargo[i].y;
-		setRadioMessage(FACE_PHOEBE, "ありがとう!! 見なさい、WEAPCO! 解放されたフェーベの怒りを!!!", 1);
+		setRadioMessage(FS_PHOEBE, "ありがとう!! 見なさい、WEAPCO! 解放されたフェーベの怒りを!!!", 1);
 	}
 
 	cargo[i].active = false;

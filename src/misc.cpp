@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012, 2013 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -23,15 +23,15 @@ void clearInfoLines()
 {
 	for (int i = 0 ; i < 4 ; i++)
 	{
-		textShape[i].life = 0;
+		gfx_textSprites[i].life = 0;
 	}
 }
 
 // from a to b
 void copyInfoLine(int a, int b)
 {
-	textSurface(b, textShape[a].text, -1, 0, textShape[a].fontColor);
-	textShape[b].life = textShape[a].life;
+	gfx_createTextObject(b, gfx_textSprites[a].text, -1, 0, gfx_textSprites[a].fontColor);
+	gfx_textSprites[b].life = gfx_textSprites[a].life;
 }
 
 /*
@@ -44,9 +44,9 @@ void setInfoLine(const char *in, int color)
 {
 	int index = -1;
 
-	for (int i = 0 ; i < 3 ; i++)
+	for (int i = 0 ; i < MAX_INFOLINES ; i++)
 	{
-		if ((textShape[i].life == 0) && (index == -1))
+		if ((gfx_textSprites[i].life == 0) && (index == -1))
 		{
 			index = i;
 		}
@@ -55,13 +55,15 @@ void setInfoLine(const char *in, int color)
 	// Bump down
 	if (index == -1)
 	{
-		index = 2;
-		copyInfoLine(1, 0);
-		copyInfoLine(2, 1);
+		index = MAX_INFOLINES - 1;
+		for (int i = 1 ; i < MAX_INFOLINES ; i++)
+		{
+			copyInfoLine(i, i - 1);
+		}
 	}
 
-	textSurface(index, in, -1, 0, color);
-	textShape[index].life = 240;
+	gfx_createTextObject(index, in, -1, 0, color);
+	gfx_textSprites[index].life = 240;
 }
 
 /*
@@ -69,19 +71,20 @@ Sets a radio message that appears at the top of the screen. Used for
 script events, etc. We send a message priority too, since we don't want
 Phoebe or Ursula's banter to interrupt an important message
 */
-void setRadioMessage(signed char face, const char *in, int priority)
+void setRadioMessage(int face, const char *in, int priority)
 {
-	if ((textShape[3].life > 0) && (priority == 0))
+	SDL_Surface *faceShape = NULL;
+
+	if ((gfx_textSprites[TS_RADIO].life > 0) && (priority == 0))
 		return;
 
-	textSurface(3, in, -1, 50, FONT_WHITE);
-	textShape[3].life = 240;
+	gfx_createTextObject(TS_RADIO, in, -1, 50, FONT_WHITE);
+	gfx_textSprites[TS_RADIO].life = 240;
 
-	SDL_Surface *faceShape = NULL;
 	if (face > -1)
-		faceShape = shape[face];
+		faceShape = gfx_faceSprites[face];
 
-	createMessageBox(faceShape, in, 1);
+	gfx_createMessageBox(faceShape, in, 1);
 }
 
 static const char *faces[] = {
@@ -95,7 +98,7 @@ int getFace(const char *face)
 	for (int i = 0 ; i < 7 ; i++)
 	{
 		if (strcmp(faces[i], face) == 0)
-			return 90 + i;
+			return FS_CHRIS + i;
 	}
 
 	return -1;
@@ -138,7 +141,7 @@ void resetLists()
 	engine.collectableHead->next = NULL;
 	engine.collectableTail = engine.collectableHead;
 	
-	r1 = bufferHead->next;
+	r1 = screen_bufferHead->next;
 	while (r1 != NULL)
 	{
 		r2 = r1;
@@ -146,8 +149,8 @@ void resetLists()
 		delete r2;
 	}
 	
-	bufferHead->next = NULL;
-	bufferTail = bufferHead;
+	screen_bufferHead->next = NULL;
+	screen_bufferTail = screen_bufferHead;
 
 	ob = engine.debrisHead->next;
 	while(ob != NULL)

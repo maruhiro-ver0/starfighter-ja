@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012, 2013 Guus Sliepen
-Copyright (C) 2012, 2014, 2015 Julian Marchant
+Copyright (C) 2012, 2014, 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -21,9 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Game game;
 
+static Star stars[STARS_NUM];
+static Uint32 frameLimit = 0;
+static int thirds = 0;
+
 void game_init()
 {
-	game.system = 0;
+	game.system = SYSTEM_SPIRIT;
 	game.area = MISN_START;
 	game.sfxVolume = 0;
 	game.musicVolume = 0;
@@ -124,6 +128,13 @@ void game_init()
 	player.weaponType[0] = W_PLAYER_WEAPON;
 	player.weaponType[1] = W_ROCKETS;
 
+	for (int i = 0 ; i < STARS_NUM ; i++)
+	{
+		stars[i].x = rand() % screen->w;
+		stars[i].y = rand() % screen->h;
+		stars[i].speed = 1 + (rand() % 3);
+	}
+
 	initWeapons();
 	initMissions();
 	initPlanetMissions(game.system);
@@ -132,9 +143,9 @@ void game_init()
 static void game_addDebris(int x, int y, int amount)
 {
 	if ((rand() % 2) == 0)
-		audio_playSound(SFX_DEBRIS, x);
+		audio_playSound(SFX_DEBRIS, x, y);
 	else
-		audio_playSound(SFX_DEBRIS2, x);
+		audio_playSound(SFX_DEBRIS2, x, y);
 
 	object *debris;
 	
@@ -166,6 +177,52 @@ static void game_addDebris(int x, int y, int amount)
 }
 
 /*
+Simply draws the stars in their positions on screen and moves
+them around.
+*/
+void game_doStars()
+{
+	/* Lock the screen for direct access to the pixels */
+	if (SDL_MUSTLOCK(screen))
+	{
+		if (SDL_LockSurface(screen) < 0)
+			engine_showError(2, "");
+	}
+
+	int color = 0;
+
+	SDL_Rect r;
+
+	for (int i = 0 ; i < STARS_NUM ; i++)
+	{
+		if (stars[i].speed == 3)
+			color = white;
+		else if (stars[i].speed == 2)
+			color = lightGrey;
+		else if (stars[i].speed == 1)
+			color = darkGrey;
+
+		WRAP_ADD(stars[i].x, (engine.ssx + engine.smx) * stars[i].speed, 0,
+			screen->w - 1);
+		WRAP_ADD(stars[i].y, (engine.ssy + engine.smy) * stars[i].speed, 0,
+			screen->h - 1);
+
+		gfx_putPixel(screen, (int)stars[i].x, (int)stars[i].y, color);
+		r.x = (int)stars[i].x;
+		r.y = (int)stars[i].y;
+		r.w = 1;
+		r.h = 1;
+
+		screen_addBuffer(r.x, r.y, r.w, r.h);
+	}
+
+	if (SDL_MUSTLOCK(screen))
+	{
+		SDL_UnlockSurface(screen);
+	}
+}
+
+/*
 Loops through the currently active collectables (in a linked list). The collectable
 will travel in the direction that was defined when it was made. Its life will decreased
 whilst it remains active. It will be removed if the player touches it or if its life
@@ -189,7 +246,7 @@ static void game_doCollectables()
 					(collectable->x < screen->w) &&
 					(collectable->y + collectable->image->h > 0) &&
 					(collectable->y < screen->h))
-				blit(collectable->image, (int)collectable->x, (int)collectable->y);
+				screen_blit(collectable->image, (int)collectable->x, (int)collectable->y);
 
 			collectable->x += engine.ssx + engine.smx;
 			collectable->y += engine.ssy + engine.smy;
@@ -198,24 +255,24 @@ static void game_doCollectables()
 
 			collectable->life--;
 
-			if ((player.shield > 0) && (collision(collectable, &player)))
+			if ((player.shield > 0) && (collectable_collision(collectable, &player)))
 			{
 				switch(collectable->type)
 				{
 					case P_CASH:
 						if (game.difficulty == DIFFICULTY_ORIGINAL)
-							collectable->value *= 2;
+							collectable->value = collectable->value * 3 / 2;
 
 						game.cash += collectable->value;
 						game.cashEarned += collectable->value;
-						sprintf(temp, "$%d 獲得", collectable->value);
+						sprintf(temp, "$%d 獲得 ", collectable->value);
 						break;
 
 					case P_ROCKET:
 						LIMIT_ADD(player.ammo[1], collectable->value, 0,
 							game.maxRocketAmmo);
 						if (player.ammo[1] == game.maxRocketAmmo)
-							sprintf(temp, "ロケット弾 最大");
+							sprintf(temp, "ロケット弾 既に最大");
 						else
 						{
 							if (collectable->value > 1)
@@ -234,17 +291,22 @@ static void game_doCollectables()
 
 					case P_PLASMA_RATE:
 						game.powerups++;
-						if ((game.area != MISN_INTERCEPTION) ||
-							(game.difficulty == DIFFICULTY_ORIGINAL) ||
-							(player.ammo[0] > 0))
+						if (game.difficulty == DIFFICULTY_ORIGINAL)
 						{
-							if ((game.area != MISN_INTERCEPTION) ||
-									(game.difficulty == DIFFICULTY_ORIGINAL))
+							player.ammo[0] = MAX(player.ammo[0], 50);
+							weapon[W_PLAYER_WEAPON].reload[0] = MAX(
+								rate2reload[game.maxPlasmaRate],
+								weapon[W_PLAYER_WEAPON].reload[0] - 2);
+						}
+						else if ((game.area != MISN_INTERCEPTION) ||
+								(player.ammo[0] > 0))
+						{
+							if (game.area != MISN_INTERCEPTION)
 								LIMIT_ADD(player.ammo[0], collectable->value,
 									0, game.maxPlasmaAmmo);
 
 							if (weapon[W_PLAYER_WEAPON].reload[0] <= rate2reload[game.maxPlasmaRate])
-								sprintf(temp, "連射速度 最大");
+								sprintf(temp, "連射速度 既に最大");
 							else
 							{
 								weapon[W_PLAYER_WEAPON].reload[0] -= 2;
@@ -259,17 +321,21 @@ static void game_doCollectables()
 
 					case P_PLASMA_SHOT:
 						game.powerups++;
-						if ((game.area != MISN_INTERCEPTION) ||
-							(game.difficulty == DIFFICULTY_ORIGINAL) ||
-							(player.ammo[0] > 0))
+						if (game.difficulty == DIFFICULTY_ORIGINAL)
 						{
-							if ((game.area != MISN_INTERCEPTION) ||
-									(game.difficulty == DIFFICULTY_ORIGINAL))
+							player.ammo[0] = MAX(player.ammo[0], 50);
+							weapon[W_PLAYER_WEAPON].ammo[0] = MIN(
+								game.maxPlasmaOutput, weapon[W_PLAYER_WEAPON].ammo[0] + 1);
+						}
+						else if ((game.area != MISN_INTERCEPTION) ||
+								(player.ammo[0] > 0))
+						{
+							if (game.area != MISN_INTERCEPTION)
 								LIMIT_ADD(player.ammo[0], collectable->value,
 									0, game.maxPlasmaAmmo);
 
 							if (weapon[W_PLAYER_WEAPON].ammo[0] >= game.maxPlasmaOutput)
-								sprintf(temp, "出力範囲 最大");
+								sprintf(temp, "出力範囲 既に最大");
 							else
 							{
 								weapon[W_PLAYER_WEAPON].ammo[0]++;
@@ -284,18 +350,23 @@ static void game_doCollectables()
 
 					case P_PLASMA_DAMAGE:
 						game.powerups++;
-						if ((game.area != MISN_INTERCEPTION) ||
-							(game.difficulty == DIFFICULTY_ORIGINAL) ||
-							(player.ammo[0] > 0))
+						if (game.difficulty == DIFFICULTY_ORIGINAL)
 						{
-							if ((game.area != MISN_INTERCEPTION) ||
-									(game.difficulty == DIFFICULTY_ORIGINAL))
+							player.ammo[0] = MAX(player.ammo[0], 50);
+							weapon[W_PLAYER_WEAPON].damage = MIN(
+								game.maxPlasmaDamage, weapon[W_PLAYER_WEAPON].damage + 1);
+						}
+						else if ((game.area != MISN_INTERCEPTION) ||
+								(player.ammo[0] > 0))
+						{
+							if (game.area != MISN_INTERCEPTION)
 								LIMIT_ADD(player.ammo[0], collectable->value,
 									0, game.maxPlasmaAmmo);
 
 							if (weapon[W_PLAYER_WEAPON].damage >= game.maxPlasmaDamage)
-								sprintf(temp, "火力 最大");
-							else {
+								sprintf(temp, "火力 既に最大");
+							else
+							{
 								weapon[W_PLAYER_WEAPON].damage++;
 								sprintf(temp, "火力 増加");
 							}
@@ -312,8 +383,9 @@ static void game_doCollectables()
 							(game.difficulty == DIFFICULTY_ORIGINAL) ||
 							(player.ammo[0] > 0))
 						{
-							if ((game.area != MISN_INTERCEPTION) ||
-									(game.difficulty == DIFFICULTY_ORIGINAL))
+							if (game.difficulty == DIFFICULTY_ORIGINAL)
+								player.ammo[0] = MAX(player.ammo[0], 50);
+							else if (game.area != MISN_INTERCEPTION)
 								LIMIT_ADD(player.ammo[0], collectable->value,
 									0, game.maxPlasmaAmmo);
 
@@ -332,7 +404,7 @@ static void game_doCollectables()
 
 					case P_PLASMA_AMMO:
 						if (player.ammo[0] >= game.maxPlasmaAmmo)
-							sprintf(temp, "プラズマセル 最大");
+							sprintf(temp, "プラズマセル 既に最大");
 						else
 						{
 							LIMIT_ADD(player.ammo[0], collectable->value,
@@ -378,9 +450,9 @@ static void game_doCollectables()
 				{
 					setInfoLine(temp, FONT_WHITE);
 					if (collectable->type == P_SHIELD)
-						audio_playSound(SFX_SHIELDUP, player.x);
+						audio_playSound(SFX_SHIELDUP, player.x, player.y);
 					else
-						audio_playSound(SFX_PICKUP, player.x);
+						audio_playSound(SFX_PICKUP, player.x, player.y);
 				}
 			}
 
@@ -409,7 +481,9 @@ static void game_doCollectables()
 		}
 		else
 		{
-			if (collectable->type == P_MINE)
+			if ((collectable->type == P_MINE) && (collectable->x >= 0) &&
+					(collectable->x <= screen->w) && (collectable->y >= 0) &&
+					(collectable->y <= screen->h))
 				collectable_explode(collectable);
 			prevCollectable->next = collectable->next;
 			delete collectable;
@@ -464,16 +538,16 @@ static void game_doBullets()
 
 			if (bullet->id == WT_ROCKET)
 			{
-				explosion_add(bullet->x, bullet->y, E_SMALL_EXPLOSION);
+				explosion_add(bullet->x, bullet->y, SP_SMALL_EXPLOSION);
 			}
 			else if (bullet->id == WT_MICROROCKET)
 			{
-				explosion_add(bullet->x, bullet->y, E_TINY_EXPLOSION);
+				explosion_add(bullet->x, bullet->y, SP_TINY_EXPLOSION);
 			}
 
 			if ((bullet->flags & WF_AIMED))
 			{
-				blit(bullet->image[0], (int)(bullet->x - bullet->dx),
+				screen_blit(bullet->image[0], (int)(bullet->x - bullet->dx),
 					(int)(bullet->y - bullet->dy));
 			}
 
@@ -485,13 +559,13 @@ static void game_doBullets()
 					charger_num = bullet->damage * 2;
 
 				for (int i = 0 ; i < charger_num ; i++)
-					blit(bullet->image[0],
+					screen_blit(bullet->image[0],
 						(int)(bullet->x - RANDRANGE(
 							-(charger_num / 6), charger_num / 6)),
 						(int)(bullet->y + RANDRANGE(-3, 3)));
 			}
 
-			blit(bullet->image[0], (int)bullet->x, (int)bullet->y);
+			screen_blit(bullet->image[0], (int)bullet->x, (int)bullet->y);
 			bullet->x += bullet->dx;
 			bullet->y += bullet->dy;
 
@@ -542,7 +616,7 @@ static void game_doBullets()
 
 				if (okayToHit)
 				{
-					if ((bullet->active) && (collision(bullet, &aliens[i])))
+					if ((bullet->active) && (bullet_collision(bullet, &aliens[i])))
 					{
 						old_shield = aliens[i].shield;
 
@@ -576,11 +650,11 @@ static void game_doBullets()
 							{
 								bullet->active = false;
 								bullet->shield = 0;
-								audio_playSound(SFX_EXPLOSION, bullet->x);
+								audio_playSound(SFX_EXPLOSION, bullet->x, bullet->y);
 								for (int i = 0 ; i < 10 ; i++)
 									explosion_add(bullet->x + RANDRANGE(-35, 35),
 										bullet->y + RANDRANGE(-35, 35),
-										E_BIG_EXPLOSION);
+										SP_BIG_EXPLOSION);
 							}
 						}
 						else
@@ -590,9 +664,9 @@ static void game_doBullets()
 						}
 
 						if (bullet->id == WT_ROCKET)
-							explosion_add(bullet->x, bullet->y, E_BIG_EXPLOSION);
+							explosion_add(bullet->x, bullet->y, SP_BIG_EXPLOSION);
 						else
-							explosion_add(bullet->x, bullet->y, E_SMALL_EXPLOSION);
+							explosion_add(bullet->x, bullet->y, SP_SMALL_EXPLOSION);
 					}
 				}
 			}
@@ -602,11 +676,11 @@ static void game_doBullets()
 				(bullet->id == WT_LASER) || (bullet->id == WT_CHARGER))
 			{
 				if (bullet->active && (player.shield > 0) &&
-					(bullet->owner != &player) && collision(bullet, &player))
+					(bullet->owner != &player) && bullet_collision(bullet, &player))
 				{
 					old_shield = player.shield;
 
-					if ((!engine.cheatShield) || (engine.missionCompleteTimer != 0))
+					if ((!engine.cheatShield) && (engine.missionCompleteTimer == 0))
 					{
 						if ((player.shield > engine.lowShield) &&
 								(player.shield - bullet->damage <= engine.lowShield))
@@ -628,10 +702,10 @@ static void game_doBullets()
 						{
 							bullet->active = false;
 							bullet->shield = 0;
-							audio_playSound(SFX_EXPLOSION, bullet->x);
+							audio_playSound(SFX_EXPLOSION, bullet->x, bullet->y);
 							for (int i = 0 ; i < 10 ; i++)
 								explosion_add(bullet->x + RANDRANGE(-35, 35),
-									bullet->y + RANDRANGE(-35, 35), E_BIG_EXPLOSION);
+									bullet->y + RANDRANGE(-35, 35), SP_BIG_EXPLOSION);
 						}
 					}
 					else
@@ -640,12 +714,12 @@ static void game_doBullets()
 						bullet->shield = 0;
 					}
 
-					audio_playSound(SFX_HIT, player.x);
+					audio_playSound(SFX_HIT, player.x, player.y);
 
 					if (bullet->id == WT_ROCKET)
-						explosion_add(bullet->x, bullet->y, E_BIG_EXPLOSION);
+						explosion_add(bullet->x, bullet->y, SP_BIG_EXPLOSION);
 					else
-						explosion_add(bullet->x, bullet->y, E_SMALL_EXPLOSION);
+						explosion_add(bullet->x, bullet->y, SP_SMALL_EXPLOSION);
 				}
 			}
 		}
@@ -657,19 +731,19 @@ static void game_doBullets()
 			{
 				if (cargo[j].active)
 				{
-					if (collision(bullet, &cargo[j]))
+					if (bullet_collision(bullet, &cargo[j]))
 					{
 						bullet->active = false;
-						explosion_add(bullet->x, bullet->y, E_SMALL_EXPLOSION);
-						audio_playSound(SFX_HIT, cargo[j].x);
+						explosion_add(bullet->x, bullet->y, SP_SMALL_EXPLOSION);
+						audio_playSound(SFX_HIT, cargo[j].x, cargo[j].y);
 						if (cargo[j].collectType != P_PHOEBE)
 						{
 							cargo[j].active = false;
-							audio_playSound(SFX_EXPLOSION, cargo[j].x);
+							audio_playSound(SFX_EXPLOSION, cargo[j].x, cargo[j].y);
 							for (int i = 0 ; i < 10 ; i++)
 								explosion_add(cargo[j].x + RANDRANGE(-15, 15),
 									cargo[j].y + RANDRANGE(-15, 15),
-									E_BIG_EXPLOSION);
+									SP_BIG_EXPLOSION);
 							updateMissionRequirements(M_PROTECT_PICKUP,
 								P_CARGO, 1);
 						}
@@ -688,7 +762,7 @@ static void game_doBullets()
 
 			if (collectable->type == P_MINE)
 			{
-				if (collision(collectable, bullet))
+				if (collectable_collision(collectable, bullet))
 				{
 					collectable->active = false;
 					
@@ -731,10 +805,10 @@ static void game_doBullets()
 		{
 			if (bullet->flags & WF_TIMEDEXPLOSION)
 			{
-				audio_playSound(SFX_EXPLOSION, bullet->x);
+				audio_playSound(SFX_EXPLOSION, bullet->x, bullet->y);
 				for (int i = 0 ; i < 10 ; i++)
 					explosion_add(bullet->x + RANDRANGE(-35, 35),
-						bullet->y + RANDRANGE(-35, 35), E_BIG_EXPLOSION);
+						bullet->y + RANDRANGE(-35, 35), SP_BIG_EXPLOSION);
 
 				player_checkShockDamage(bullet->x, bullet->y);
 			}
@@ -915,7 +989,7 @@ static void game_doAliens()
 						aliens[i].flags -= FL_ISCLOAKED;
 					else
 						aliens[i].flags += FL_ISCLOAKED;
-					audio_playSound(SFX_CLOAK, aliens[i].x);
+					audio_playSound(SFX_CLOAK, aliens[i].x, aliens[i].y);
 				}
 
 				if (aliens[i].classDef == CD_BARRIER)
@@ -950,32 +1024,32 @@ static void game_doAliens()
 
 				if (canFire)
 				{
-					if ((aliens[i].reload[0] == 0) &&
-						((rand() % 1000 < aliens[i].chance[0]) ||
-							(aliens[i].flags & FL_CONTINUOUS_FIRE)))
+					for (int j = 0 ; j < 2 ; j++)
 					{
-						ship_fireBullet(&aliens[i], 0);
-					}
-					if ((aliens[i].reload[1] == 0) &&
-						((rand() % 1000 < aliens[i].chance[1]) ||
-							(aliens[i].flags & FL_CONTINUOUS_FIRE)))
-					{
-						if ((aliens[i].weaponType[1] != W_ENERGYRAY) &&
-							(aliens[i].weaponType[1] != W_LASER))
+						if ((aliens[i].reload[j] == 0) &&
+							((rand() % 1000 < aliens[i].chance[j]) ||
+								(aliens[i].flags & FL_CONTINUOUS_FIRE)))
 						{
-							if (aliens[i].weaponType[1] == W_CHARGER)
-								aliens[i].ammo[1] = 50 + rand() % 150;
-							ship_fireBullet(&aliens[i], 1);
-						}
-						else if (aliens[i].weaponType[1] == W_LASER)
-						{
-							aliens[i].flags += FL_FIRELASER;
-						}
-						else if ((aliens[i].weaponType[1] == W_ENERGYRAY) &&
-							(aliens[i].ammo[0] == 250))
-						{
-							aliens[i].flags += FL_FIRERAY;
-							audio_playSound(SFX_ENERGYRAY, aliens[i].x);
+							if ((aliens[i].weaponType[j] != W_ENERGYRAY) &&
+								(aliens[i].weaponType[j] != W_LASER))
+							{
+								if (aliens[i].weaponType[j] == W_CHARGER)
+									aliens[i].ammo[j] = 50 + rand() % 150;
+								ship_fireBullet(&aliens[i], j);
+							}
+							else if (aliens[i].weaponType[j] == W_LASER)
+							{
+								aliens[i].flags += FL_FIRELASER;
+							}
+							// XXX: This ammo check only seems to work for ammo[0],
+							// not ammo[1], thus necessitating using ammo[0] instead of
+							// ammo[j]. Should be investigated in the future.
+							else if ((aliens[i].weaponType[j] == W_ENERGYRAY) &&
+								(aliens[i].ammo[0] >= 250))
+							{
+								aliens[i].flags += FL_FIRERAY;
+								audio_playSound(SFX_ENERGYRAY, aliens[i].x, aliens[i].y);
+							}
 						}
 					}
 				}
@@ -1014,7 +1088,7 @@ static void game_doAliens()
 				shapeToUse = aliens[i].imageIndex[aliens[i].face];
 
 				if (aliens[i].hit)
-					shapeToUse += SHIP_HIT_INDEX;
+					shapeToUse += SS_HIT_INDEX;
 
 				LIMIT_ADD(aliens[i].hit, -1, 0, 100);
 
@@ -1028,14 +1102,14 @@ static void game_doAliens()
 							(aliens[i].classDef != CD_ASTEROID2))
 						explosion_addEngine(&aliens[i]);
 					if ((!(aliens[i].flags & FL_ISCLOAKED)) || (aliens[i].hit > 0))
-						blit(shipShape[shapeToUse], (int)aliens[i].x,
+						screen_blit(gfx_shipSprites[shapeToUse], (int)aliens[i].x,
 							(int)aliens[i].y);
 					if (aliens[i].flags & FL_DISABLED)
 					{
 						if ((rand() % 10) == 0)
 							explosion_add(aliens[i].x + (rand() % aliens[i].image[0]->w),
 								aliens[i].y + (rand() % aliens[i].image[0]->h),
-								E_ELECTRICAL);
+								SP_ELECTRICAL);
 					}
 				}
 
@@ -1048,11 +1122,11 @@ static void game_doAliens()
 				if ((aliens[i].x > 0) && (aliens[i].x < screen->w) &&
 					(aliens[i].y > 0) && (aliens[i].y < screen->h))
 				{
-					blit(aliens[i].image[aliens[i].face], (int)aliens[i].x,
+					screen_blit(aliens[i].image[aliens[i].face], (int)aliens[i].x,
 						(int)aliens[i].y);
 					explosion_add(aliens[i].x + (rand() % aliens[i].image[0]->w),
 						aliens[i].y + (rand() % aliens[i].image[0]->h),
-						E_BIG_EXPLOSION);
+						SP_BIG_EXPLOSION);
 				}
 				if (aliens[i].shield < aliens[i].deathCounter)
 				{
@@ -1234,7 +1308,7 @@ static void game_doPlayer()
 				if ((engine.done == 0) && (engine.gameSection == SECTION_GAME) &&
 					(currentMission.remainingObjectives1 == 0))
 				{
-					audio_playSound(SFX_FLY, screen->w / 2);
+					audio_playSound(SFX_FLY, screen->w / 2, screen->h / 2);
 					engine.done = 2;
 					engine.missionCompleteTimer = (SDL_GetTicks() - 1);
 				}
@@ -1246,8 +1320,7 @@ static void game_doPlayer()
 				engine.keyState[KEY_PAUSE] = 0;
 			}
 
-			if (((game.area == MISN_ELLESH) &&
-					(aliens[ALIEN_BOSS].shield > 0)) ||
+			if ((game.area == MISN_ELLESH) ||
 				(game.area == MISN_MARS))
 			{
 				player.face = 0;
@@ -1334,15 +1407,15 @@ static void game_doPlayer()
 			shapeToUse = player.face;
 
 			if (player.hit)
-				shapeToUse += SHIP_HIT_INDEX;
+				shapeToUse += SS_HIT_INDEX;
 
 			LIMIT_ADD(player.hit, -1, 0, 100);
 
-			blit(shipShape[shapeToUse], (int)player.x, (int)player.y);
+			screen_blit(gfx_shipSprites[shapeToUse], (int)player.x, (int)player.y);
 			if ((player.maxShield > 1) && (player.shield <= engine.lowShield) &&
 					(rand() % 5 < 1))
 				explosion_add(player.x + RANDRANGE(-10, 10),
-					player.y + RANDRANGE(-10, 20), E_SMOKE);
+					player.y + RANDRANGE(-10, 20), SP_SMOKE);
 		}
 		else
 		{
@@ -1360,14 +1433,14 @@ static void game_doPlayer()
 						aliens[i].flags |= FL_LEAVESECTOR;
 				}
 
-				audio_playSound(SFX_DEATH, player.x);
-				audio_playSound(SFX_EXPLOSION, player.x);
+				audio_playSound(SFX_DEATH, player.x, player.y);
+				audio_playSound(SFX_EXPLOSION, player.x, player.y);
 			}
 
 			engine.keyState[KEY_UP] = engine.keyState[KEY_DOWN] = engine.keyState[KEY_LEFT] = engine.keyState[KEY_RIGHT] = 0;
-			if ((rand() % 3) == 0)
+			if (CHANCE(1. / 3.))
 				explosion_add(player.x + RANDRANGE(-10, 10),
-					player.y + RANDRANGE(-10, 10), E_BIG_EXPLOSION);
+					player.y + RANDRANGE(-10, 10), SP_BIG_EXPLOSION);
 			if (player.shield == -99)
 				game_addDebris((int)player.x, (int)player.y, player.maxShield);
 		}
@@ -1377,14 +1450,8 @@ static void game_doPlayer()
 	LIMIT(engine.ssy, -cameraMaxSpeed, cameraMaxSpeed);
 
 	// Specific for the mission were you have to chase the Executive Transport
-	if ((game.area == MISN_ELLESH) && (aliens[ALIEN_BOSS].shield > 0) &&
-		(player.shield > 0))
-	{
-		engine.ssx = -6;
-		engine.ssy = 0;
-	}
-	
-	if (game.area == MISN_MARS)
+	if (((game.area == MISN_ELLESH) && (player.shield > 0)) ||
+			(game.area == MISN_MARS))
 	{
 		engine.ssx = -6;
 		engine.ssy = 0;
@@ -1408,7 +1475,7 @@ static void game_doCargo()
 				continue;
 			}
 
-			blit(cargo[i].image[0], (int)cargo[i].x, (int)cargo[i].y);
+			screen_blit(cargo[i].image[0], (int)cargo[i].x, (int)cargo[i].y);
 
 			cargo[i].x += engine.ssx + engine.smx;
 			cargo[i].y += engine.ssy + engine.smy;
@@ -1424,7 +1491,7 @@ static void game_doCargo()
 			// draw the chain link line
 			for (int j = 0 ; j < 10 ; j++)
 			{
-				blit(shape[30], (int)chainX, (int)chainY);
+				screen_blit(gfx_sprites[SP_CHAIN_LINK], (int)chainX, (int)chainY);
 				chainX -= dx;
 				chainY -= dy;
 			}
@@ -1451,7 +1518,7 @@ static void game_doDebris()
 			debris->x += debris->dx;
 			debris->y += debris->dy;
 
-			explosion_add(debris->x + RANDRANGE(-10, 10), debris->y + RANDRANGE(-10, 10), E_BIG_EXPLOSION);
+			explosion_add(debris->x + RANDRANGE(-10, 10), debris->y + RANDRANGE(-10, 10), SP_BIG_EXPLOSION);
 		}
 
 		if (debris->thinktime < 1)
@@ -1490,9 +1557,9 @@ void game_doExplosions()
 			explosion->x += engine.ssx + engine.smx;
 			explosion->y += engine.ssy + engine.smy;
 
-			blit(explosion->image[0], (int)explosion->x, (int)explosion->y);
+			screen_blit(explosion->image[0], (int)explosion->x, (int)explosion->y);
 
-			if(rand() % 7 == 0)
+			if(CHANCE(1. / 7.))
 			{
 				explosion->thinktime -= 7;
 
@@ -1503,7 +1570,7 @@ void game_doExplosions()
 				else
 				{
 					explosion->face++;
-					explosion->image[0] = shape[explosion->face];
+					explosion->image[0] = gfx_sprites[explosion->face];
 				}
 			}
 		}
@@ -1527,62 +1594,81 @@ Draw an arrow at the edge of the screen for each enemy ship that is not visible.
 */
 static void game_doArrow(int i)
 {
+	int arrow = -1;
+	int arrowX;
+	int arrowY;
+
+	int indicator = -1;
+	int indicatorX;
+	int indicatorY;
+
 	if (i < 0 || !aliens[i].active || aliens[i].shield <= 0 || aliens[i].flags & FL_ISCLOAKED)
 		return;
 
-	int x = aliens[i].x + aliens[i].image[0]->w / 2;
-	int y = aliens[i].y + aliens[i].image[0]->h / 2;
-
-	float sx = fabsf((x - (screen->w / 2)) / (screen->w / 2.0));
-	float sy = fabsf((y - (screen->h / 2)) / (screen->h / 2.0));
-	float sxy = MAX(sx, sy);
-
-	if (sxy < 1) 
-		return;
-
-	x = screen->w / 2 + (x - screen->w / 2) / sxy;
-	y = screen->h / 2 + (y - screen->h / 2) / sxy;
-
-	int arrow;
-
-	if (sxy == sx) {
-		arrow = x < screen->w / 2 ? 42 : 38;
-		x -= x > screen->w / 2 ? shape[arrow]->w : 0;
-		y -= shape[arrow]->h / 2;
-	} else {
-		arrow = y < screen->h / 2 ? 36 : 40;
-		x -= shape[arrow]->w / 2;
-		y -= y > screen->h / 2 ? shape[arrow]->h : 0;
+	if (aliens[i].x + aliens[i].image[0]->w < 0)
+	{
+		if (aliens[i].y + aliens[i].image[0]->h < 0)
+			arrow = (aliens[i].flags & FL_FRIEND) ? SP_ARROW_FRIEND_NORTHWEST : SP_ARROW_NORTHWEST;
+		else if (aliens[i].y > screen->h)
+			arrow = (aliens[i].flags & FL_FRIEND) ? SP_ARROW_FRIEND_SOUTHWEST : SP_ARROW_SOUTHWEST;
+		else
+			arrow = (aliens[i].flags & FL_FRIEND) ? SP_ARROW_FRIEND_WEST : SP_ARROW_WEST;
 	}
-
-	blit(shape[arrow], x, y);
-
-	if (i != engine.targetIndex)
-		return;
-
-	if (textShape[3].life > 0)
-		return;
-
-	if (sxy == sx) {
-		x -= x > screen->w / 2 ? 5 + shape[44]->w : -5 - shape[arrow]->w;
-		y -= (shape[44]->h - shape[arrow]->h) / 2;
-	} else {
-		x -= (shape[44]->w - shape[arrow]->w) / 2;
-		y -= y > screen->h / 2 ? 5 + shape[44]->h : -5 - shape[arrow]->h;
+	else if (aliens[i].x > screen->w)
+	{
+		if (aliens[i].y + aliens[i].image[0]->h < 0)
+			arrow = (aliens[i].flags & FL_FRIEND) ? SP_ARROW_FRIEND_NORTHEAST : SP_ARROW_NORTHEAST;
+		else if (aliens[i].y > screen->h)
+			arrow = (aliens[i].flags & FL_FRIEND) ? SP_ARROW_FRIEND_SOUTHEAST : SP_ARROW_SOUTHEAST;
+		else
+			arrow = (aliens[i].flags & FL_FRIEND) ? SP_ARROW_FRIEND_EAST : SP_ARROW_EAST;
 	}
+	else if (aliens[i].y + aliens[i].image[0]->h < 0)
+		arrow = (aliens[i].flags & FL_FRIEND) ? SP_ARROW_FRIEND_NORTH : SP_ARROW_NORTH;
+	else if (aliens[i].y > screen->h)
+		arrow = (aliens[i].flags & FL_FRIEND) ? SP_ARROW_FRIEND_SOUTH : SP_ARROW_SOUTH;
 
-	blit(shape[44], x, y);
+	if (arrow != -1)
+	{
+		arrowX = aliens[i].x + aliens[i].image[0]->w / 2 - gfx_sprites[arrow]->w;
+		arrowX = MAX(0, MIN(arrowX, screen->w - gfx_sprites[arrow]->w));
+		arrowY = aliens[i].y + aliens[i].image[0]->h / 2 - gfx_sprites[arrow]->h;
+		arrowY = MAX(0, MIN(arrowY, screen->h - gfx_sprites[arrow]->h));
+		screen_blit(gfx_sprites[arrow], arrowX, arrowY);
+
+		if (i == ALIEN_SID)
+			indicator = SP_INDICATOR_SID;
+		else if (i == ALIEN_PHOEBE)
+			indicator = SP_INDICATOR_PHOEBE;
+		else if (i == ALIEN_URSULA)
+			indicator = SP_INDICATOR_URSULA;
+		else if (i == ALIEN_KLINE)
+			indicator = SP_INDICATOR_KLINE;
+		else if (i == engine.targetIndex)
+			indicator = SP_INDICATOR_TARGET;
+
+		if (indicator != -1)
+		{
+			indicatorX = arrowX + gfx_sprites[arrow]->w / 2 - gfx_sprites[indicator]->w / 2;
+			indicatorX = MAX(indicatorX, gfx_sprites[arrow]->w + 5);
+			indicatorX = MIN(indicatorX, screen->w - gfx_sprites[arrow]->w - gfx_sprites[indicator]->w - 5);
+			indicatorY = arrowY + gfx_sprites[arrow]->h / 2 - gfx_sprites[indicator]->h / 2;
+			indicatorY = MAX(indicatorY, gfx_sprites[arrow]->h + 5);
+			indicatorY = MIN(indicatorY, screen->h - gfx_sprites[arrow]->h - gfx_sprites[indicator]->h - 5);
+			screen_blit(gfx_sprites[indicator], indicatorX, indicatorY);
+		}
+	}
 }
 
 static void game_doHud()
 {
 	int shieldColor = 0;
 	SDL_Rect bar;
-	signed char fontColor;
+	int fontColor;
 	char text[25];
 
-	addBuffer(0, 20, 800, 25);
-	addBuffer(0, 550, 800, 34);
+	screen_addBuffer(0, 20, screen->w, 25);
+	screen_addBuffer(0, screen->h - 50, screen->w, 34);
 
 	if (engine.minutes > -1)
 	{
@@ -1592,24 +1678,24 @@ static void game_doHud()
 			fontColor = FONT_YELLOW;
 		else
 			fontColor = FONT_WHITE;
-		blitText(10); // time remaining
+		screen_blitText(TS_TIME_T);
 		sprintf(text, "%.2d:%.2d", engine.minutes, engine.seconds);
-		textSurface(30, text, 410, 21, fontColor);
-		blitText(30);
+		gfx_createTextObject(TS_TIME, text, screen->w / 2 + 10, 21, fontColor);
+		screen_blitText(TS_TIME);
 	}
 
 	if (game.area != MISN_INTERCEPTION)
 	{
-		blitText(9); // mission objectives
+		screen_blitText(TS_OBJECTIVES_T);
 		sprintf(text, "%d", (currentMission.remainingObjectives1 + currentMission.remainingObjectives2));
-		textSurface(39, text, 745, 21, FONT_WHITE);
-		blitText(39);
+		gfx_createTextObject(TS_OBJECTIVES, text, screen->w - 55, 21, FONT_WHITE);
+		screen_blitText(TS_OBJECTIVES);
 	}
 
-	blitText(8); // cash
+	screen_blitText(TS_CASH_T); // cash
 	sprintf(text, "%.6d", game.cash);
-	textSurface(38, text, 90, 21, FONT_WHITE);
-	blitText(38);
+	gfx_createTextObject(TS_CASH, text, 90, 21, FONT_WHITE);
+	screen_blitText(TS_CASH);
 
 	for (int i = 0; i < ALIEN_MAX; i++)
 		game_doArrow(i);
@@ -1620,12 +1706,12 @@ static void game_doHud()
 		if (player.ammo[0] <= 25) fontColor = FONT_YELLOW;
 		if (player.ammo[0] <= 10) fontColor = FONT_RED;
 	}
-	blitText(5); // plasma ammo
+	screen_blitText(TS_PLASMA_T);
 	sprintf(text, "%.3d", player.ammo[0]);
-	textSurface(35, text, 320, 551, fontColor);
-	blitText(35);
+	gfx_createTextObject(TS_PLASMA, text, screen->w * 5 / 16 + 70, screen->h - 49, fontColor);
+	screen_blitText(TS_PLASMA);
 
-	blitText(6);
+	screen_blitText(TS_AMMO_T);
 
 	if ((player.weaponType[1] != W_CHARGER) && (player.weaponType[1] != W_LASER))
 	{
@@ -1634,8 +1720,8 @@ static void game_doHud()
 		else
 			fontColor = FONT_WHITE;
 		sprintf(text, "%.3d", player.ammo[1]); // rocket ammo
-		textSurface(36, text, 465, 551, fontColor);
-		blitText(36);
+		gfx_createTextObject(TS_AMMO, text, screen->w / 2 + 80, screen->h - 49, fontColor);
+		screen_blitText(TS_AMMO);
 	}
 
 	if (((player.weaponType[1] == W_CHARGER) || (player.weaponType[1] == W_LASER)) && (player.ammo[1] > 0))
@@ -1644,15 +1730,15 @@ static void game_doHud()
 		if (player.ammo[1] > 100)
 			c = red;
 
-		bar.x = 450;
-		bar.y = 550;
+		bar.x = screen->w / 2 + 65;
+		bar.y = screen->h - 50;
 		bar.h = 12;
 
 		for (int i = 0 ; i < (player.ammo[1] / 5) ; i++)
 		{
-			bar.w = 1;
+			bar.w = MAX(screen->w / 800, 1);
 			SDL_FillRect(screen, &bar, c);
-			bar.x += 2;
+			bar.x += bar.w + (screen->w / 800);
 		}
 	}
 
@@ -1661,7 +1747,7 @@ static void game_doHud()
 		engine.timeTaken++;
 		engine.counter2 = SDL_GetTicks() + 1000;
 		if (engine.missionCompleteTimer == 0)
-			checkScriptEvents();
+			events_check();
 	}
 
 	if ((engine.timeMission) && (!engine.cheatTime) && (player.shield > 0))
@@ -1670,7 +1756,7 @@ static void game_doHud()
 		{
 			if ((engine.seconds > 1) && (engine.seconds <= 11) && (engine.minutes == 0))
 			{
-				audio_playSound(SFX_CLOCK, screen->w / 2);
+				audio_playSound(SFX_CLOCK, screen->w / 2, screen->h / 2);
 			}
 
 			if (engine.seconds > 0)
@@ -1691,7 +1777,7 @@ static void game_doHud()
 						currentMission.timeLimit2[i]--;
 				}
 				checkTimer();
-				checkScriptEvents();
+				events_check();
 			}
 
 			if ((engine.seconds == 0) && (engine.minutes == 0))
@@ -1704,67 +1790,79 @@ static void game_doHud()
 						currentMission.timeLimit2[i]--;
 				}
 				checkTimer();
-				checkScriptEvents();
+				events_check();
 				engine.counter = (SDL_GetTicks() + 1000);
 			}
 		}
 	}
 
-	for (int i = 0 ; i < 3 ; i++)
+	for (int i = 0 ; i < MAX_INFOLINES ; i++)
 	{
-		if (textShape[i].life > 0)
+		if (gfx_textSprites[i].life > 0)
 		{
-			textShape[i].y = (525 - (i * 20));
-			blitText(i);
-			textShape[i].life--;
+			gfx_textSprites[i].y = screen->h - 75 - (i * 20);
+			screen_blitText(i);
+			gfx_textSprites[i].life--;
 
-			if (textShape[i].life == 0)
+			if (gfx_textSprites[i].life == 0)
 			{
-				copyInfoLine(i + 1, i);
-				copyInfoLine(i + 2, i + 1);
-				textShape[2].life = 0;
+				for (int j = i ; j < MAX_INFOLINES - 1 ; j++)
+				{
+					copyInfoLine(j + 1, j);
+				}
+				gfx_textSprites[MAX_INFOLINES - 1].life = 0;
 			}
 		}
 	}
 
 	// Show the radio message if there is one
-	if (textShape[3].life > 0)
+	if (gfx_textSprites[TS_RADIO].life > 0)
 	{
-		blit(messageBox, (800 - messageBox->w) / 2, 50);
-		textShape[3].life--;
+		screen_blit(gfx_messageBox, (screen->w - gfx_messageBox->w) / 2, 50);
+		gfx_textSprites[TS_RADIO].life--;
 	}
 
 	// Do the target's remaining shield (if required)
 	if (game.area != MISN_DORIM)
 	{
-		if ((engine.targetIndex > -1) && (aliens[engine.targetIndex].shield > 0) && (engine.targetIndex > 9))
+		if ((engine.targetIndex > -1) && (aliens[engine.targetIndex].shield > 0) &&
+				(engine.targetIndex > engine.maxAliens))
 		{
-			blitText(7);
-			bar.w = 1;
+			if (engine.targetIndex == ALIEN_SID)
+				screen_blitText(TS_TARGET_SID);
+			else if (engine.targetIndex == ALIEN_PHOEBE)
+				screen_blitText(TS_TARGET_PHOEBE);
+			else if (engine.targetIndex == ALIEN_KLINE)
+				screen_blitText(TS_TARGET_KLINE);
+			else
+				screen_blitText(TS_TARGET);
+
+			bar.w = MAX(screen->w / 800, 1);
 			bar.h = 12;
-			bar.x = 620;
-			bar.y = 550;
+			bar.x = screen->w * 11 / 16 + 65;
+			bar.y = screen->h - 50;
 
 			for (float i = 0 ; i < (engine.targetShield * aliens[engine.targetIndex].shield) ; i++)
 			{
-				if (i > 50)
+				if (i > engine.targetShield * aliens[engine.targetIndex].maxShield * 2 / 3)
 					shieldColor = green;
-				else if ((i >= 25) && (i <= 50))
+				else if ((i >= engine.targetShield * aliens[engine.targetIndex].maxShield / 3) &&
+						(i <= engine.targetShield * aliens[engine.targetIndex].maxShield * 2 / 3))
 					shieldColor = yellow;
 				else
 					shieldColor = red;
 				SDL_FillRect(screen, &bar, shieldColor);
-				bar.x += 2;
+				bar.x += bar.w + (screen->w / 800);
 			}
 		}
 	}
 
-	blitText(11);
+	screen_blitText(TS_POWER);
 
-	bar.w = 25;
+	bar.w = screen->w / 32;
 	bar.h = 12;
-	bar.x = 80;
-	bar.y = 571;
+	bar.x = screen->w / 32 + 55;
+	bar.y = screen->h - 29;
 
 	for (int i = 1 ; i <= 5 ; i++)
 	{
@@ -1775,15 +1873,15 @@ static void game_doHud()
 			}
 		} else if (i <= game.maxPlasmaDamage)
 			SDL_FillRect(screen, &bar, darkGreen);
-		bar.x += 30;
+		bar.x += screen->w * 3 / 80;
 	}
 
-	blitText(12);
+	screen_blitText(TS_OUTPUT);
 
-	bar.w = 25;
+	bar.w = screen->w / 32;
 	bar.h = 12;
-	bar.x = 315;
-	bar.y = 571;
+	bar.x = screen->w * 5 / 16 + 65;
+	bar.y = screen->h - 29;
 	SDL_FillRect(screen, &bar, yellow);
 
 	for (int i = 1 ; i <= 5 ; i++)
@@ -1796,15 +1894,15 @@ static void game_doHud()
 		}
 		else if (i <= game.maxPlasmaOutput)
 			SDL_FillRect(screen, &bar, darkYellow);
-		bar.x += 30;
+		bar.x += screen->w * 3 / 80;
 	}
 
-	blitText(13);
+	screen_blitText(TS_COOLER);
 
-	bar.w = 25;
+	bar.w = screen->w / 32;
 	bar.h = 12;
-	bar.x = 550;
-	bar.y = 571;
+	bar.x = screen->w * 97 / 160 + 65;
+	bar.y = screen->h - 29;
 
 	for (int i = 1 ; i <= 5 ; i++)
 	{
@@ -1816,10 +1914,10 @@ static void game_doHud()
 		}
 		else if (i <= game.maxPlasmaRate)
 			SDL_FillRect(screen, &bar, darkerBlue);
-		bar.x += 30;
+		bar.x += screen->w * 3 / 80;
 	}
 
-	blitText(4);
+	screen_blitText(TS_SHIELD);
 	if (player.shield < 1)
 		return;
 
@@ -1829,12 +1927,12 @@ static void game_doHud()
 	if ((engine.eventTimer < 30) && (player.shield <= engine.lowShield))
 		return;
 
-	signed char blockSize = 1;
+	int blockSize = MAX(screen->w / 800, 1);
 
 	bar.w = blockSize;
 	bar.h = 12;
-	bar.x = 95;
-	bar.y = 550;
+	bar.x = screen->w / 32 + 65;
+	bar.y = screen->h - 50;
 
 	for (int i = 0 ; i < player.shield ; i += blockSize)
 	{
@@ -1846,9 +1944,31 @@ static void game_doHud()
 			shieldColor = red;
 		SDL_FillRect(screen, &bar, shieldColor);
 		bar.x += blockSize;
-		if (player.maxShield < 75)
-			bar.x++;
+		if (player.maxShield <= 75 || screen->w >= 1200)
+			bar.x += screen->w / 800;
 	}
+}
+
+/*
+ * Delay until the next 60 Hz frame
+ */
+void game_delayFrame()
+{
+	Uint32 now = SDL_GetTicks();
+
+	// Add 16 2/3 (= 1000 / 60) to frameLimit
+	frameLimit += 16;
+	thirds += 2;
+	while (thirds >= 3)
+	{
+		thirds -= 3;
+		frameLimit++;
+	}
+
+	if(now < frameLimit)
+		SDL_Delay(frameLimit - now);
+	else
+		frameLimit = now;
 }
 
 /*
@@ -1875,6 +1995,17 @@ static bool game_checkPauseRequest()
 	}
 
 	return false;
+}
+
+bool game_collision(float x0, float y0, int w0, int h0, float x2, float y2, int w1, int h1)
+{
+	float x1 = x0 + w0;
+	float y1 = y0 + h0;
+
+	float x3 = x2 + w1;
+	float y3 = y2 + h1;
+
+	return !(x1<x2 || x3<x0 || y1<y2 || y3<y0);
 }
 
 int game_mainLoop()
@@ -1934,7 +2065,7 @@ int game_mainLoop()
 	// Some specifics for interception missions
 	if (game.area == MISN_INTERCEPTION)
 	{
-		if ((game.system > 1) && ((rand() % 5) == 0))
+		if ((game.system > SYSTEM_EYANANTH) && ((rand() % 5) == 0))
 		{
 			aliens[ALIEN_KLINE] = alien_defs[CD_KLINE];
 			aliens[ALIEN_KLINE].owner = &aliens[ALIEN_KLINE];
@@ -1945,19 +2076,19 @@ int game_mainLoop()
 			player_setTarget(ALIEN_KLINE);
 		}
 
-		if ((game.system == 2) && (game.experimentalShield > 0))
+		if ((game.system == SYSTEM_MORDOR) && (game.experimentalShield > 0))
 		{
 			if ((rand() % 5) > 0)
 			{
-				aliens[10] = alien_defs[CD_CLOAKFIGHTER];
-				aliens[10].owner = &aliens[10];
-				aliens[10].target = &aliens[10];
-				aliens[10].shield = 1000;
-				aliens[10].active = true;
-				aliens[10].x = player.x - 1000;
-				aliens[10].y = player.y;
-				player_setTarget(10);
-				aliens[10].shield = game.experimentalShield;
+				aliens[ALIEN_BOSS] = alien_defs[CD_CLOAKFIGHTER];
+				aliens[ALIEN_BOSS].owner = &aliens[ALIEN_BOSS];
+				aliens[ALIEN_BOSS].target = &aliens[ALIEN_BOSS];
+				aliens[ALIEN_BOSS].shield = 1000;
+				aliens[ALIEN_BOSS].active = true;
+				aliens[ALIEN_BOSS].x = player.x - 1000;
+				aliens[ALIEN_BOSS].y = player.y;
+				player_setTarget(ALIEN_BOSS);
+				aliens[ALIEN_BOSS].shield = game.experimentalShield;
 			}
 		}
 	}
@@ -1982,7 +2113,6 @@ int game_mainLoop()
 		case MISN_ELAMALE:
 		case MISN_ODEON:
 		case MISN_FELLON:
-		case MISN_POSWIC:
 		case MISN_ELLESH:
 		case MISN_PLUTO:
 		case MISN_NEPTUNE:
@@ -1994,9 +2124,10 @@ int game_mainLoop()
 			player_setTarget(ALIEN_PHOEBE);
 			break;
 		case MISN_ALLEZ:
-			player_setTarget(ALIEN_GOODTRANSPORT);
+			player_setTarget(ALIEN_FRIEND1);
 			break;
 		case MISN_URUSOR:
+		case MISN_POSWIC:
 			player_setTarget(ALIEN_SID);
 			break;
 		case MISN_EARTH:
@@ -2007,7 +2138,7 @@ int game_mainLoop()
 
 	clearInfoLines();
 
-	loadScriptEvents();
+	events_init();
 
 	engine.ssx = 0;
 	engine.ssy = 0;
@@ -2044,8 +2175,8 @@ int game_mainLoop()
 		}
 	}
 
-	drawBackGround();
-	flushBuffer();
+	screen_drawBackground();
+	screen_flushBuffer();
 
 	// Default to no aliens dead...
 	engine.allAliensDead = 0;
@@ -2056,7 +2187,7 @@ int game_mainLoop()
 
 	while (engine.done != 1)
 	{
-		updateScreen();
+		renderer_update();
 
 		if ((allMissionsCompleted()) && (engine.missionCompleteTimer == 0))
 		{
@@ -2145,8 +2276,8 @@ int game_mainLoop()
 			getPlayerInput();
 		}
 
-		unBuffer();
-		doStarfield();
+		screen_unBuffer();
+		game_doStars();
 		game_doCollectables();
 		game_doBullets();
 		game_doAliens();
@@ -2160,15 +2291,15 @@ int game_mainLoop()
 
 		if (engine.paused)
 		{
-			textSurface(22, "PAUSED", -1, screen->h / 2, FONT_WHITE);
-			blitText(22);
-			updateScreen();
+			gfx_createTextObject(TS_PAUSED, "PAUSED", -1, screen->h / 2, FONT_WHITE);
+			screen_blitText(TS_PAUSED);
+			renderer_update();
 			audio_pauseMusic();
 
 			while (engine.paused)
 			{
 				engine.done = game_checkPauseRequest();
-				delayFrame();
+				game_delayFrame();
 			}
 
 			audio_resumeMusic();
@@ -2204,23 +2335,23 @@ int game_mainLoop()
 		if ((game.area == MISN_MOEBO) &&
 			(aliens[ALIEN_BOSS].flags & FL_ESCAPED))
 		{
-			audio_playSound(SFX_DEATH, aliens[ALIEN_BOSS].x);
-			clearScreen(white);
-			updateScreen();
+			audio_playSound(SFX_DEATH, aliens[ALIEN_BOSS].x, aliens[ALIEN_BOSS].y);
+			screen_clear(white);
+			renderer_update();
 			for (int i = 0 ; i < 300 ; i++)
 			{
 				SDL_Delay(10);
 				if ((rand() % 25) == 0)
-					audio_playSound(SFX_EXPLOSION, aliens[ALIEN_BOSS].x);
+					audio_playSound(SFX_EXPLOSION, aliens[ALIEN_BOSS].x, aliens[ALIEN_BOSS].y);
 			}
 			SDL_Delay(1000);
 			break;
 		}
 
-		delayFrame();
+		game_delayFrame();
 	}
 
-	flushBuffer();
+	screen_flushBuffer();
 
 	if ((player.shield > 0) && (!missionFailed()))
 	{
@@ -2230,20 +2361,20 @@ int game_mainLoop()
 		switch (game.area)
 		{
 			case MISN_MOEBO:
-				doCutscene(1);
-				doCutscene(2);
+				cutscene_init(1);
+				cutscene_init(2);
 				break;
 			case MISN_NEROD:
-				doCutscene(3);
+				cutscene_init(3);
 				break;
 			case MISN_ELAMALE:
-				doCutscene(4);
+				cutscene_init(4);
 				break;
 			case MISN_ODEON:
-				doCutscene(5);
+				cutscene_init(5);
 				break;
 			case MISN_ELLESH:
-				doCutscene(6);
+				cutscene_init(6);
 				break;
 			case MISN_VENUS:
 				doCredits();

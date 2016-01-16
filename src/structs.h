@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012, 2013 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -20,14 +20,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
-struct object {
+typedef struct object_ {
 
 	bool active;
 	int classDef; // Used by aliens to determine what they are
 	int AIType; // Type of articifial intelligence
 
 	int id; // The "job" of the object
-	object *target; //  index target in aliens array
+	struct object_ *target; //  index target in aliens array
 
 	int reload[2];
 
@@ -42,7 +42,7 @@ struct object {
 
 	int face; // Either 0 or 1
 
-	object *owner; // Who owns this object
+	struct object_ *owner; // Who owns this object
 
 	int chance[2]; // Chance of using the weapons (out of 1000)
 
@@ -64,11 +64,11 @@ struct object {
 
 	float x, y, dx, dy;
 
-	object *next;
+	struct object_ *next;
 
-};
+} object;
 
-struct mission {
+typedef struct mission_ {
 
 	char primaryObjective[3][50]; // Description
 	int primaryType[3]; // The type of mission this is
@@ -88,16 +88,16 @@ struct mission {
 	int remainingObjectives2;
 	int addAliens; // How often to add new enemies
 
-};
+} mission;
 
-struct Star {
+typedef struct Star_ {
 
 	float x, y, dx, dy;
 	int speed; // How fast the star moves
 
-};
+} Star;
 
-struct collectables {
+typedef struct collectables_ {
 
 	bool active;
 	float x, y, dx, dy;
@@ -106,11 +106,11 @@ struct collectables {
 	int value; // How much is it worth?
 	int life; // How long it will stay around for
 
-	collectables *next;
+	struct collectables_ *next;
 
-};
+} collectables;
 
-struct textObject {
+typedef struct textObject_ {
 
 	SDL_Surface *image;
 	int life;
@@ -118,9 +118,9 @@ struct textObject {
 	int fontColor;
 	char text[255];
 
-};
+} textObject;
 
-struct Game {
+typedef struct Game_ {
 	object thePlayer;
 	object playerWeapon;
 
@@ -162,7 +162,7 @@ struct Game {
 	// remaining shield for experimental fighter
 	int experimentalShield;
 
-	long int timeTaken; // In seconds
+	Uint32 timeTaken; // In seconds
 	int missionCompleted[10];
 
 	int stationedPlanet;
@@ -191,25 +191,26 @@ struct Game {
 	int maxPlasmaAmmoLimit;
 	int maxRocketAmmoLimit;
 
-};
+} Game;
 
-struct ShopItem {
+typedef struct ShopItem_ {
 
 	int x, y;
 	int price;
 	char name[50];
 	char description[255];
 	int image;
-};
 
-struct bRect {
+} ShopItem;
+
+typedef struct bRect_ {
 
 	int x, y, w, h;
-	bRect *next;
+	struct bRect_ *next;
 
-};
+} bRect;
 
-struct Planet {
+typedef struct Planet_ {
 
 	int y;
 	char name[50];
@@ -223,112 +224,7 @@ struct Planet {
 	int faceImage;
 	char from[50];
 	char subject[100];
-};
 
-enum keys {
-	KEY_UP,
-	KEY_DOWN,
-	KEY_LEFT,
-	KEY_RIGHT,
-	KEY_FIRE,
-	KEY_ALTFIRE,
-	KEY_SWITCH,
-	KEY_PAUSE,
-	KEY_ESCAPE,
-	KEY_FULLSCREEN,
-	KEY_DUMMY,
-	KEY_LAST
-};
-
-struct Engine {
-
-	SDL_Event event;
-	int done;
-
-	SDL_RWops *sdlrw;
-
-	float musicVolume;
-
-	int maxAliens;
-
-	float ssx;
-	float ssy;
-	float smx;
-	float smy;
-
-	object *bulletHead;
-	object *bulletTail;
-	object *explosionHead;
-	object *explosionTail;
-	collectables *collectableHead;
-	collectables *collectableTail;
-	object *debrisHead;
-	object *debrisTail;
-
-	int cursor_x, cursor_y;
-
-	int commsSection;
-
-	int eventTimer;
-
-	int lowShield;
-	int averageShield;
-
-	float targetShield;
-	int targetIndex;
-
-	// Mission completion timer (allows for 4 seconds before leaving sector)
-	long missionCompleteTimer;
-
-	// Times the mission normally
-	Uint32 counter2;
-	long int timeTaken; // In seconds
-
-	// For missions with a time limit
-	int timeMission;
-	Uint32 counter;
-	int seconds;
-	int minutes;
-
-	// Mission Related stuff
-	int allAliensDead;
-	int addAliens;
-
-	bool paused;
-	int gameSection;
-
-	bool useAudio;
-	bool useSound;
-	bool useMusic;
-	bool fullScreen;
-	bool autoPause;
-
-	char userHomeDirectory[1024];
-	
-	char keyState[KEY_LAST];
-
-	bool cheat; // overall cheat
-	bool cheatShield;
-	bool cheatCash;
-	bool cheatAmmo;
-	bool cheatTime;
-	bool cheatCredits;
-};
-
-struct event {
-
-	int time;
-	char message[255];
-	int face;
-	int entity;
-	int flag;
-};
-
-struct cutMsg {
-
-	int face;
-	char message[255];
-
-};
+} Planet;
 
 #endif

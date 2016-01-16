@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011, 2012 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -18,6 +18,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "Starfighter.h"
+
+bool ship_collision(object *ship, object *otherShip)
+{
+	float x0 = ship->x;
+	float y0 = ship->y;
+	float w0 = ship->image[0]->w;
+	float h0 = ship->image[0]->h;
+
+	float x2 = otherShip->x;
+	float y2 = otherShip->y;
+	float w1 = otherShip->image[0]->w;
+	float h1 = otherShip->image[0]->h;
+
+	float x1 = x0 + w0;
+	float y1 = y0 + h0;
+
+	float x3 = x2 + w1;
+	float y3 = y2 + h1;
+
+	return !(x1<x2 || x3<x0 || y1<y2 || y3<y0);
+}
 
 /*
 Fill in later...
@@ -40,16 +61,16 @@ void ship_fireBullet(object *ship, int weaponType)
 		case WT_PLASMA:
 		case WT_SPREAD:
 		case WT_DIRECTIONAL:
-			audio_playSound(SFX_PLASMA, ship->x);
+			audio_playSound(SFX_PLASMA, ship->x, ship->y);
 			break;
 		case WT_ROCKET:
-			audio_playSound(SFX_MISSILE, ship->x);
+			audio_playSound(SFX_MISSILE, ship->x, ship->y);
 			break;
 		case WT_LASER:
-			audio_playSound(SFX_LASER, ship->x);
+			audio_playSound(SFX_LASER, ship->x, ship->y);
 			break;
 		case WT_CHARGER:
-			audio_playSound(SFX_PLASMA3, ship->x);
+			audio_playSound(SFX_PLASMA3, ship->x, ship->y);
 			break;
 	}
 
@@ -74,16 +95,16 @@ void ship_fireBullet(object *ship, int weaponType)
 	}
 	else
 	{
-		if(theWeapon->ammo[0] & 1)
+		if (theWeapon->ammo[0] & 1)
 			bullet_add(theWeapon, ship, y * 3, 0);
 
-		if(theWeapon->ammo[0] >= 2)
+		if (theWeapon->ammo[0] >= 2)
 		{
 			bullet_add(theWeapon, ship, y * 2, 0);
 			bullet_add(theWeapon, ship, y * 4, 0);
 		}
 
-		if(theWeapon->ammo[0] >= 4)
+		if (theWeapon->ammo[0] >= 4)
 		{
 			bullet_add(theWeapon, ship, y * 1, 0);
 			bullet_add(theWeapon, ship, y * 5, 0);
@@ -136,31 +157,31 @@ void ship_fireRay(object *ship)
 
 	int red = SDL_MapRGB(screen->format, rand() % 256, 0x00, 0x00);
 	SDL_FillRect(screen, &ray, red);
-	addBuffer(ray.x, ray.y, ray.w, ray.h);
+	screen_addBuffer(ray.x, ray.y, ray.w, ray.h);
 
 	if (ship != &player)
 	{
 		if (player.shield > 0)
 		{
-			if (collision(player.x, player.y, player.image[0]->w,
-					player.image[0]->h, ray.x, ray.y, ray.w, ray.h) &&
-				(!engine.cheatShield))
+			if (game_collision(player.x, player.y, player.image[0]->w,
+						player.image[0]->h, ray.x, ray.y, ray.w, ray.h) &&
+					(!engine.cheatShield) && (engine.missionCompleteTimer == 0))
 			{
 				if (player.shield > engine.lowShield)
 				{
 					if (player.shield - 1 <= engine.lowShield)
 					{
-						setInfoLine("!!! ·Ù¹ð: ¥·¡¼¥ë¥ÉÄã²¼ !!!", FONT_RED);
+						setInfoLine("!!! Œx: ƒV[ƒ‹ƒh’á‰º !!!", FONT_RED);
 					}
 				}
 				player.shield--;
 
-				explosion_add(player.x, player.y, E_SMALL_EXPLOSION);
-				audio_playSound(SFX_HIT, player.x);
+				explosion_add(player.x, player.y, SP_SMALL_EXPLOSION);
+				audio_playSound(SFX_HIT, player.x, player.y);
 				if (player.shield < 1)
 				{
-					audio_playSound(SFX_DEATH, player.x);
-					audio_playSound(SFX_EXPLOSION, player.x);
+					audio_playSound(SFX_DEATH, player.x, player.y);
+					audio_playSound(SFX_EXPLOSION, player.x, player.y);
 				}
 			}
 		}
@@ -174,7 +195,7 @@ void ship_fireRay(object *ship)
 		if ((aliens[i].shield > 0) && (ship != &aliens[i]) &&
 			(ship->classDef != aliens[i].classDef))
 		{
-			if (collision(aliens[i].x, aliens[i].y, aliens[i].image[0]->w,
+			if (game_collision(aliens[i].x, aliens[i].y, aliens[i].image[0]->w,
 					aliens[i].image[0]->h, ray.x, ray.y, ray.w, ray.h))
 			{
 				alien_hurt(&aliens[i], ship->owner, 1, false);

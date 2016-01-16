@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -22,5 +22,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 void bullet_add(object *theWeapon, object *attacker, int y, int dy);
 object *bullet_getTarget(object *bullet);
+bool bullet_collision(object *bullet, object *ship);
 
 #endif

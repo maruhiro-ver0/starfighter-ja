@@ -1,7 +1,7 @@
 /*
 Copyright (C) 2003 Parallel Realities
 Copyright (C) 2011 Guus Sliepen
-Copyright (C) 2015 Julian Marchant
+Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 extern int initSaveSlots();
 extern bool loadGame(int slot);
 extern void saveGame(int slot);
-extern void createSavesSurface(SDL_Surface *savesSurface, signed char clickedSlot);
-extern int showSaveSlots(SDL_Surface *savesSurface, signed char saveSlot);
+extern void createSavesSurface(SDL_Surface *savesSurface, int clickedSlot);
+extern int showSaveSlots(SDL_Surface *savesSurface, int saveSlot);
 
 #endif

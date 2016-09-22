@@ -3,7 +3,7 @@ CXXFLAGS += `pkg-config --cflags sdl2 SDL2_image SDL2_mixer`
 LIBS = `pkg-config --libs sdl2 SDL2_image SDL2_mixer`
 OBJS = alien.o audio.o bullet.o cargo.o collectable.o colors.o cutscene.o engine.o event.o explosion.o game.o gfx.o intermission.o loadSave.o messages.o misc.o missions.o player.o renderer.o resources.o screen.o ship.o shop.o Starfighter.o title.o weapons.o window.o
 
-VERSION = 1.5.1
+VERSION = 1.6
 PROG = starfighter
 DOCS = docs/*
 DATA = data gfx sound music
@@ -40,14 +40,14 @@ install: $(ALL)
 	mkdir -p $(DESTDIR)$(BINDIR)
 	mkdir -p $(DESTDIR)$(DATADIR)
 	mkdir -p $(DESTDIR)$(DOCDIR)
-	mkdir -p $(MENUDIR)
-	mkdir -p $(ICONDIR)
+	mkdir -p $(DESTDIR)$(MENUDIR)
+	mkdir -p $(DESTDIR)$(ICONDIR)
 
 	install -m 755 $(PROG) $(DESTDIR)$(BINDIR)$(PROG)
 	cp -r $(DATA) $(DESTDIR)$(DATADIR)
 	cp $(DOCS) $(DESTDIR)$(DOCDIR)
-	cp $(LAUNCHER) $(MENUDIR)
-	cp $(ICON) $(ICONDIR)
+	install -m 644 $(LAUNCHER) $(DESTDIR)$(MENUDIR)
+	install -m 644 $(ICON) $(DESTDIR)$(ICONDIR)
 
 optimise:
 	advpng -z gfx/*.png

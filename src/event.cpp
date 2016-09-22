@@ -294,7 +294,7 @@ void events_init()
 
 			events[6].time = 25;
 			events[6].face = FS_CHRIS;
-			strcpy(events[6].message, "俺にも名前がある。知らねえのか?");
+			strcpy(events[6].message, "俺にも名前がある。憶えているか?");
 
 			events[7].time = 45;
 			events[7].entity = ALIEN_BOSS_PART3;

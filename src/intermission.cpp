@@ -54,7 +54,7 @@ static void intermission_setStatusLines()
 	sprintf(string, "プレイヤー以外に撃墜された敵の数 : %d", game.totalOtherKills);
 	gfx_createTextObject(TS_OTHER_KILLS, string, 0, 0, FONT_WHITE);
 
-	sprintf(string, "稼いだ送金額 : %d", game.cashEarned);
+	sprintf(string, "稼いだ総金額 : %d", game.cashEarned);
 	gfx_createTextObject(TS_CASH_EARNED, string, 0, 0, FONT_WHITE);
 
 	gfx_createTextObject(TS_CHRIS_HEADER, "*** クリス ***", 0, 0, FONT_WHITE);

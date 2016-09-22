@@ -1,4 +1,4 @@
-Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
+﻿Copyright (C) 2015, 2016 onpon4 <onpon4@riseup.net>
 
 Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -71,20 +71,20 @@ Project: Starfighterは次のライブラリに依存している:
 
 日本語版のビルド方法
 
-1. オリジナル(英語)のProject: Starfighter v1.5.1 のソースを展開する。
-2. 日本語版のアーカイブ starfighter-1.5.1-jp-src.tgz を展開する。
+1. オリジナル(英語)のProject: Starfighter v1.6 のソースを展開する。
+2. 日本語版のアーカイブ starfighter-1.6-jp-src.tgz を展開する。
 3. 日本語版の gfx/smallFont.png をオリジナルの gfx/ にコピーし上書きす
    る。
-4. 日本語版の starfighter-1.5.1-jp.patch をオリジナルのルートディレクトリ
+4. 日本語版の starfighter-1.6-jp.patch をオリジナルのルートディレクトリ
    にコピーする。
 5. オリジナルのルートディレクトリで
 
-   patch -p1 < starfighter-1.5.1-jp.patch
+   patch -p1 < starfighter-1.6-jp.patch
 
    を実行する。
 
 6. make を実行する。
 
-win32版をビルドする場合は starfighter-1.5.1-win32.patch.gz を展開し、パッ
+win32版をビルドする場合は starfighter-1.6-win32.patch.gz を展開し、パッ
 チを当てる必要がある。
 このパッチは日本語版・オリジナルの両方で使える。

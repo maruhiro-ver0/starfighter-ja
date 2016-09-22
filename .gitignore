@@ -58,3 +58,4 @@ screen.o
 window.o
 resource.rc
 icon.ico
+starfighter-1.6-win32.patch

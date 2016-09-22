@@ -583,6 +583,11 @@ bool allMissionsCompleted()
 			}
 			else
 			{
+				if (currentMission.remainingObjectives2 > 0)
+				{
+					setInfoLine("脱出ワープエンジンが利用可能 ESCボタンで始動する", FONT_CYAN);
+				}
+
 				if (game.area != MISN_INTERCEPTION)
 					setInfoLine("*** 主要な任務を完了 ***", FONT_GREEN);
 				else
@@ -902,7 +907,10 @@ void missionFinishedScreen()
 
 		if (currentMission.remainingObjectives1 + currentMission.remainingObjectives2 == 0)
 		{
-			shield_bonus = player.shield * 10;
+			if (game.difficulty == DIFFICULTY_NIGHTMARE)
+				shield_bonus = 100;
+			else
+				shield_bonus = player.shield * 10;
 			sprintf(temp, "シールド ボーナス: $%.3d", shield_bonus);
 			screen_renderString(temp, -1, 430, FONT_WHITE);
 			game.cash += shield_bonus;
